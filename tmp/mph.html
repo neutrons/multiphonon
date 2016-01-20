@@ -1,0 +1,30 @@
+<body onload="count=0; setTimeout(f,1000);">
+<table cellpadding=0 cellspacing=0 border=0>
+<tr>
+<td><img src="sqe.png?1"     width=480 height=480 id='bob1'>
+<td><img src="se.png?2"      width=480 height=480 id='bob2'>
+<tr>
+<td><img src="mask.png?3"    width=480 height=480 id='bob3'>
+<td><img src="sqeCalc.png?4"     width=480 height=480 id='bob4'>
+<tr>
+<td><img src="dos.png?5" width=480 height=480 id='bob5'>
+<td><img src="seComp.png?6"  width=480 height=480 id='bob6'>
+<tr>
+<td><img src="lsq.png?7"     width=480 height=480 id='bob7'>
+<td><img src="lsg_f.png?8"   width=480 height=480 id='bob8'>
+</table>
+
+<script>
+function f() {
+  document.getElementById('bob1').src="sqe.png?"    +new Date().getTime();
+  document.getElementById('bob2').src="se.png?"     +new Date().getTime();
+  document.getElementById('bob3').src="mask.png?"   +new Date().getTime();
+  document.getElementById('bob4').src="sqeCalc.png?"+new Date().getTime();
+  document.getElementById('bob5').src="dos.png?"    +new Date().getTime();
+  document.getElementById('bob6').src="seComp.png?" +new Date().getTime();
+  document.getElementById('bob7').src="lsq.png?"    +new Date().getTime();
+  document.getElementById('bob8').src="lsq_f.png?"  +new Date().getTime();
+  setTimeout(f,1000);
+}
+</script>
+

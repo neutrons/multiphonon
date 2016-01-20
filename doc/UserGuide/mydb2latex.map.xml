@@ -1,0 +1,16 @@
+<?xml version='1.0'?>
+<!DOCTYPE latexbindings SYSTEM "http://db2latex.sourceforge.net/xsl/latex.mapping.dtd">
+<latexbindings>
+  <latexmapping role="begin">
+    <mapping key="equation" text="">
+      <line>&#10;\begin{equation}&#10;</line>
+      <line>\hypertarget{%id%}{}%&#10;</line>
+    </mapping>
+  </latexmapping>
+  <latexmapping role="end">
+    <mapping key="equation" text="">
+      <line>\end{dbequation}&#10;</line>
+      <line>&#10;</line>
+    </mapping>
+  </latexmapping>
+</latexbindings>

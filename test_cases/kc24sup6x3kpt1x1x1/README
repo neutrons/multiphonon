@@ -1,0 +1,7 @@
+*this is for the work in trueblue:/home/jbk/gulp3.0/newkc24PhononOpt.  
+*the first four modes were unstable, so this structure needs to be optimized more and 
+this analysis is, technically, invalid.  However, those modes probably arise from 
+volumetric instabilities.  Since we have artificially constrained the volume to 
+that of experiment (by applying a semi-fictitious pressure?), this is to be
+expected.
+*

@@ -1,0 +1,6 @@
+*this is for the work in trueblue:/home/jbk/gulp3.0/kc24PhononsOpt/phon6x3PostCool.gin.  
+*as such it is not gamma point, but 1x1x4 mesh
+*the results are questionable, since there are two unstable modes
+at the time gulp had a bug in it and did not optimize it correctly
+to the lowest energy state so I could not get rid of them,
+even trying a very slow quench

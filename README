@@ -1,0 +1,35 @@
+
+NEEDED FIXES:
+
+* to fix energy symmetric requirement, get rid of exception and fix wherever crashes (should be a matter of applying detailed balance earlier.  half of the data gets thrown away anyway, so )
+* see expSqe._sanitize()
+* also remove 0
+* figure out where brillouin zones are in data and pick out whole zones for integration (ask O. D.?).
+* come up with method to calculate S(q,e) and compare
+* warning: this code has cubic space group built into its algorithms 
+
+
+below is dated?
+
+!!! Create top level documentation !!!
+-- use Matt's as a guide ?
+
+- Straight line for elastic cutoff
+  - fix the error bars for this.
+
+-  the internal representation of C_ms should match the paper 
+
+Double and triple check expSqe.expand and expSqe.slopeCut.  
+Fix up causes of warnings:
+  Warning: divide by zero encountered in divide
+  Warning: invalid value encountered in divide
+  -- You can "GetDos.py 2>/dev/null"
+
+Plotting:
+  - What about gnuplot compiled with zlib instead of libgd?
+  - Perhaps there should be a separate conf file for plotting stuff?
+    - is putting the GDCONF stuff in user.py too ugly??
+
+Clean out some of the test cases?
+
+Edit densityOfStates.py to accept range of possible cutoffs. :)

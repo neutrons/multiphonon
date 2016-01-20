@@ -1,0 +1,131 @@
+
+***
+Look for things that would change the relative heights of the 1-phonon and 
+N-phonon contributions...
+  See the appendices in Sears -- multiple scattering will look like 
+multiphonon.
+
+--- Notes for usage ----------------------------------------------------------
+
+I think that the user.py file is the only one that requires user tweaking.
+
+In it, you set the temperature, sample mass, and sample cross sections, as
+well as the input files.
+
+You also set a few parameters about where to crop the funny shaped S(Q,E) data
+set into a rectangle.  Hopefully this can be automated in the future.  In the
+not so much further future, this will become less important, as we will be
+using our beautiful Gaussian bases. :)
+
+To run it, after setting up, type:
+./getDOS.py
+
+The outputs are the following:
+"Dos"        the Density of states as calculated
+"Dos.z"      the Density of states as calculated, with everything after the 
+             first zero crossing set to zero
+"sqe_N.pkl"  cPickle containing (q,e,_SQE)  where _SQE is a 
+             N x len(e) x len(q) with _SQE[N-1] == S(Q,E)_N
+
+------------------------------------------------------------------------------
+-- Notes about multiphonon corrections ---------------------------------------
+------------------------------------------------------------------------------
+
+  We measure scattering as a function of detector, pixel and time-of-flight --> 
+        S( d, p, t ) 
+
+if you will.  That is `instrument specific data` (it depends on the positions 
+of detectors, etc. etc.) The "reduction code" takes that data to instrument 
+independant coordinates:
+        S( d, p, t ) -->  S( Q, E )
+
+S( Q, E) for E = 0 is the elastic scattering...  For E != 0, it is inelastic.  
+And in some cases (those that we're interested in) the inelastic stuff is 
+dominated by the creation and annihilation of phonons.  Assuming that the 
+neutron scatters only once (our samples are designed for this to be `true`): 
+you have :
+        S( Q,E )  ==  S_1( Q, E) + S_2( Q, E) + ... + S_N( Q, E ) + ...
+
+where the _N describes how many phonons were involved in the instantaneous 
+scattering event ( with `A` an integer, N - A are created and A are destroyed 
+is an N phonon event ) If you know the DOS, you can calculate 
+        S( Q, E ) - S_1( Q, E ) = S_{2+}( Q, E )
+
+But you need to know S_1( Q, E ) to calculate the DOS.
+  My code iterates to `self-consistently` get the DOS and  all the S_N( Q, E ).
+
+------------------------------------------------------------------------------
+-- Notes to self -------------------------------------------------------------
+------------------------------------------------------------------------------
+
+It seems that dos and sqe are modules, but should be classes.
+
+Why does LRMECS require a constant background correction and Pharos not??
+  -- is it b/c of the tof-independent-background?
+  -- is it b/c of decreased resolution on the phonon annihilation side?
+
+***  MOST IMPORTANT
+Why does the 2+ phonon portion scale like (sig_coh+sig_inc), but the 1-phonon
+like sig_inc ???
+ 
+QUESTION:
+ Again, the question arises -- What do I do about the funny shape of S(Q,E) 
+when I'm trying to sum over all Q?
+ - Can I use one region for summing up to get the DOS, and another region for
+   looking at the multiphonon scattering?  That might actually work well.
+
+"ANSWER": 
+ 1) Pick out the rectangular region for integrating over Q to get the DOS 
+    (corresponds to just barely having data at the cutoff energy)
+ 2) Do something different with the multiphonon data out there.
+
+What about the pixels at the top and bottom of the detectors?  Do they suck?
+  Or is it the ones in the middle that suck?
+
+What should I do about constants and units ??
+
+Gamma_0:
+  Must make certain that it's units are 1/meV.  
+  Also, should take care of the E = 0 contribution to the sum.
+
+debyeWaller:
+  Must make certain that it's unitless...
+  This means that the recoil energy has units meV
+
+Reimplement this using a `full` data set (just use detailed balance on the good
+half) 
+ -- This makes all the normalizations much more obvious.
+
+------------------------------------------------------------------------------
+
+Edit correction.getBestSol(...) so that I don't have to copy a bunch of arrays.
+
+Get larger font labels for plots.  -- Maybe switch to pylab, if you can get it 
+to not crash.
+
+Need try accept structure to handle case of no background file, and other 
+  possibile blow-ups.
+  
+For those magic methods who can get but not set, there should be meaningful 
+error messages.
+
+Simple speed up:
+ -- set lower tolerance on Dos, then reconverge at solution C_ms
+
+The slope of the multiphonon+multiplescattering is determined by C_ms at fixed
+constant background. Can you use this to optimize the constantFrac at the same
+time as C_ms ??
+
+It seems like the noisyness combined with the binny-ness of the data often get 
+in the way of getting the results I want.
+  For example, at the cutoff, I often want the cutoff to be in between two bins
+but that can't happen.  (Perhaps I can actually code this... the cutoff is 
+always determined by linear extrapolation between two points, perhaps?)
+  Example 2 -- the elastic peak.  Often the elastic peak cutoff isn't right in
+one bin or the next.  Bummer.
+
+#-----------------------------------------------------------------------------
+Can you linearly extrapolate over bad detectors?
+
+Make a more general web-plot tool that can take an arbitrary function, 
+write it to png, and update the html so that you see it.
