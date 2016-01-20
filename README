@@ -1,6 +1,6 @@
 This repository was converted from a svn repo.
 This package was derived from the multiphonon package written by Max Kresch.
-The original package by Max was not yet migrated because it contains large
+The original package by Max was not yet fully migrated because it contains large
 data files.
 
 NEEDED FIXES:
