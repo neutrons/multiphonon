@@ -1,0 +1,70 @@
+8
+
+dir
+33
+svn+ssh://svn@danse.us/multiphonon/dev
+svn+ssh://svn@danse.us/multiphonon
+
+
+
+2007-04-30T22:03:11.331428Z
+30
+max
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+acaf4b23-401c-0410-a99b-c4f7e3680560
+
+peruseRes.py
+file
+
+
+
+
+2007-08-28T01:50:46.000000Z
+84f24a14ae343fcd3619e1afc955d176
+2007-03-24T04:25:46.327297Z
+22
+max
+has-props
+
+cgi_from_mcq
+dir
+
+user.py.lappy
+file
+
+
+
+
+2007-08-28T01:50:46.000000Z
+2cecab3c5e78464ccb52001fa4f5de0f
+2007-03-24T04:25:46.327297Z
+22
+max
+has-props
+
+sqePlot.orig.py
+file
+
+
+
+
+2007-08-28T01:50:46.000000Z
+556306443178091e0bf738fce427038a
+2007-04-30T22:03:11.331428Z
+30
+max
+has-props
+

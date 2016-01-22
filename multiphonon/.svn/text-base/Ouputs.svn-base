@@ -1,0 +1,38 @@
+
+Data goes out into a file "all.pkl" which is a tuple with the following 
+contents:
+
+all[0] = The corrected (elastic peak, etc. etc.) experimental scattering which 
+           you are fitting. 
+all[1] = A list of the values of 1 + C_ms used.
+all[2] = A list of lists -- for every C_ms that you try, all the calculated 
+           data is stored here.
+all[3] = The LSQ penalty from comparing the calculated scattering to the 
+           experimental scattering.
+all[4] = The LSQ penalty associated with something.  Presumably it's 
+           looking at the noise after the 1-phonon cutoff, and making sure 
+           that it oscillates about the fit.  However, there appears to be 
+           some other fudgery going on, and I no longer remember what or 
+           why.  ***To be addressed at a later date.
+all[5] = The LSQ penalty associated with the slopes out past the 1-phonon 
+           cutoff.
+all[6] = The average of the 3 aforementioned LSQ penalties.
+
+In the ith (i just picks out a C_ms) element of all[2], we have:
+
+all[2][i][0] Is the 1-N phonon calculated scattering, in a numpy array.
+               So, for example, all[2][i][0][3] is the 3-phonon (1+C_ms) 
+               times the 3-phonon multiphon  scattering. Where the value
+               of C_ms is determined by i (it's all[1][i]).
+all[2][i][1] Is the density of states for 1 + C_ms = all[1][i], in a 
+               "densityOfStates" object.
+all[2][i][2] Is the value of 1 + C_ms, same as all[1][i]
+
+If the source code *.py that comes in "src" is located in "/my/multiphonon/src"
+and the output is in "/my/multiphonon/tmp"
+
+>>> import sys
+>>> sys.path.append('/my/multiphonon/src')
+>>> import cPickle as cp
+>>> all = cp.load(open("/my/multiphonon/tmp/all.pkl",'r'))
+>>> 

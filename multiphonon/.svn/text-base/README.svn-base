@@ -1,0 +1,23 @@
+
+NEEDED FIXES:
+
+!!! Create top level documentation !!!
+-- use Matt's as a guide ?
+
+- Straight line for elastic cutoff
+  - fix the error bars for this.
+
+-  the internal representation of C_ms should match the paper 
+
+Double and triple check expSqe.expand and expSqe.slopeCut.  
+Fix up causes of warnings:
+  Warning: divide by zero encountered in divide
+  Warning: invalid value encountered in divide
+  -- You can "GetDos.py 2>/dev/null"
+
+Plotting:
+  - What about gnuplot compiled with zlib instead of libgd?
+  - Perhaps there should be a separate conf file for plotting stuff?
+    - is putting the GDCONF stuff in user.py too ugly??
+
+Clean out some of the test cases?

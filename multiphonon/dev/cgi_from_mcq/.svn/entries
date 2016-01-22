@@ -1,0 +1,52 @@
+8
+
+dir
+33
+svn+ssh://svn@danse.us/multiphonon/dev/cgi_from_mcq
+svn+ssh://svn@danse.us/multiphonon
+
+
+
+2007-03-24T04:25:46.327297Z
+22
+max
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+acaf4b23-401c-0410-a99b-c4f7e3680560
+
+foo.perl
+file
+
+
+
+
+2007-08-28T01:50:46.000000Z
+8134e0365434654f0b6e66c5173c6bba
+2007-03-24T04:25:46.327297Z
+22
+max
+
+foo.html
+file
+
+
+
+
+2007-08-28T01:50:46.000000Z
+7424439eff2988286f16fd0074e43a73
+2007-03-24T04:25:46.327297Z
+22
+max
+
