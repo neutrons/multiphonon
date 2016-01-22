@@ -1,0 +1,45 @@
+def get_q_e_sqe_sqerr(filename,nqsteps):
+    # LOAD MANTID STUFF
+    import sys
+    sys.path.append('/opt/mantid/bin')
+    from mantid.simpleapi import *
+    from numpy import *
+    
+    #load data from nxspe file
+    w=Load(filename)
+    print filename
+   
+    md=ConvertToMD(w,QDimensions='|Q|',dEAnalysisMode='Direct')
+    qdim=md.getDimension(0)
+    qmin=qdim.getMinimum()
+    qmax=qdim.getMaximum()
+   
+    emin=w.readX(0)[0]
+    emax=w.readX(0)[-1]   
+    nesteps=w.blocksize()
+
+    #need to add code here to test that the ebins will span zero equally,
+    #reset to enforce for BinMD if not.
+    
+
+    #ad0 and ad1 are inputs to the BinMD command.  Because, of course you need
+    #strings for command line arguments which are all numeric.
+    ad0='|Q|,'+str(qmin)+','+str(qmax)+','+str(nqsteps)
+    ad1='DeltaE,'+str(emin)+','+str(emax)+','+str(nesteps)
+
+    mdh=BinMD(md,AlignedDim0=ad0,AlignedDim1=ad1)
+    data=mdh.getSignalArray()
+    err2=mdh.getErrorSquaredArray()
+    npts=mdh.getNumEventsArray()
+    sqe=data/npts
+    err2=err2/npts
+    sqerr=sqrt(err2)
+    
+    qstep=(qmax-qmin)/nqsteps
+    qarray=arange(qmin+qstep*0.5,qmax,qstep)
+    estep=w.readX(0)[1]-w.readX(0)[0]
+
+
+    earray=arange(emin+estep*0.5,emax,estep)
+    return qarray,earray,sqe,sqerr
+    
