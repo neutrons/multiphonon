@@ -325,8 +325,4 @@ m_n   =   1.6749272e-27   # kg
 
 import numpy as np, math
 
-
-# version
-__id__ = "$Id$"
-
 # End of file 

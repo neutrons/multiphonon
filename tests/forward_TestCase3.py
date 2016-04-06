@@ -1,19 +1,8 @@
 #!/usr/bin/env python
 #
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#
-#                                   Jiao Lin
-#                      California Institute of Technology
-#                        (C) 2007 All Rights Reserved  
-#
-# {LicenseText}
-#
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#
 
 
 skip = True
-
 
 import unittestX as unittest
 import journal
@@ -77,27 +66,6 @@ def readdos():
     return dos
 
 
-def pysuite():
-    suite1 = unittest.makeSuite(TestCase)
-    return unittest.TestSuite( (suite1,) )
-
-
-def main():
-    #debug.activate()
-    #journal.debug('phonon_coherent_inelastic_polyxtal_kernel').activate()
-    #journal.debug('random').activate()
-    pytests = pysuite()
-    alltests = unittest.TestSuite( (pytests, ) )
-    res = unittest.TextTestRunner(verbosity=2).run(alltests)
-    import sys; sys.exit(not res.wasSuccessful())
-
+if __name__ == "__main__": unittest.main()
     
-    
-if __name__ == "__main__":
-    unittest.main()
-    #  main()
-    
-# version
-__id__ = "$Id: dispersion_TestCase.py 1126 2011-04-10 03:05:40Z linjiao $"
-
 # End of file 

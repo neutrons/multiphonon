@@ -1,27 +1,11 @@
 #!/usr/bin/env python
 #
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#
-#                                   Jiao Lin
-#                      California Institute of Technology
-#                        (C) 2007 All Rights Reserved  
-#
-# {LicenseText}
-#
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#
 
 
 interactive = False
 
 
-import unittestX as unittest
-import journal
-
-#debug = journal.debug( "TestCase" )
-#warning = journal.warning( "TestCase" )
-
-
+import unittest
 import numpy
 
 
@@ -29,18 +13,15 @@ class TestCase(unittest.TestCase):
 
 
     def test1(self):
-        "mccomponents.sample.phonon.multiphonon.computeAnESet"
+        "multiphonon.forward.computeAnESet"
         from dos import loadDOS
-        dos = loadDOS()
-        E = dos.energy
+        E, g = loadDOS()
         dE = E[1] - E[0]
-        g = dos.I
         # expand E a bit
         E = numpy.arange(E[0], 70, dE)
         g = numpy.concatenate((g, numpy.zeros(len(E)-len(g))))
-
         g/=g.sum()*dE
-        from mccomponents.sample.phonon.multiphonon import computeAnESet
+        from multiphonon.forward import computeAnESet
         kelvin2mev = 0.0862
         beta = 1./(300*kelvin2mev)
         E, An_set = computeAnESet(N=5, E=E, g=g, beta=beta, dE=dE)
@@ -53,8 +34,8 @@ class TestCase(unittest.TestCase):
         return
         
         
-    def test2(self):
-        "mccomponents.sample.phonon.multiphonon.computeSQESet"
+    def _test2(self):
+        "multiphonon.forward.computeSQESet"
         from dos import loadDOS
         dos = loadDOS()
         E = dos.energy; g = dos.I
@@ -73,7 +54,7 @@ class TestCase(unittest.TestCase):
 
         M = 50.
         
-        from mccomponents.sample.phonon.multiphonon import computeSQESet
+        from multiphonon.forward import computeSQESet
         Q, E, S_set= computeSQESet(5, Q, dQ, E, dE, M, g, beta)
 
         import histogram as H, histogram.hdf as hh
@@ -89,14 +70,14 @@ class TestCase(unittest.TestCase):
         return
         
 
-    def test3(self):
-        "mccomponents.sample.phonon.multiphonon.sqe"
+    def _test3(self):
+        "multiphonon.forward.sqe"
         from dos import loadDOS
         dos = loadDOS()
         assert dos.__class__.__name__ == 'Histogram', "%s is not a histogram" % (dos,)
         E = dos.energy
         g = dos.I
-        from mccomponents.sample.phonon.multiphonon import sqe
+        from multiphonon.forward import sqe
         Q, E, S = sqe(E,g, N=4)
         saveSQE(Q,E,S, 'S_2..5')
         return
@@ -116,28 +97,8 @@ def saveSQE(Q, E, S, name):
     return
 
 
-def pysuite():
-    suite1 = unittest.makeSuite(TestCase)
-    return unittest.TestSuite( (suite1,) )
-
-
-def main():
-    #debug.activate()
-    #journal.debug('phonon_coherent_inelastic_polyxtal_kernel').activate()
-    #journal.debug('random').activate()
-    pytests = pysuite()
-    alltests = unittest.TestSuite( (pytests, ) )
-    res = unittest.TextTestRunner(verbosity=2).run(alltests)
-    import sys; sys.exit(not res.wasSuccessful())
-
-    
-    
 if __name__ == "__main__":
     interactive = True
     unittest.main()
-    #  main()
     
-# version
-__id__ = "$Id: dispersion_TestCase.py 1126 2011-04-10 03:05:40Z linjiao $"
-
 # End of file 
