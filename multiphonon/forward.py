@@ -46,8 +46,8 @@ def sqe(
     g/=int_g
     # Q axis
     if Qmax is None:
-        from mcni.utils import conversion
-        Qmax = conversion.e2k(emax) * 3
+        from units import neutron as nunits
+        Qmax = nunits.e2k(emax) * 3
     if dQ is None:
         dQ = (Qmax-Qmin)/200
     Q = np.arange(Qmin, Qmax, dQ)

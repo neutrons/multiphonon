@@ -8,3 +8,4 @@ def _hertz2meV():
     return hbar * hertz / meV
 
 hertz2mev = _hertz2meV()
+

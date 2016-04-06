@@ -52,7 +52,7 @@ def fromascii(datapath, x_unit=None):
     # unit conversion
     if x_unit == 'meV': pass
     elif x_unit == 'TeraHz': 
-        from ..units import hertz2mev
+        from ..units.phonon import hertz2mev
         from math import pi
         E *= 2*pi*1e12 * hertz2mev
     else:

@@ -34,11 +34,10 @@ class TestCase(unittest.TestCase):
         return
         
         
-    def _test2(self):
+    def test2(self):
         "multiphonon.forward.computeSQESet"
         from dos import loadDOS
-        dos = loadDOS()
-        E = dos.energy; g = dos.I
+        E,g = loadDOS()
         # expand E a bit
         dE = E[1] - E[0]
         E = numpy.arange(E[0], 70, dE)
@@ -70,13 +69,10 @@ class TestCase(unittest.TestCase):
         return
         
 
-    def _test3(self):
+    def test3(self):
         "multiphonon.forward.sqe"
         from dos import loadDOS
-        dos = loadDOS()
-        assert dos.__class__.__name__ == 'Histogram', "%s is not a histogram" % (dos,)
-        E = dos.energy
-        g = dos.I
+        E,g = loadDOS()
         from multiphonon.forward import sqe
         Q, E, S = sqe(E,g, N=4)
         saveSQE(Q,E,S, 'S_2..5')
