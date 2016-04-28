@@ -16,7 +16,7 @@ class TestCase(unittest.TestCase):
 
     def test1(self):
         S = hh.load("V-S1.h5")
-        E, g = sqe2dos(S, T=300, Ecutoff=55., M=50.94)
+        E, g = sqe2dos(S, T=300, Ecutoff=55., elastic_E_cutoff=0., M=50.94)
         # compare to the original dos data
         E1, g1 = loadDOS()
         ginterp = np.interp(E1, E, g)
