@@ -18,6 +18,13 @@ def sqe2dos(sqe, T, Ecutoff, M):
     T: temperature (kelvin)
     Ecutoff: beyond this DOS must be zero
     M: atomic mass
+
+    The basic procedure is
+    * construct an initial guess of DOS
+    * use this DOS to compute 1-phonon SQE
+    * for both exp and sim SQE, integrate along Q to obtain S(E)
+    * scale the initial guess DOS by the S(E) ratio
+    * optionally we can do this again
     """ 
     Efull = sqe.E
     dE = sqe.E[1] - sqe.E[0]
