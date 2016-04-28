@@ -3,6 +3,10 @@
 
 
 skip = True
+interactive = False
+
+import sys, os
+sys.path.insert(0, os.path.abspath("../data"))
 
 import unittest
 import numpy
@@ -24,11 +28,12 @@ class TestCase(unittest.TestCase):
         kelvin2mev = 0.0862
         beta = 1./(5*kelvin2mev)
         E, An_set = computeAnESet(N=10, E=E, g=g, beta=beta, dE=dE)
-        import pylab
-        for An in An_set:
-            pylab.plot(E, An)
-            continue
-        pylab.show()
+        if interactive:
+            import pylab
+            for An in An_set:
+                pylab.plot(E, An)
+                continue
+            pylab.show()
         return
         
         
@@ -42,19 +47,25 @@ class TestCase(unittest.TestCase):
         from histogram import plot, histogram
         axes = [('Q', q, 'angstrom**-1'), ('E', e, 'meV')]
         iqe = histogram('iqe', axes, i)
-        plot(iqe)
+        if interactive:
+            plot(iqe)
         return
         
     pass  # end of TestCase
 
 
 def readdos():
-    datapath = 'UN-N-dos.dat'
+    datapath = os.path.join(
+        os.path.dirname(__file__), 'data/UN-N-dos.dat'
+        )
     from multiphonon.dos import io
     E, Z, error = io.fromascii(datapath)
     return E,Z
 
 
-if __name__ == "__main__": unittest.main()
+if __name__ == "__main__":
+    global interactive
+    interactive = True
+    unittest.main()
     
 # End of file 

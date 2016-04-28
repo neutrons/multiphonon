@@ -4,6 +4,8 @@
 
 interactive = False
 
+import os
+datadir = os.path.join(os.path.dirname(__file__), "../data")
 
 import unittest
 import numpy as np, histogram.hdf as hh
@@ -15,7 +17,7 @@ class TestCase(unittest.TestCase):
 
     def test1(self):
         "multiphonon.sqe.interp"
-        sqe = hh.load("../V-iqe.h5")
+        sqe = hh.load(os.path.join(datadir, "V-iqe.h5"))
         newsqe = interp(sqe, newE=np.arange(-50, 50, 1.))
         hh.dump(newsqe, "V-iqe-interpd.h5")
         return

@@ -4,6 +4,9 @@
 
 interactive = False
 
+import sys, os
+datadir = os.path.join(os.path.dirname(__file__), "../data")
+sys.path.insert(0, datadir)
 
 import unittest
 import numpy as np, histogram.hdf as hh
@@ -15,7 +18,7 @@ class TestCase(unittest.TestCase):
 
 
     def test1(self):
-        S = hh.load("V-S1.h5")
+        S = hh.load(os.path.join(datadir, "V-S1.h5"))
         E, g = sqe2dos(S, T=300, Ecutoff=55., elastic_E_cutoff=0., M=50.94)
         # compare to the original dos data
         E1, g1 = loadDOS()
@@ -31,7 +34,7 @@ class TestCase(unittest.TestCase):
         
         
     def test2(self):
-        iqehist = hh.load("../V-iqe.h5")
+        iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
         from multiphonon.sqe import interp
         newiqe = interp(iqehist, newE = np.arange(-50, 50, 1.))
         E, g = sqe2dos(newiqe, T=300, Ecutoff=65., elastic_E_cutoff=6.7, M=50.94)
