@@ -53,7 +53,6 @@ def sqe(
     Q = np.arange(Qmin, Qmax, dQ)
     
     # beta
-    kelvin2mev = 0.0862
     beta = 1./(T*kelvin2mev)
     
     # compute S
@@ -321,6 +320,9 @@ h     =   6.6260688e-34   # kg m^2 / s
 h_b   =   1.0545716e-34   # kg m^2 / s
 k_b   =   1.3806503e-23   # kg m^2 / K s^2
 m_n   =   1.6749272e-27   # kg
+
+
+kelvin2mev = 0.0862
 
 
 import numpy as np, math
