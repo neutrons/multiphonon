@@ -45,7 +45,9 @@ def sqe2dos(sqe, T, Ecutoff, M):
     expse = sqe[(), (-dE/2, None)].I.sum(0)
     simse = simsqe[:, -expse.shape[-1]:].sum(0)
     dos = initdos * (expse/simse)
-    return dos
+    dos[dos!=dos] = 0
+    dos /= dos.sum()*dE
+    return Eplus, dos
 
 
 def guess_init_dos(E, cutoff):
