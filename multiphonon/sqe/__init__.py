@@ -31,17 +31,20 @@ def interp(iqehist, newE):
     ]
     #
     iqehist.I[mask] = 0
+    iqehist.E2[mask] = 0
     Q = iqehist.Q
     f = interpolate.interp2d(E, Q, iqehist.I, kind='linear')
+    E2f = interpolate.interp2d(E, Q, iqehist.E2, kind='linear')
     dE = E[1] - E[0]
     Emin = E[0]//dE * dE
     Emax = E[-1]//dE * dE
     Enew = np.arange(Emin, Emax+dE/2, dE)
-    newS = f(Enew, iqehist.Q)
+    newS = f(Enew, Q)
+    newE2 = E2f(Enew, Q)
     # create new histogram
     Eaxis = H.axis("E", Enew, unit='meV')
     Qaxis = H.axis("Q", Q, unit='1./angstrom')
-    newHist = H.histogram("IQE", [Qaxis, Eaxis], data=newS)
+    newHist = H.histogram("IQE", [Qaxis, Eaxis], data=newS, errors=newE2)
     #
     for Erange, q in zip(Eranges, Q):
         Emin, Emax = Erange
@@ -49,6 +52,8 @@ def interp(iqehist, newE):
         Emax = min(Emax, Enew[-1])
         newHist[q, (None, Emin)].I[:] = np.nan
         newHist[q, (Emax, None)].I[:] = np.nan
+        newHist[q, (None, Emin)].E2[:] = np.nan
+        newHist[q, (Emax, None)].E2[:] = np.nan
         continue
     return newHist
 
