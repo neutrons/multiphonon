@@ -89,5 +89,8 @@ def guess_init_dos(E, cutoff):
     norm = np.sum(dos) * dE
     return dos / norm
 
+# alias
+onephonon = onephononsqe2dos
+
 
 # End of file 
