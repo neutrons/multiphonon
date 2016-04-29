@@ -21,6 +21,7 @@ VS2E = mN/(2e-3*e)
 #VS2E = 5.227e-6	   #/* Convert (v[m/s])**2 to E[meV] */
 RV2W = 2*PI*K2V            # Converts reverse v[m/s] to wavelength[AA]; w = RV2W*1/v
 #RV2W = 3.95664E+3
+SE2K = SE2V * V2K
 
 def v2k(vel):
     return V2K * vel
