@@ -4,7 +4,7 @@
 
 import numpy as np, histogram as H
 
-def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M):
+def onephononsqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M):
     """ 
     Given a one-phonon sqe, compute dos
 
