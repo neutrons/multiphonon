@@ -18,7 +18,7 @@ class TestCase(unittest.TestCase):
     def test1(self):
         "multiphonon.sqe.interp"
         sqe = hh.load(os.path.join(datadir, "V-iqe.h5"))
-        newsqe = interp(sqe, newE=np.arange(-50, 50, 1.))
+        newsqe = interp(sqe, newE=np.arange(-70, 70, 1.))
         hh.dump(newsqe, "V-iqe-interpd.h5")
         return
         

@@ -41,22 +41,24 @@ def interp(iqehist, newE):
     dE = E[1] - E[0]
     Emin = E[0]//dE * dE
     Emax = E[-1]//dE * dE
-    Enew = np.arange(Emin, Emax+dE/2, dE)
-    newS = f(Enew, Q)
-    newE2 = E2f(Enew, Q)
+    # Enew = np.arange(Emin, Emax+dE/2, dE)
+    newS = f(newE, Q)
+    newS_E2 = E2f(newE, Q)
     # create new histogram
-    Eaxis = H.axis("E", Enew, unit='meV')
+    Eaxis = H.axis("E", newE, unit='meV')
     Qaxis = H.axis("Q", Q, unit='1./angstrom')
-    newHist = H.histogram("IQE", [Qaxis, Eaxis], data=newS, errors=newE2)
+    newHist = H.histogram("IQE", [Qaxis, Eaxis], data=newS, errors=newS_E2)
     #
     for Erange, q in zip(Eranges, Q):
         Emin, Emax = Erange
-        Emin = max(Emin, Enew[0])
-        Emax = min(Emax, Enew[-1])
-        newHist[q, (None, Emin)].I[:] = np.nan
-        newHist[q, (Emax, None)].I[:] = np.nan
-        newHist[q, (None, Emin)].E2[:] = np.nan
-        newHist[q, (Emax, None)].E2[:] = np.nan
+        if Emin > newE[0]:
+            Emin = min(Emin, newE[-1])
+            newHist[q, (None, Emin)].I[:] = np.nan
+            newHist[q, (None, Emin)].E2[:] = np.nan
+        if Emax < newE[-1]:
+            Emax = max(Emax, newE[0])
+            newHist[q, (Emax, None)].I[:] = np.nan
+            newHist[q, (Emax, None)].E2[:] = np.nan
         continue
     return newHist
 
