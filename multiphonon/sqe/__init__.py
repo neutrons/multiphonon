@@ -24,7 +24,10 @@ def interp(iqehist, newE):
         get_boundary_indexes(row)
         for row in np.logical_not(mask)
     ]
-    E = iqehist.energy
+    try:
+        E = iqehist.energy
+    except:
+        E = iqehist.E
     Eranges = [ 
         (E[ind1], E[ind2])
         for ind1, ind2 in boundary_indexes
@@ -56,6 +59,28 @@ def interp(iqehist, newE):
         newHist[q, (Emax, None)].E2[:] = np.nan
         continue
     return newHist
+
+
+
+def dynamical_range_mask(sqe, Ei):
+    """calculate a mask of dynamical range being measured
+    at the given incident energy.
+    0 means within dynamical range
+    """
+    Q = sqe.Q
+    E = sqe.E
+    Ef = Ei - E
+    from ..units.neutron import e2k, SE2K
+    ki = e2k(Ei)
+    kf = Ef ** .5 * SE2K
+    import numpy as np
+    kf = np.tile(kf, Q.size)
+    kf.shape = Q.size, -1
+    Q2d = np.repeat(Q, E.size)
+    Q2d.shape = Q.size, -1
+    mask = np.zeros(sqe.I.shape, dtype="bool")
+    mask = (ki+kf > Q2d) * (ki+Q2d > kf) * (kf+Q2d > ki)
+    return np.logical_not(mask)
 
 
 # End of file 
