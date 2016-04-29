@@ -2,7 +2,71 @@
 #
 # Jiao Lin <jiao.lin@gmail.com>
 
-import numpy as np, histogram as H
+import numpy as np, histogram as H, histogram.hdf as hh
+
+
+def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, C_ms=None, Ei=None):
+    """Given a SQE, compute DOS
+    * Start with a initial guess of DOS and a SQE
+    * Calculate SQE of multiphonon scattering
+    * Calculate SQE of multiple scattering using C_ms and multiphonon scattering SQE
+    * Subtract MS and MP SQE from the experimental SQE to obtain single-phonon SQE
+    * Compute a new DOS from the single-phonon SQE
+    * Compare the new DOS to the previous one and calculate the difference
+    * If difference is large, continue the iteration. Otherwise the new DOS is what we want
+    """
+    Q, E = sqe.Q, sqe.E
+    dQ = Q[1]-Q[0]; Qmin = Q[0]; Qmax=Q[-1] + dQ/2.
+    dE = E[1]-E[0]; Efirst = E[0]; Elast=E[-1]
+
+    corrected_sqe = sqe
+    for i in range(5):
+        dos = onephonon(corrected_sqe, T, Ecutoff, elastic_E_cutoff, M)
+        yield dos
+
+        # normalize exp SQE
+        from ..forward import kelvin2mev
+        beta = 1./(T*kelvin2mev)
+        sqe = normalizeExpSQE(sqe, dos, M, beta, elastic_E_cutoff)
+
+        from .. import forward
+        Q,E,S = forward.sqe(
+            dos.E, dos.I, 
+            Qmin=Qmin, Qmax=Qmax, dQ=dQ,
+            starting_order=2, N=4
+        )
+        Qaxis = H.axis('Q', Q, '1./angstrom')
+        Eaxis = H.axis('E', E, 'meV')
+        mpsqe = H.histogram("MP SQE", [Qaxis, Eaxis], S)
+        from .. import ms
+        mssqe = ms.sqe(mpsqe, Ei)
+        sqe_correction = mpsqe + mssqe * (C_ms,0)
+        sqe_correction = sqe_correction[(), (Efirst, Elast)]
+        hh.dump(sqe, 'sqe.h5')
+        hh.dump(sqe_correction, 'sqe_correction.h5')
+        corrected_sqe = sqe + sqe_correction * (-1., 0)
+    return
+
+
+def normalizeExpSQE(sqe, dos, M, beta, elastic_E_cutoff):
+    # integration of S(E) should be 1-exp(-2W) for every Q
+    from .. import forward
+    Q = sqe.Q
+    E = dos.E; g = dos.I; dE = E[1] - E[0]
+    DW2 = forward.DWExp(Q, M, E,g, beta, dE)
+    DW = np.exp(-DW2)
+    integration = 1 - DW
+    sqe2 = sqe.copy()
+    sqe2 = sqe2[(), (elastic_E_cutoff, None)]
+    I = sqe2.I
+    I[I!=I] = 0
+    ps = I.sum(1) * dE
+    norm_factors = integration/ps
+    norm = np.median(norm_factors)
+    sqe.I *= norm
+    sqe.E2 *= norm*norm
+    return sqe
+    
 
 def onephononsqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M):
     """ 

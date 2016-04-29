@@ -46,11 +46,32 @@ class TestCase(unittest.TestCase):
         return
         
         
+    def test2a(self):
+        iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
+        from multiphonon.sqe import interp
+        newiqe = interp(iqehist, newE = np.arange(-55, 80, 1.))
+        iterdos = sqe2dos.sqe2dos(
+            newiqe, T=300, Ecutoff=65., elastic_E_cutoff=6.7, M=50.94,
+            C_ms=0.4, Ei=120.)
+        for i, dos in enumerate(iterdos):
+            print dos
+            # plot
+            if interactive:
+                print '*' * 70
+                pylab.plot(dos.E, dos.I, label='%d' % i)
+        if interactive:
+            pylab.legend()
+            pylab.show()
+        return
+        
+        
     pass  # end of TestCase
 
 
 if __name__ == "__main__":
+    global interactive
     interactive = True
+    import pylab
     unittest.main()
     
 # End of file 
