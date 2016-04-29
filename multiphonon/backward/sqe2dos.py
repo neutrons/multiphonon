@@ -2,7 +2,7 @@
 #
 # Jiao Lin <jiao.lin@gmail.com>
 
-import numpy as np
+import numpy as np, histogram as H
 
 def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M):
     """ 
@@ -48,9 +48,12 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M):
     # - experiment
     # -- only need the positive part
     expsqe_Epositive = sqe[(), (-dE/2, None)].I
+    expsqeE2_Epositive = sqe[(), (-dE/2, None)].E2
     mask = expsqe_Epositive != expsqe_Epositive
     expsqe_Epositive[mask] = 0
+    expsqeE2_Epositive[mask] = 0
     expse = expsqe_Epositive.sum(0)
+    expse_E2 = expsqeE2_Epositive.sum(0)
     # - simulation
     simsqe = sqeset[0]
     simsqe_Epositive = simsqe[:, -expse.shape[-1]:]
@@ -58,6 +61,7 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M):
     simse = simsqe_Epositive.sum(0)
     # apply scale factor to dos
     dos = initdos * (expse/simse)
+    dos_relative_error = expse_E2**.5 / expse
     # clean up bad values
     dos[dos!=dos] = 0
     # clean up data near elastic line
@@ -65,7 +69,10 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M):
     dos[:n_small_E] = Eplus[:n_small_E] ** 2 * dos[n_small_E] / Eplus[n_small_E]**2
     # normalize
     dos /= dos.sum()*dE
-    return Eplus, dos
+    dos_error = dos * dos_relative_error
+    Eaxis = H.axis("E", Eplus, 'meV')
+    h = H.histogram("DOS", [Eaxis], data=dos, errors=dos_error**2)
+    return h
 
 
 def guess_init_dos(E, cutoff):
