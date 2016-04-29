@@ -4,7 +4,7 @@
 
 
 """
-compute S(Q,E) from phonon DOS
+compute one-phonon and multi-phonon S(Q,E) from phonon DOS
 
 We follow the formulas in section
 "Calculation of Multiphonon Scattering"
