@@ -2,10 +2,13 @@
 #
 # Jiao Lin <jiao.lin@gmail.com>
 
-import numpy as np, histogram as H, histogram.hdf as hh
+import numpy as np, histogram as H, histogram.hdf as hh, os
 
 
-def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, C_ms=None, Ei=None):
+def sqe2dos(
+        sqe, T, Ecutoff, elastic_E_cutoff, M, C_ms=None, Ei=None,
+        workdir = 'work',
+        ):
     """Given a SQE, compute DOS
     * Start with a initial guess of DOS and a SQE
     * Calculate SQE of multiphonon scattering
@@ -20,15 +23,18 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, C_ms=None, Ei=None):
     dE = E[1]-E[0]; Efirst = E[0]; Elast=E[-1]
 
     corrected_sqe = sqe
-    for i in range(5):
+    for roundno in range(5):
+        # compute dos
         dos = onephonon(corrected_sqe, T, Ecutoff, elastic_E_cutoff, M)
         yield dos
-
+        # should compare to previous round and break 
+        # if change is little
+        # ...
         # normalize exp SQE
         from ..forward import kelvin2mev
         beta = 1./(T*kelvin2mev)
         sqe = normalizeExpSQE(sqe, dos, M, beta, elastic_E_cutoff)
-
+        # compute MP sqe
         from .. import forward
         Q,E,S = forward.sqe(
             dos.E, dos.I, 
@@ -37,14 +43,30 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, C_ms=None, Ei=None):
         )
         Qaxis = H.axis('Q', Q, '1./angstrom')
         Eaxis = H.axis('E', E, 'meV')
-        mpsqe = H.histogram("MP SQE", [Qaxis, Eaxis], S)
+        mpsqe = H.histogram("MP SQE", [Qaxis, Eaxis], S)[(), (Efirst, Elast)]
+        # compute MS sqe
         from .. import ms
         mssqe = ms.sqe(mpsqe, Ei)
+        # compute SQE correction
         sqe_correction = mpsqe + mssqe * (C_ms,0)
-        sqe_correction = sqe_correction[(), (Efirst, Elast)]
-        hh.dump(sqe, 'sqe.h5')
-        hh.dump(sqe_correction, 'sqe_correction.h5')
+        # sqe_correction = sqe_correction[(), (Efirst, Elast)]
+        # compute corrected SQE
         corrected_sqe = sqe + sqe_correction * (-1., 0)
+        # save intermediate results
+        cwd = os.path.join(workdir, "round-%d" % roundno)
+        if not os.path.exists(cwd):
+            os.makedirs(cwd)
+        hh.dump(sqe, os.path.join(cwd, 'exp-sqe.h5'))
+        hh.dump(mpsqe, os.path.join(cwd, 'mp-sqe.h5'))
+        hh.dump(mssqe, os.path.join(cwd, 'ms-sqe.h5'))
+        hh.dump(sqe_correction, os.path.join(cwd, 'sqe_correction.h5'))
+        hh.dump(corrected_sqe, os.path.join(cwd, 'corrected_sqe.h5'))
+        plot_script = os.path.join(cwd, "plot.py")
+        open(plot_script, 'wt').write(plot_intermediate_result_code)
+        import stat
+        st = os.stat(plot_script)
+        os.chmod(plot_script, st.st_mode | stat.S_IEXEC)
+        continue
     return
 
 
@@ -155,6 +177,44 @@ def guess_init_dos(E, cutoff):
 
 # alias
 onephonon = onephononsqe2dos
+
+
+plot_intermediate_result_code = """#!/usr/bin/env python
+
+import histogram.hdf as hh
+
+import matplotlib.pyplot as plt, matplotlib as mpl, numpy as np
+mpl.rcParams['figure.figsize'] = 12,9
+
+plots = \"\"\"
+exp exp-sqe.h5
+multiphonon mp-sqe.h5
+multiple-scattering ms-sqe.h5
+correction sqe_correction.h5
+corrected corrected_sqe.h5
+\"\"\"
+plots = plots.strip().splitlines()
+plots = [p.split() for p in plots]
+
+Imax = np.nanmax(hh.load("exp-sqe.h5").I)
+zmin = -Imax/100
+zmax = Imax/30
+
+for index, (title, fn) in enumerate(plots):
+    plt.subplot(3, 2, index+1)
+    sqe = hh.load(fn)
+    Q = sqe.Q
+    E = sqe.E
+    Y, X = np.meshgrid(E, Q)
+    Z = sqe.I
+    plt.pcolormesh(X, Y, Z, vmin=zmin, vmax=zmax)
+    plt.colorbar()
+    plt.title(title)
+    continue
+
+plt.tight_layout()
+plt.show()
+"""
 
 
 # End of file 
