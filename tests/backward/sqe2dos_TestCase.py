@@ -19,7 +19,7 @@ class TestCase(unittest.TestCase):
 
     def test1a(self):
         S = hh.load(os.path.join(datadir, "V-S1.h5"))
-        DOS = sqe2dos.onephonon(S, T=300, Ecutoff=55., elastic_E_cutoff=0., M=50.94)
+        DOS = sqe2dos.onephonon(S, T=300, Ecutoff=55., elastic_E_cutoff=(0.,0.), M=50.94)
         E = DOS.E
         g = DOS.I
         # compare to the original dos data
@@ -39,7 +39,7 @@ class TestCase(unittest.TestCase):
         iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
         from multiphonon.sqe import interp
         newiqe = interp(iqehist, newE = np.arange(-50, 50, 1.))
-        DOS = sqe2dos.onephonon(newiqe, T=300, Ecutoff=65., elastic_E_cutoff=6.7, M=50.94)
+        DOS = sqe2dos.onephonon(newiqe, T=300, Ecutoff=65., elastic_E_cutoff=(-20., 6.7), M=50.94)
         # plot
         if interactive:
             H.plot(DOS)
@@ -52,7 +52,7 @@ class TestCase(unittest.TestCase):
         newiqe = interp(iqehist, newE = np.arange(-55, 80, 1.))
         hh.dump(newiqe, 'V-iqe-interped.h5')
         iterdos = sqe2dos.sqe2dos(
-            newiqe, T=300, Ecutoff=65., elastic_E_cutoff=6.7, M=50.94,
+            newiqe, T=300, Ecutoff=65., elastic_E_cutoff=(-20., 6.7), M=50.94,
             C_ms=0.1, Ei=120.)
         for i, dos in enumerate(iterdos):
             print dos

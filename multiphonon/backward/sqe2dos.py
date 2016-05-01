@@ -98,19 +98,40 @@ def sqe2dos(
     return
 
 
+def removeElasticPeak(sqe, elastic_E_cutoff):
+    negEcut, posEcut = elastic_E_cutoff
+    E = sqe.E; dE = E[1]-E[0]
+    left = sqe[(), (None, negEcut-dE)]
+    leftindex = left.I.shape[1]
+    right = sqe[(), (posEcut+dE, None)]
+    rightindex = sqe.I.shape[1] - right.I.shape[1]
+    leftIs = sqe.I[:, leftindex]
+    rightIs = sqe.I[:, rightindex]
+    dI = rightIs - leftIs
+    increments = np.arange(0, 1., 1./(rightindex-leftindex))
+    increments = np.tile(increments, sqe.Q.size)
+    increments.shape = sqe.Q.size, -1
+    increments *= dI[:, np.newaxis]
+    linear_interp_I = leftIs[:, np.newaxis] + increments
+    sqe[(), elastic_E_cutoff].I[:] = linear_interp_I
+    return sqe                                                        
+
+
 def normalizeExpSQE(sqe, dos, M, beta, elastic_E_cutoff):
     # integration of S(E) should be 1-exp(-2W) for every Q
+    # the idea here is to for each Q, we calculate 
+    # a normalization factor, and then take the median of
+    # all normalization factors.
+    sqe1 = removeElasticPeak(sqe.copy(), elastic_E_cutoff)
     from .. import forward
-    Q = sqe.Q
+    Q = sqe1.Q
     E = dos.E; g = dos.I; dE = E[1] - E[0]
     DW2 = forward.DWExp(Q, M, E,g, beta, dE)
     DW = np.exp(-DW2)
     integration = 1 - DW
-    sqe2positive = sqe.copy()[(), (elastic_E_cutoff, None)]
-    sqe2negative = sqe.copy()[(), (None, -elastic_E_cutoff)]
-    Ipos = sqe2positive.I; Ipos[Ipos!=Ipos] = 0
-    Ineg = sqe2negative.I; Ineg[Ineg!=Ineg] = 0
-    ps = (Ipos.sum(1)+Ineg.sum(1)) * dE
+    I = sqe1.I
+    ps = I.sum(1) * dE
+    # 
     norm_factors = integration/ps
     norm = np.median(norm_factors)
     sqe.I *= norm
@@ -179,7 +200,7 @@ def onephononsqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M):
     # clean up bad values
     dos[dos!=dos] = 0
     # clean up data near elastic line
-    n_small_E = (Eplus<elastic_E_cutoff).sum()
+    n_small_E = (Eplus<elastic_E_cutoff[1]).sum()
     dos[:n_small_E] = Eplus[:n_small_E] ** 2 * dos[n_small_E] / Eplus[n_small_E]**2
     # normalize
     dos /= dos.sum()*dE
