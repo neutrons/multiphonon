@@ -7,7 +7,8 @@ import numpy as np, histogram as H, histogram.hdf as hh, os
 
 def sqe2dos(
         sqe, T, Ecutoff, elastic_E_cutoff, M, C_ms=None, Ei=None,
-        workdir = 'work',
+        workdir = 'work', 
+        MAX_ITERATION = 7
         ):
     """Given a SQE, compute DOS
     * Start with a initial guess of DOS and a SQE
@@ -24,9 +25,10 @@ def sqe2dos(
     mask = sqe.I != sqe.I
     
     corrected_sqe = sqe
-    for roundno in range(5):
+    for roundno in range(MAX_ITERATION):
         # compute dos
-        dos = onephonon(corrected_sqe, T, Ecutoff, elastic_E_cutoff, M)
+        dos = singlephonon_sqe2dos(
+            corrected_sqe, T, Ecutoff, elastic_E_cutoff, M)
         yield dos
         # should compare to previous round and break 
         # if change is little
@@ -34,7 +36,7 @@ def sqe2dos(
         # normalize exp SQE
         from ..forward import kelvin2mev
         beta = 1./(T*kelvin2mev)
-        sqe = normalizeExpSQE(sqe, dos, M, beta, elastic_E_cutoff)
+        sqe = normalizeExpSQE(sqe)
         # compute MP sqe
         from .. import forward
         Q,E,S = forward.sqe(
@@ -66,35 +68,48 @@ def sqe2dos(
                            [(), (Efirst, Elast)]
         # compute residual
         residual_sqe = corrected_sqe + singlephonon_sqe * (-1., 0)
+        # compute all-phonon sqe and ms sqe
+        phonon_ms_sqe = singlephonon_sqe + mpsqe + mssqe
         # save intermediate results
         cwd = os.path.join(workdir, "round-%d" % roundno)
         if not os.path.exists(cwd):
             os.makedirs(cwd)
-        sqe.I[mask] = np.nan
-        hh.dump(sqe, os.path.join(cwd, 'exp-sqe.h5'))
-        mpsqe.I[mask] = np.nan
-        hh.dump(mpsqe, os.path.join(cwd, 'mp-sqe.h5'))
-        mssqe.I[mask] = np.nan
-        hh.dump(mssqe, os.path.join(cwd, 'ms-sqe.h5'))
-        sqe_correction.I[mask] = np.nan
-        hh.dump(sqe_correction, os.path.join(cwd, 'sqe_correction.h5'))
-        corrected_sqe.I[mask] = np.nan
-        hh.dump(corrected_sqe, os.path.join(cwd, 'corrected_sqe.h5'))
-        singlephonon_sqe.I[mask] = np.nan
-        hh.dump(singlephonon_sqe, os.path.join(cwd, 'sp-sqe.h5'))
-        residual_sqe.I[mask] = np.nan
-        hh.dump(residual_sqe, os.path.join(cwd, 'residual-sqe.h5'))
-        plot_sqe_script = os.path.join(cwd, "plot_sqe.py")
-        open(plot_sqe_script, 'wt').write(plot_intermediate_result_sqe_code)
-        plot_se_script = os.path.join(cwd, "plot_se.py")
-        open(plot_se_script, 'wt').write(plot_intermediate_result_se_code)
-        scripts = [plot_sqe_script, plot_se_script]
-        import stat
-        for script in scripts:
-            st = os.stat(script)
-            os.chmod(script, st.st_mode | stat.S_IEXEC)
-            continue
+        def savesqe(sqe, fn):
+            sqe.I[mask] = np.nan
+            hh.dump(sqe, os.path.join(cwd, fn))
+            return
+        savesqe(sqe, 'exp-sqe.h5')
+        savesqe(mpsqe, 'mp-sqe.h5')
+        savesqe(mssqe, 'ms-sqe.h5')
+        savesqe(sqe_correction, 'sqe_correction.h5')
+        savesqe(corrected_sqe, 'corrected_sqe.h5')
+        savesqe(singlephonon_sqe, 'sp-sqe.h5')
+        savesqe(residual_sqe, 'residual-sqe.h5')
+        savesqe(phonon_ms_sqe, 'phonon+ms-sqe.h5')
+        # save DOS
+        hh.dump(dos, os.path.join(cwd, 'dos.h5'))
+        # write scripts
+        create_script(
+            os.path.join(cwd, "plot_sqe.py"),
+            plot_intermediate_result_sqe_code
+        )
+        create_script(
+            os.path.join(cwd, "plot_se.py"),
+            plot_intermediate_result_se_code
+        )
         continue
+    create_script(
+        os.path.join(workdir, 'plot_dos.py'),
+        plot_dos_code % dict(total_rounds=MAX_ITERATION)
+    )
+    return
+
+
+def create_script(fn, content):
+    open(fn, 'wt').write(content)
+    import stat
+    st = os.stat(fn)
+    os.chmod(fn, st.st_mode | stat.S_IEXEC)
     return
 
 
@@ -117,14 +132,37 @@ def removeElasticPeak(sqe, elastic_E_cutoff):
     return sqe                                                        
 
 
-def normalizeExpSQE(sqe, dos, M, beta, elastic_E_cutoff):
-    # integration of S(E) should be 1-exp(-2W) for every Q
+def normalizeExpSQE(sqe):
+    # integration of S(E) should be 1 for every Q
+    # the idea here is to for each Q, we calculate 
+    # a normalization factor, and then take the median of
+    # all normalization factors.
+    sq = sqe.sum('E')
+    # sq.I should be normalized to 1 for each Q
+    # but since we are not measuring the fulling dynamical
+    # range due to limitation of instrument and Ei
+    # that normalization holds true only at a small
+    # region at low Q, but not too low. 
+    # so we take a front portion of the Q axis
+    # and ignore the very low Q where the dynamical range
+    # is cut off (those are marked by nans)
+    # the 1/3 factor below is kind of arbitrary
+    average_sq = np.nanmean(sq[(None, sq.Q[-1]/3.)].I)
+    norm = 1./average_sq
+    sqe.I *= norm
+    sqe.E2 *= norm*norm
+    return sqe
+    
+
+# this is also OK but not as simple and robust as normalizeExpSQE
+def normalizeExpSQE_inelonly(sqe, dos, M, beta, elastic_E_cutoff):
+    # integration of inelastic S(E) should be 1-exp(-2W) for every Q
     # the idea here is to for each Q, we calculate 
     # a normalization factor, and then take the median of
     # all normalization factors.
     sqe1 = removeElasticPeak(sqe.copy(), elastic_E_cutoff)
     from .. import forward
-    Q = sqe1.Q
+    Q = sqe.Q
     E = dos.E; g = dos.I; dE = E[1] - E[0]
     DW2 = forward.DWExp(Q, M, E,g, beta, dE)
     DW = np.exp(-DW2)
@@ -139,93 +177,8 @@ def normalizeExpSQE(sqe, dos, M, beta, elastic_E_cutoff):
     return sqe
     
 
-def onephononsqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M):
-    """ 
-    Given a one-phonon sqe, compute dos
-
-    sqe:
-      For a simulated sqe, this is easy.
-      For an experimental sqe, the part around elastic line
-      has be masked as NaNs.
-      It is assumed that the E axis is symmetric about
-      zero, and zero is one of the E values (or close to zero).
-
-    T: temperature (kelvin)
-    Ecutoff: beyond this DOS must be zero
-    Elastic_E_cutoff: cutoff energy for removing the elastic line
-    M: atomic mass
-
-    The basic procedure is
-    * construct an initial guess of DOS
-    * use this DOS to compute 1-phonon SQE
-    * for both exp and sim SQE, integrate along Q to obtain S(E)
-    * scale the initial guess DOS by the S(E) ratio
-    * optionally we can do this again
-    """ 
-    # create initial guess of dos
-    Efull = sqe.E
-    dE = sqe.E[1] - sqe.E[0]
-    Eplus = Efull[Efull>-dE/2]
-    assert Eplus[0] < dE/1e6
-    Eplus[0] = 0.
-    initdos = guess_init_dos(Eplus, Ecutoff)
-    # compute sqe from dos
-    from ..forward import computeSQESet, kelvin2mev
-    Q = sqe.Q
-    dQ = Q[1] - Q[0]
-    E = sqe.E
-    dE = E[1] - E[0]
-    beta = 1./(T*kelvin2mev)    
-    Q2, E2, sqeset = computeSQESet(1, Q,dQ, Eplus,dE, M, initdos, beta)
-    length = min(E2.size, E.size)
-    assert np.allclose(E2[-length:], E[-length:])
-    # compute S(E) from SQE
-    # - experiment
-    # -- only need the positive part
-    expsqe_Epositive = sqe[(), (-dE/2, None)].I
-    expsqeE2_Epositive = sqe[(), (-dE/2, None)].E2
-    mask = expsqe_Epositive != expsqe_Epositive
-    expsqe_Epositive[mask] = 0
-    expsqeE2_Epositive[mask] = 0
-    expse = expsqe_Epositive.sum(0)
-    expse_E2 = expsqeE2_Epositive.sum(0)
-    # - simulation
-    simsqe = sqeset[0]
-    simsqe_Epositive = simsqe[:, -expse.shape[-1]:]
-    simsqe_Epositive[mask] = 0
-    simse = simsqe_Epositive.sum(0)
-    # apply scale factor to dos
-    dos = initdos * (expse/simse)
-    dos_relative_error = expse_E2**.5 / expse
-    # clean up bad values
-    dos[dos!=dos] = 0
-    # clean up data near elastic line
-    n_small_E = (Eplus<elastic_E_cutoff[1]).sum()
-    dos[:n_small_E] = Eplus[:n_small_E] ** 2 * dos[n_small_E] / Eplus[n_small_E]**2
-    # normalize
-    dos /= dos.sum()*dE
-    dos_error = dos * dos_relative_error
-    Eaxis = H.axis("E", Eplus, 'meV')
-    h = H.histogram("DOS", [Eaxis], data=dos, errors=dos_error**2)
-    return h
-
-
-def guess_init_dos(E, cutoff):
-    """return an initial DOS
-
-    It is x^2 near E=0, and flat after that, until it reaches
-    maximum E.
-    """
-    dos = np.ones(E.size, dtype=float)
-    dos[E>cutoff] = 0
-    end_of_E2_zone = cutoff/3.
-    dos[E<end_of_E2_zone] = (E*E/end_of_E2_zone/end_of_E2_zone)[E<end_of_E2_zone]
-    dE = E[1] - E[0]
-    norm = np.sum(dos) * dE
-    return dos / norm
-
-# alias
-onephonon = onephononsqe2dos
+# 
+from singlephonon_sqe2dos import sqe2dos as singlephonon_sqe2dos
 
 
 plots_table = """
@@ -235,9 +188,11 @@ multiphonon mp-sqe.h5
 multiple-scattering ms-sqe.h5
 correction sqe_correction.h5
 corrected-single-phonon corrected_sqe.h5
+phonon+ms phonon+ms-sqe.h5
 residual residual-sqe.h5
 """
 
+# script templates
 plot_intermediate_result_sqe_code = """#!/usr/bin/env python
 
 import histogram.hdf as hh
@@ -295,6 +250,23 @@ for index, (title, fn) in enumerate(plots):
 plt.legend()
 plt.show()
 """ % plots_table
+
+plot_dos_code = """#!/usr/bin/env python
+
+import histogram.hdf as hh, os
+
+import matplotlib.pyplot as plt, matplotlib as mpl, numpy as np
+mpl.rcParams['figure.figsize'] = 6,4.5
+
+for round_no in range(%(total_rounds)d): 
+    fn = os.path.join('round-' + str(round_no), 'dos.h5')
+    dos = hh.load(fn)
+    plt.plot(dos.E, dos.I, label=str(round_no))
+    continue
+
+plt.legend()
+plt.show()
+"""
 
 
 # End of file 
