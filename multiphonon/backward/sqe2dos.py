@@ -21,7 +21,8 @@ def sqe2dos(
     Q, E = sqe.Q, sqe.E
     dQ = Q[1]-Q[0]; Qmin = Q[0]; Qmax=Q[-1] + dQ/2.
     dE = E[1]-E[0]; Efirst = E[0]; Elast=E[-1]
-
+    mask = sqe.I != sqe.I
+    
     corrected_sqe = sqe
     for roundno in range(5):
         # compute dos
@@ -47,25 +48,52 @@ def sqe2dos(
         # compute MS sqe
         from .. import ms
         mssqe = ms.sqe(mpsqe, Ei)
+        mssqe.I[:] *= C_ms
         # compute SQE correction
-        sqe_correction = mpsqe + mssqe * (C_ms,0)
+        sqe_correction = mpsqe + mssqe
         # sqe_correction = sqe_correction[(), (Efirst, Elast)]
         # compute corrected SQE
         corrected_sqe = sqe + sqe_correction * (-1., 0)
+        # compute one phonon SQE as well
+        Q1,E1,S1 = forward.sqe(
+            dos.E, dos.I,
+            Qmin=Qmin, Qmax=Qmax, dQ=dQ,
+            starting_order=1, N=1
+        )
+        Q1axis = H.axis('Q', Q1, '1./angstrom')
+        E1axis = H.axis('E', E1, 'meV')
+        singlephonon_sqe = H.histogram("SP SQE", [Q1axis, E1axis], S1)\
+                           [(), (Efirst, Elast)]
+        # compute residual
+        residual_sqe = corrected_sqe + singlephonon_sqe * (-1., 0)
         # save intermediate results
         cwd = os.path.join(workdir, "round-%d" % roundno)
         if not os.path.exists(cwd):
             os.makedirs(cwd)
+        sqe.I[mask] = np.nan
         hh.dump(sqe, os.path.join(cwd, 'exp-sqe.h5'))
+        mpsqe.I[mask] = np.nan
         hh.dump(mpsqe, os.path.join(cwd, 'mp-sqe.h5'))
+        mssqe.I[mask] = np.nan
         hh.dump(mssqe, os.path.join(cwd, 'ms-sqe.h5'))
+        sqe_correction.I[mask] = np.nan
         hh.dump(sqe_correction, os.path.join(cwd, 'sqe_correction.h5'))
+        corrected_sqe.I[mask] = np.nan
         hh.dump(corrected_sqe, os.path.join(cwd, 'corrected_sqe.h5'))
-        plot_script = os.path.join(cwd, "plot.py")
-        open(plot_script, 'wt').write(plot_intermediate_result_code)
+        singlephonon_sqe.I[mask] = np.nan
+        hh.dump(singlephonon_sqe, os.path.join(cwd, 'sp-sqe.h5'))
+        residual_sqe.I[mask] = np.nan
+        hh.dump(residual_sqe, os.path.join(cwd, 'residual-sqe.h5'))
+        plot_sqe_script = os.path.join(cwd, "plot_sqe.py")
+        open(plot_sqe_script, 'wt').write(plot_intermediate_result_sqe_code)
+        plot_se_script = os.path.join(cwd, "plot_se.py")
+        open(plot_se_script, 'wt').write(plot_intermediate_result_se_code)
+        scripts = [plot_sqe_script, plot_se_script]
         import stat
-        st = os.stat(plot_script)
-        os.chmod(plot_script, st.st_mode | stat.S_IEXEC)
+        for script in scripts:
+            st = os.stat(script)
+            os.chmod(script, st.st_mode | stat.S_IEXEC)
+            continue
         continue
     return
 
@@ -78,11 +106,11 @@ def normalizeExpSQE(sqe, dos, M, beta, elastic_E_cutoff):
     DW2 = forward.DWExp(Q, M, E,g, beta, dE)
     DW = np.exp(-DW2)
     integration = 1 - DW
-    sqe2 = sqe.copy()
-    sqe2 = sqe2[(), (elastic_E_cutoff, None)]
-    I = sqe2.I
-    I[I!=I] = 0
-    ps = I.sum(1) * dE
+    sqe2positive = sqe.copy()[(), (elastic_E_cutoff, None)]
+    sqe2negative = sqe.copy()[(), (None, -elastic_E_cutoff)]
+    Ipos = sqe2positive.I; Ipos[Ipos!=Ipos] = 0
+    Ineg = sqe2negative.I; Ineg[Ineg!=Ineg] = 0
+    ps = (Ipos.sum(1)+Ineg.sum(1)) * dE
     norm_factors = integration/ps
     norm = np.median(norm_factors)
     sqe.I *= norm
@@ -179,42 +207,73 @@ def guess_init_dos(E, cutoff):
 onephonon = onephononsqe2dos
 
 
-plot_intermediate_result_code = """#!/usr/bin/env python
+plots_table = """
+exp exp-sqe.h5
+singlephonon sp-sqe.h5
+multiphonon mp-sqe.h5
+multiple-scattering ms-sqe.h5
+correction sqe_correction.h5
+corrected-single-phonon corrected_sqe.h5
+residual residual-sqe.h5
+"""
+
+plot_intermediate_result_sqe_code = """#!/usr/bin/env python
 
 import histogram.hdf as hh
 
 import matplotlib.pyplot as plt, matplotlib as mpl, numpy as np
 mpl.rcParams['figure.figsize'] = 12,9
 
-plots = \"\"\"
-exp exp-sqe.h5
-multiphonon mp-sqe.h5
-multiple-scattering ms-sqe.h5
-correction sqe_correction.h5
-corrected corrected_sqe.h5
-\"\"\"
+plots = %r
 plots = plots.strip().splitlines()
 plots = [p.split() for p in plots]
 
 Imax = np.nanmax(hh.load("exp-sqe.h5").I)
-zmin = -Imax/100
+zmin = 0 # -Imax/100
 zmax = Imax/30
 
 for index, (title, fn) in enumerate(plots):
-    plt.subplot(3, 2, index+1)
+    plt.subplot(3, 3, index+1)
     sqe = hh.load(fn)
     Q = sqe.Q
     E = sqe.E
     Y, X = np.meshgrid(E, Q)
     Z = sqe.I
-    plt.pcolormesh(X, Y, Z, vmin=zmin, vmax=zmax)
+    Zm = np.ma.masked_where(np.isnan(Z), Z)
+    if title=='residual':  zmin,zmax = np.array([-1.,1])/2. * zmax
+    plt.pcolormesh(X, Y, Zm, vmin=zmin, vmax=zmax, cmap='hot')
     plt.colorbar()
     plt.title(title)
     continue
 
 plt.tight_layout()
 plt.show()
-"""
+""" % plots_table
+
+plot_intermediate_result_se_code = """#!/usr/bin/env python
+
+import histogram.hdf as hh
+
+import matplotlib.pyplot as plt, matplotlib as mpl, numpy as np
+mpl.rcParams['figure.figsize'] = 12,9
+
+plots = %r
+plots = plots.strip().splitlines()
+plots = [p.split() for p in plots]
+
+for index, (title, fn) in enumerate(plots):
+    sqe = hh.load(fn)
+    Q = sqe.Q
+    E = sqe.E
+    I = sqe.I
+    I[I!=I] = 0
+    se = sqe.sum('Q')
+    plt.plot(E, se.I, label=title)
+    continue
+
+plt.legend()
+plt.show()
+""" % plots_table
 
 
 # End of file 

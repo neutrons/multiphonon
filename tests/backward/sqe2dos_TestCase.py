@@ -50,9 +50,10 @@ class TestCase(unittest.TestCase):
         iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
         from multiphonon.sqe import interp
         newiqe = interp(iqehist, newE = np.arange(-55, 80, 1.))
+        hh.dump(newiqe, 'V-iqe-interped.h5')
         iterdos = sqe2dos.sqe2dos(
             newiqe, T=300, Ecutoff=65., elastic_E_cutoff=6.7, M=50.94,
-            C_ms=0.4, Ei=120.)
+            C_ms=0.1, Ei=120.)
         for i, dos in enumerate(iterdos):
             print dos
             # plot
