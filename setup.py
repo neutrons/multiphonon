@@ -11,7 +11,7 @@ setup(
     package_dir = {'': "."},
     test_suite = 'tests',
     install_requires = [
-        'numpy',
+        'numpy', 'scipy',
     ],
     dependency_links = [
     ],
