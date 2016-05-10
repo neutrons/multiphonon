@@ -8,7 +8,7 @@ import numpy as np, histogram as H, histogram.hdf as hh, os
 def sqe2dos(
         sqe, T, Ecutoff, elastic_E_cutoff, M, C_ms=None, Ei=None,
         workdir = 'work', 
-        MAX_ITERATION = 7
+        MAX_ITERATION = 20, TOLERATION = 1e-4,
         ):
     """Given a SQE, compute DOS
     * Start with a initial guess of DOS and a SQE
@@ -25,6 +25,8 @@ def sqe2dos(
     mask = sqe.I != sqe.I
     
     corrected_sqe = sqe
+    prev_dos = None
+    total_rounds = 0
     for roundno in range(MAX_ITERATION):
         # compute dos
         dos = singlephonon_sqe2dos(
@@ -97,12 +99,21 @@ def sqe2dos(
             os.path.join(cwd, "plot_se.py"),
             plot_intermediate_result_se_code
         )
+        total_rounds += 1
+        if prev_dos:
+            if isclose(dos, prev_dos, TOLERATION):
+                break
+        prev_dos = dos
         continue
     create_script(
         os.path.join(workdir, 'plot_dos.py'),
-        plot_dos_code % dict(total_rounds=MAX_ITERATION)
+        plot_dos_code % dict(total_rounds=total_rounds)
     )
     return
+
+
+def isclose(dos1, dos2, TOLERATION):
+    return np.allclose(dos1.I, dos2.I, rtol=TOLERATION, atol=TOLERATION)
 
 
 def create_script(fn, content):
