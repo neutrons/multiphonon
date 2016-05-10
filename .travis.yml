@@ -1,0 +1,45 @@
+sudo: false
+# dist: trusty
+
+language: python
+
+python:
+  - 2.7
+
+branches:
+  only:
+    - master
+#
+# services:
+#
+# matrix:
+#  include:
+#    - os: linux
+
+env:
+  - PATH=$HOME/travis/mc/bin:$PATH LD_LIBRARY_PATH=$HOME/travis/mc/lib
+   
+before_install:
+  - if [ ${TRAVIS_PYTHON_VERSION:0:1} == "2" ]; then wget http://repo.continuum.io/miniconda/Miniconda-3.5.5-Linux-x86_64.sh -O miniconda.sh; else wget http://repo.continuum.io/miniconda/Miniconda3-3.5.5-Linux-x86_64.sh -O miniconda.sh; fi
+  - chmod +x miniconda.sh
+  - ./miniconda.sh -b -p /home/travis/mc
+
+install:
+  - export GIT_FULL_HASH=`git rev-parse HEAD`
+  - conda config --set always_yes true
+  - conda update conda
+  - conda create -n testenv pip pytest python=$TRAVIS_PYTHON_VERSION
+  - conda install -n testenv numpy scipy matplotlib
+  - conda install -n testenv -c yxqd histogram
+  - source activate testenv
+  - python setup.py install
+#  - pip install coveralls
+#  - pip install codecov
+
+script:
+   - py.test
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
