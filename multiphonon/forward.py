@@ -16,6 +16,15 @@ Max Kresch's original multiphonon code.
 """
 
 
+def sqehist(E, g, **kwds):
+    "a simple wrapper of method sqe to return a histogram"
+    Q,E,S = sqe(E,g, **kwds)
+    import histogram as H
+    Qaxis = H.axis('Q', Q, '1./angstrom')
+    Eaxis = H.axis('E', E, 'meV')
+    return H.histogram("SP SQE", [Qaxis, Eaxis], S)
+
+
 def sqe(
     E, g, Qmax=None, Qmin=0, dQ=None,
     T=300, M=50, N=5, starting_order=2, Emax=None,
