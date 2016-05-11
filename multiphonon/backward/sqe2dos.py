@@ -78,7 +78,6 @@ def sqe2dos(
         # compute residual
         residual_sqe = corrected_sqe + singlephonon_sqe * (-1., 0)
         # compute all-phonon sqe and ms sqe
-        phonon_ms_sqe = tot_inel_sqe
         # save intermediate results
         cwd = os.path.join(workdir, "round-%d" % roundno)
         if not os.path.exists(cwd):
@@ -94,7 +93,7 @@ def sqe2dos(
         savesqe(corrected_sqe, 'corrected_sqe.h5')
         savesqe(singlephonon_sqe, 'sp-sqe.h5')
         savesqe(residual_sqe, 'residual-sqe.h5')
-        savesqe(phonon_ms_sqe, 'phonon+ms-sqe.h5')
+        savesqe(tot_inel_sqe, 'total-inel-sqe.h5')
         # save DOS
         hh.dump(dos, os.path.join(cwd, 'dos.h5'))
         # write scripts
@@ -207,13 +206,13 @@ from singlephonon_sqe2dos import sqe2dos as singlephonon_sqe2dos
 
 plots_table = """
 exp exp-sqe.h5
-singlephonon sp-sqe.h5
-multiphonon mp-sqe.h5
-multiple-scattering ms-sqe.h5
-correction sqe_correction.h5
-corrected-single-phonon corrected_sqe.h5
-phonon+ms phonon+ms-sqe.h5
-residual residual-sqe.h5
+sim-singlephonon sp-sqe.h5
+sim-multiphonon mp-sqe.h5
+sim-multiple-scattering ms-sqe.h5
+sim-correction sqe_correction.h5
+exp-corrected-single-phonon corrected_sqe.h5
+sim-total-inel total-inel-sqe.h5
+exp-residual residual-sqe.h5
 """
 
 # script templates
@@ -267,10 +266,20 @@ for index, (title, fn) in enumerate(plots):
     E = sqe.E
     I = sqe.I
     I[I!=I] = 0
+    E2 = sqe.E2
+    E2[E2!=E2] = 0
     se = sqe.sum('Q')
-    plt.plot(E, se.I, label=title)
+    if title.startswith('sim'):
+        plt.plot(E, se.I, '-', label=title)
+    else:
+        plt.errorbar(E, se.I, se.E2**.5, ls='none', elinewidth=2, label=title)
+
+    # set a reasonable y range
+    if title == 'exp':
+        max_inel_I = se[(E[-1]*0.1,None)].I.max()
     continue
 
+plt.ylim(-max_inel_I/10., max_inel_I*1.1)
 plt.legend()
 plt.show()
 """ % plots_table
