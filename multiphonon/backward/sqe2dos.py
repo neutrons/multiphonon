@@ -39,39 +39,46 @@ def sqe2dos(
         from ..forward import kelvin2mev
         beta = 1./(T*kelvin2mev)
         sqe = normalizeExpSQE(sqe)
-        # compute MP sqe
+        #
         from .. import forward
-        Q,E,S = forward.sqe(
+        # compute one phonon SQE as well
+        singlephonon_sqe = forward.sqehist(
+            dos.E, dos.I,
+            T=T, M=M,
+            Qmin=Qmin, Qmax=Qmax, dQ=dQ,
+            starting_order=1, N=1
+        )[(), (Efirst, Elast)].rename("SP SQE")        
+        # compute MP sqe
+        mpsqe = forward.sqehist(
             dos.E, dos.I, 
+            T=T, M=M,
             Qmin=Qmin, Qmax=Qmax, dQ=dQ,
             starting_order=2, N=4
-        )
-        Qaxis = H.axis('Q', Q, '1./angstrom')
-        Eaxis = H.axis('E', E, 'meV')
-        mpsqe = H.histogram("MP SQE", [Qaxis, Eaxis], S)[(), (Efirst, Elast)]
+        )[(), (Efirst, Elast)].rename("MP SQE")
         # compute MS sqe
         from .. import ms
         mssqe = ms.sqe(mpsqe, Ei)
         mssqe.I[:] *= C_ms
+        # total expected inelastic sqe computed from trial DOS
+        tot_inel_sqe = singlephonon_sqe + mpsqe + mssqe
+        tot_inel_sqe.I[mask] = np.nan
+        # compute norm_adjustment
+        def get_pos_tot_int(sqe):
+            subset = sqe[(), (elastic_E_cutoff[-1],None)].copy().I
+            subset[subset!=subset] = 0
+            return subset.sum()
+        norm_adjustment = get_pos_tot_int(tot_inel_sqe)/get_pos_tot_int(sqe)
+        sqe.I *= norm_adjustment
+        sqe.E2 *= norm_adjustment**2
         # compute SQE correction
         sqe_correction = mpsqe + mssqe
         # sqe_correction = sqe_correction[(), (Efirst, Elast)]
         # compute corrected SQE
         corrected_sqe = sqe + sqe_correction * (-1., 0)
-        # compute one phonon SQE as well
-        Q1,E1,S1 = forward.sqe(
-            dos.E, dos.I,
-            Qmin=Qmin, Qmax=Qmax, dQ=dQ,
-            starting_order=1, N=1
-        )
-        Q1axis = H.axis('Q', Q1, '1./angstrom')
-        E1axis = H.axis('E', E1, 'meV')
-        singlephonon_sqe = H.histogram("SP SQE", [Q1axis, E1axis], S1)\
-                           [(), (Efirst, Elast)]
         # compute residual
         residual_sqe = corrected_sqe + singlephonon_sqe * (-1., 0)
         # compute all-phonon sqe and ms sqe
-        phonon_ms_sqe = singlephonon_sqe + mpsqe + mssqe
+        phonon_ms_sqe = tot_inel_sqe
         # save intermediate results
         cwd = os.path.join(workdir, "round-%d" % roundno)
         if not os.path.exists(cwd):
@@ -148,7 +155,12 @@ def normalizeExpSQE(sqe):
     # the idea here is to for each Q, we calculate 
     # a normalization factor, and then take the median of
     # all normalization factors.
-    sq = sqe.sum('E')
+    mask = sqe.I != sqe.I
+    copy = sqe.copy()
+    copy.I[mask] = 0
+    E = sqe.E; dE = E[1] - E[0]
+    Q = sqe.Q; dQ = Q[1] - Q[0]
+    sq = copy.sum('E')
     # sq.I should be normalized to 1 for each Q
     # but since we are not measuring the fulling dynamical
     # range due to limitation of instrument and Ei
@@ -158,8 +170,9 @@ def normalizeExpSQE(sqe):
     # and ignore the very low Q where the dynamical range
     # is cut off (those are marked by nans)
     # the 1/3 factor below is kind of arbitrary
-    average_sq = np.nanmean(sq[(None, sq.Q[-1]/3.)].I)
+    average_sq = np.nanmean(sq[(None, sq.Q[-1]*1/2.)].I)*dE
     norm = 1./average_sq
+    norm = 1./(np.nansum(sqe.I)*dE/Q.size)
     sqe.I *= norm
     sqe.E2 *= norm*norm
     return sqe
