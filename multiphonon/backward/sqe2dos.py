@@ -239,7 +239,7 @@ for index, (title, fn) in enumerate(plots):
     Y, X = np.meshgrid(E, Q)
     Z = sqe.I
     Zm = np.ma.masked_where(np.isnan(Z), Z)
-    if title=='residual':  zmin,zmax = np.array([-1.,1])/2. * zmax
+    if title=='exp-residual':  zmin,zmax = np.array([-1.,1])/2. * zmax
     plt.pcolormesh(X, Y, Zm, vmin=zmin, vmax=zmax, cmap='hot')
     plt.colorbar()
     plt.title(title)
