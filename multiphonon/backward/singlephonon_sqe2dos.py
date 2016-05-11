@@ -67,6 +67,8 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M):
     # clean up data near elastic line
     n_small_E = (Eplus<elastic_E_cutoff[1]).sum()
     dos[:n_small_E] = Eplus[:n_small_E] ** 2 * dos[n_small_E] / Eplus[n_small_E]**2
+    # keep positive
+    dos[dos<0] = 0
     # normalize
     dos /= dos.sum()*dE
     dos_error = dos * dos_relative_error
