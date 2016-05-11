@@ -201,7 +201,7 @@ def computeA1E(E,g, beta, dE):
     t = g/(E*g0)*t
     z = zero_ind
     # remove NaN
-    t[z] = 2.0*( t[z+1] + ( t[z+1] - t[z+2] ) ) # XXX: why 2.0* ?
+    t[z] = t[z+1] + ( t[z+1] - t[z+2] )
     # XXX: normalize?
     # t /= t.sum()
     return E, t
