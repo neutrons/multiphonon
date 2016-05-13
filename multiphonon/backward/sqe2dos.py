@@ -218,6 +218,8 @@ exp-residual residual-sqe.h5
 # script templates
 plot_intermediate_result_sqe_code = """#!/usr/bin/env python
 
+import os
+curdir = os.path.dirname(__file__)
 import histogram.hdf as hh
 
 import matplotlib.pyplot as plt, matplotlib as mpl, numpy as np
@@ -227,13 +229,13 @@ plots = %r
 plots = plots.strip().splitlines()
 plots = [p.split() for p in plots]
 
-Imax = np.nanmax(hh.load("exp-sqe.h5").I)
+Imax = np.nanmax(hh.load(os.path.join(curdir, "exp-sqe.h5")).I)
 zmin = 0 # -Imax/100
 zmax = Imax/30
 
 for index, (title, fn) in enumerate(plots):
     plt.subplot(3, 3, index+1)
-    sqe = hh.load(fn)
+    sqe = hh.load(os.path.join(curdir, fn))
     Q = sqe.Q
     E = sqe.E
     Y, X = np.meshgrid(E, Q)
@@ -251,6 +253,9 @@ plt.show()
 
 plot_intermediate_result_se_code = """#!/usr/bin/env python
 
+import os
+curdir = os.path.dirname(__file__)
+
 import histogram.hdf as hh
 
 import matplotlib.pyplot as plt, matplotlib as mpl, numpy as np
@@ -261,7 +266,7 @@ plots = plots.strip().splitlines()
 plots = [p.split() for p in plots]
 
 for index, (title, fn) in enumerate(plots):
-    sqe = hh.load(fn)
+    sqe = hh.load(os.path.join(curdir, fn))
     Q = sqe.Q
     E = sqe.E
     I = sqe.I
@@ -287,12 +292,13 @@ plt.show()
 plot_dos_code = """#!/usr/bin/env python
 
 import histogram.hdf as hh, os
+curdir = os.path.dirname(__file__)
 
 import matplotlib.pyplot as plt, matplotlib as mpl, numpy as np
 mpl.rcParams['figure.figsize'] = 6,4.5
 
 for round_no in range(%(total_rounds)d): 
-    fn = os.path.join('round-' + str(round_no), 'dos.h5')
+    fn = os.path.join(curdir, 'round-' + str(round_no), 'dos.h5')
     dos = hh.load(fn)
     plt.plot(dos.E, dos.I, label=str(round_no))
     continue
