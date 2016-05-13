@@ -111,9 +111,24 @@ def sqe2dos(
                 break
         prev_dos = dos
         continue
+    # in the end, add error of residual to the error bar 
+    # of the DOS
+    def get_pos_se(sqe):
+        s = sqe[(), (elastic_E_cutoff[-1],None)].copy()
+        s.I[s.I!=s.I] = 0
+        return s.sum('Q')
+    residual_pos_se = get_pos_se(residual_sqe)
+    exp_pos_se = get_pos_se(sqe)
+    rel_err_from_residual = np.abs(residual_pos_se.I)/exp_pos_se.I
+    # add 
+    final_dos = dos.copy()
+    final_dos_subset = final_dos[(residual_pos_se.E[0], residual_pos_se.E[-1])]
+    final_dos_subset.E2 += (final_dos_subset.I * rel_err_from_residual)**2
+    hh.dump(final_dos, os.path.join(workdir, "final-dos.h5"))
+    #
     create_script(
-        os.path.join(workdir, 'plot_dos.py'),
-        plot_dos_code % dict(total_rounds=total_rounds)
+        os.path.join(workdir, 'plot_dos_iteration.py'),
+        plot_dos_iteration_code % dict(total_rounds=total_rounds)
     )
     return
 
@@ -289,7 +304,7 @@ plt.legend()
 plt.show()
 """ % plots_table
 
-plot_dos_code = """#!/usr/bin/env python
+plot_dos_iteration_code = """#!/usr/bin/env python
 
 import histogram.hdf as hh, os
 curdir = os.path.dirname(__file__)
@@ -300,7 +315,7 @@ mpl.rcParams['figure.figsize'] = 6,4.5
 for round_no in range(%(total_rounds)d): 
     fn = os.path.join(curdir, 'round-' + str(round_no), 'dos.h5')
     dos = hh.load(fn)
-    plt.plot(dos.E, dos.I, label=str(round_no))
+    plt.errorbar(dos.E, dos.I, dos.E2**.5, label=str(round_no))
     continue
 
 plt.legend()
