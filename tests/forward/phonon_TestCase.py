@@ -5,7 +5,7 @@
 interactive = False
 
 import sys, os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "data"))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "data"))
 
 import unittest
 import numpy
@@ -15,7 +15,7 @@ class TestCase(unittest.TestCase):
 
 
     def test1(self):
-        "multiphonon.forward.computeAnESet"
+        "multiphonon.forward.phonon.computeAnESet"
         from dos import loadDOS
         E, g = loadDOS()
         dE = E[1] - E[0]
@@ -23,7 +23,7 @@ class TestCase(unittest.TestCase):
         E = numpy.arange(E[0], 70, dE)
         g = numpy.concatenate((g, numpy.zeros(len(E)-len(g))))
         g/=g.sum()*dE
-        from multiphonon.forward import computeAnESet
+        from multiphonon.forward.phonon import computeAnESet
         kelvin2mev = 0.0862
         beta = 1./(300*kelvin2mev)
         E, An_set = computeAnESet(N=5, E=E, g=g, beta=beta, dE=dE)
@@ -37,7 +37,7 @@ class TestCase(unittest.TestCase):
         
         
     def test2(self):
-        "multiphonon.forward.computeSQESet"
+        "multiphonon.forward.phonon.computeSQESet"
         from dos import loadDOS
         E,g = loadDOS()
         # expand E a bit
@@ -55,7 +55,7 @@ class TestCase(unittest.TestCase):
 
         M = 50.
         
-        from multiphonon.forward import computeSQESet
+        from multiphonon.forward.phonon import computeSQESet
         Q, E, S_set= computeSQESet(5, Q, dQ, E, dE, M, g, beta)
 
         import histogram as H, histogram.hdf as hh
@@ -72,10 +72,10 @@ class TestCase(unittest.TestCase):
         
 
     def test3(self):
-        "multiphonon.forward.sqe"
+        "multiphonon.forward.phonon.sqe"
         from dos import loadDOS
         E,g = loadDOS()
-        from multiphonon.forward import sqe
+        from multiphonon.forward.phonon import sqe
         Q, E, S = sqe(E,g, N=4)
         saveSQE(Q,E,S, 'S_2..5')
         return

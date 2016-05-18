@@ -36,11 +36,11 @@ def sqe2dos(
         # if change is little
         # ...
         # normalize exp SQE
-        from ..forward import kelvin2mev
+        from ..forward.phonon import kelvin2mev
         beta = 1./(T*kelvin2mev)
         sqe = normalizeExpSQE(sqe)
         #
-        from .. import forward
+        from ..forward import phonon as forward
         # compute one phonon SQE as well
         singlephonon_sqe = forward.sqehist(
             dos.E, dos.I,
@@ -199,7 +199,7 @@ def normalizeExpSQE_inelonly(sqe, dos, M, beta, elastic_E_cutoff):
     # a normalization factor, and then take the median of
     # all normalization factors.
     sqe1 = removeElasticPeak(sqe.copy(), elastic_E_cutoff)
-    from .. import forward
+    from ..forward import phonon as forward
     Q = sqe.Q
     E = dos.E; g = dos.I; dE = E[1] - E[0]
     DW2 = forward.DWExp(Q, M, E,g, beta, dE)

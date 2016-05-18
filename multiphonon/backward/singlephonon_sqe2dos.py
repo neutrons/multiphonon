@@ -35,7 +35,7 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M):
     Eplus[0] = 0.
     initdos = guess_init_dos(Eplus, Ecutoff)
     # compute sqe from dos
-    from ..forward import computeSQESet, kelvin2mev
+    from ..forward.phonon import computeSQESet, kelvin2mev
     Q = sqe.Q
     dQ = Q[1] - Q[0]
     E = sqe.E

@@ -11,8 +11,8 @@ import numpy
 class TestCase(unittest.TestCase):
 
     def test1(self):
-        "multiphonon.forward.DWExp"
-        from multiphonon.forward import DWExp
+        "multiphonon.forward.phonon.DWExp"
+        from multiphonon.forward.phonon import DWExp
         from dos import loadDOS
         E, g = loadDOS()
         dE = E[1]-E[0]
