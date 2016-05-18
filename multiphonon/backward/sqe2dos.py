@@ -19,11 +19,7 @@ def sqe2dos(
     * Compare the new DOS to the previous one and calculate the difference
     * If difference is large, continue the iteration. Otherwise the new DOS is what we want
     """
-    Q, E = sqe.Q, sqe.E
-    dQ = Q[1]-Q[0]; Qmin = Q[0]; Qmax=Q[-1] + dQ/2.
-    dE = E[1]-E[0]; Efirst = E[0]; Elast=E[-1]
-    mask = sqe.I != sqe.I
-    
+    mask = sqe.I != sqe.I    
     corrected_sqe = sqe
     prev_dos = None
     total_rounds = 0
@@ -32,52 +28,19 @@ def sqe2dos(
         dos = singlephonon_sqe2dos(
             corrected_sqe, T, Ecutoff, elastic_E_cutoff, M)
         yield dos
-        # should compare to previous round and break 
-        # if change is little
-        # ...
-        # normalize exp SQE
-        from ..forward.phonon import kelvin2mev
-        beta = 1./(T*kelvin2mev)
-        sqe = normalizeExpSQE(sqe)
-        #
-        from ..forward import phonon as forward
-        # compute one phonon SQE as well
-        singlephonon_sqe = forward.sqehist(
-            dos.E, dos.I,
-            T=T, M=M,
-            Qmin=Qmin, Qmax=Qmax, dQ=dQ,
-            starting_order=1, N=1
-        )[(), (Efirst, Elast)].rename("SP SQE")        
-        # compute MP sqe
-        mpsqe = forward.sqehist(
-            dos.E, dos.I, 
-            T=T, M=M,
-            Qmin=Qmin, Qmax=Qmax, dQ=dQ,
-            starting_order=2, N=4
-        )[(), (Efirst, Elast)].rename("MP SQE")
-        # compute MS sqe
-        from .. import ms
-        mssqe = ms.sqe(mpsqe, Ei)
-        mssqe.I[:] *= C_ms
-        # total expected inelastic sqe computed from trial DOS
-        tot_inel_sqe = singlephonon_sqe + mpsqe + mssqe
-        tot_inel_sqe.I[mask] = np.nan
-        # compute norm_adjustment
-        def get_pos_tot_int(sqe):
-            subset = sqe[(), (elastic_E_cutoff[-1],None)].copy().I
-            subset[subset!=subset] = 0
-            return subset.sum()
-        norm_adjustment = get_pos_tot_int(tot_inel_sqe)/get_pos_tot_int(sqe)
-        sqe.I *= norm_adjustment
-        sqe.E2 *= norm_adjustment**2
+        # compute expected sqe
+        from ..forward import dos2sqe
+        singlephonon_sqe, mpsqe, mssqe, tot_inel_sqe = dos2sqe(
+            dos, C_ms, sqe, T, M, Ei
+        )
+        # scale exp sqe for comparision
+        scale_expsqe_to_match_inel_se(sqe, tot_inel_sqe, elastic_E_cutoff[-1])
         # compute SQE correction
         sqe_correction = mpsqe + mssqe
-        # sqe_correction = sqe_correction[(), (Efirst, Elast)]
         # compute corrected SQE
         corrected_sqe = sqe + sqe_correction * (-1., 0)
         # compute residual
         residual_sqe = corrected_sqe + singlephonon_sqe * (-1., 0)
-        # compute all-phonon sqe and ms sqe
         # save intermediate results
         cwd = os.path.join(workdir, "round-%d" % roundno)
         if not os.path.exists(cwd):
@@ -120,7 +83,7 @@ def sqe2dos(
     residual_pos_se = get_pos_se(residual_sqe)
     exp_pos_se = get_pos_se(sqe)
     rel_err_from_residual = np.abs(residual_pos_se.I)/exp_pos_se.I
-    # add 
+    # add to the error bar
     final_dos = dos.copy()
     final_dos_subset = final_dos[(residual_pos_se.E[0], residual_pos_se.E[-1])]
     final_dos_subset.E2 += (final_dos_subset.I * rel_err_from_residual)**2
@@ -130,6 +93,18 @@ def sqe2dos(
         os.path.join(workdir, 'plot_dos_iteration.py'),
         plot_dos_iteration_code % dict(total_rounds=total_rounds)
     )
+    return
+
+
+def scale_expsqe_to_match_inel_se(expsqe, simsqe, elastic_E_positive_cutoff):
+    # Compute norm_adjustment
+    def get_pos_tot_int(sqe):
+        subset = sqe[(), (elastic_E_positive_cutoff,None)].copy().I
+        subset[subset!=subset] = 0
+        return subset.sum()
+    norm_adjustment = get_pos_tot_int(simsqe)/get_pos_tot_int(expsqe)
+    expsqe.I *= norm_adjustment
+    expsqe.E2 *= norm_adjustment**2
     return
 
 
