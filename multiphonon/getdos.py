@@ -1,23 +1,36 @@
 def getDOS(eventnxs, Emin=-100, Emax=100, dE=1.,
            Qmin=0, Qmax=15., dQ=0.1, T=300, Ecutoff=50., 
            elastic_E_cutoff=(-20., 7), M=50.94,
-           C_ms=0.3, Ei=116.446, workdir='work'):
+           C_ms=0.3, Ei=116.446, workdir='work',
+           iqe_nxs="iqe.nxs", iqe_h5="iqe.h5"):
+    # prepare paths
     import os
+    if not os.path.exists(workdir):
+        os.makedirs(workdir)
+    if not os.path.isabs(iqe_nxs):
+        iqe_nxs = os.path.abspath(os.path.join(workdir, iqe_nxs))
+    if not os.path.isabs(iqe_h5):
+        iqe_h5 = os.path.abspath(os.path.join(workdir, iqe_h5))
+    #
     import histogram.hdf as hh, numpy as np
     # reduce
     print("reducing...")
-    cmd = "mcvine instruments arcs nxs reduce %(eventnxs)s --out=iqe.nxs"
-    cmd += " --eaxis %(Emin)s %(Emax)s %(dE)s --qaxis %(Qmin)s %(Qmax)s %(dQ)s"
-    cmd = cmd % locals()
-    if os.system(cmd):
-        raise RuntimeError("%s failed" % cmd)
+    if not os.path.exists(iqe_nxs):
+        cmd = "mcvine instruments arcs nxs reduce "
+        cmd += "%(eventnxs)s --out=%(iqe_nxs)s "
+        cmd += "--eaxis %(Emin)s %(Emax)s %(dE)s "
+        cmd += "--qaxis %(Qmin)s %(Qmax)s %(dQ)s "
+        cmd = cmd % locals()
+        if os.system(cmd):
+            raise RuntimeError("%s failed" % cmd)
     # to histogram
     print("to histogram...")
-    cmd = "mcvine mantid extract_iqe iqe.nxs iqe.h5"
-    if os.system(cmd):
-        raise RuntimeError("%s failed" % cmd)
+    if not os.path.exists(iqe_h5):
+        cmd = "mcvine mantid extract_iqe %(iqe_nxs)s %(iqe_h5)s" % locals()
+        if os.system(cmd):
+            raise RuntimeError("%s failed" % cmd)
     # to DOS
-    iqehist = hh.load("iqe.h5")
+    iqehist = hh.load(iqe_h5)
     # interpolate data
     from .sqe import interp
     # probably don't need this line
@@ -63,8 +76,7 @@ def notebookUI(eventnxs):
 
     w_Run = widgets.Button(description="Run")
     def submit(b):
-        getDOS(
-            eventnxs, 
+        kargs = dict(
             Emin=w_Emin.value, Emax=w_Emax.value, dE=w_dE.value,
             Qmin=w_Qmin.value, Qmax=w_Qmax.value, dQ=w_dQ.value,
             T=w_T.value, Ecutoff=w_Ecutoff.value, 
@@ -72,6 +84,10 @@ def notebookUI(eventnxs):
             M=w_mass.value,
             C_ms=w_C_ms.value, Ei=w_Ei.value,
             workdir='work')
+        import pprint
+        pprint.pprint(eventnxs)
+        pprint.pprint(kargs)
+        getDOS(eventnxs, **kargs)
         return
     w_Run.on_click( submit )
     w_all = w_inputs + (w_Run,)
