@@ -49,29 +49,41 @@ def getDOS(eventnxs, Emin=-100, Emax=100, dE=1.,
     return doslist
 
 
-def notebookUI(eventnxs):
+def notebookUI(eventnxs, options=None, load_options_path=None):
+    import yaml
+    if options is not None and load_options_path:
+        raise RuntimeError(
+            "Both options and load_options_path were set: %s, %s" %(
+                options, load_options_path)
+        )
+    if load_options_path:
+        options = yaml.load(open(load_options_path))
+    if options is None:
+        options = default_options
+    #
     import ipywidgets as widgets
     from IPython.display import display
-    w_Emin = widgets.BoundedFloatText(description="Emin", min=-1000., max=0., value=-70)
-    w_Emax = widgets.BoundedFloatText(description="Emax", min=0., max=1000., value=70)
-    w_dE = widgets.BoundedFloatText(description="dE", min=0.01, max=50., value=1.)
-    w_Qmin = widgets.BoundedFloatText(description="Qmin", min=0, max=5., value=0)
-    w_Qmax = widgets.BoundedFloatText(description="Qmax", min=5., max=50., value=14.)
-    w_dQ = widgets.BoundedFloatText(description="dQ", min=0.01, max=5., value=0.1)
-    w_T = widgets.BoundedFloatText(description="Temperature", min=0.001, max=5000., value=300.)
-    w_Ecutoff = widgets.BoundedFloatText(description="Max energy of phonons", min=5, max=1000., value=50)
-    w_ElasticPeakMin = widgets.BoundedFloatText(description="Emin of elastic peak", min=-300., max=-1., value=-20.)
-    w_ElasticPeakMax = widgets.BoundedFloatText(description="Emax of elastic peak", min=0.2, max=300., value=7.)
-    w_mass = widgets.BoundedFloatText(description="Average atom mass", min=1., max=300., value=50.94)
-    w_C_ms = widgets.BoundedFloatText(description="C_ms", min=0., max=10., value=0.3)
-    w_Ei = widgets.BoundedFloatText(description="Ei", min=1, max=2000., value=116.446)
+    w_Emin = widgets.BoundedFloatText(description="Emin", min=-1000., max=0., value=options['Emin'])
+    w_Emax = widgets.BoundedFloatText(description="Emax", min=0., max=1000., value=options['Emax'])
+    w_dE = widgets.BoundedFloatText(description="dE", min=0.01, max=50., value=options['dE'])
+    w_Qmin = widgets.BoundedFloatText(description="Qmin", min=0, max=5., value=options['Qmin'])
+    w_Qmax = widgets.BoundedFloatText(description="Qmax", min=5., max=50., value=options['Qmax'])
+    w_dQ = widgets.BoundedFloatText(description="dQ", min=0.01, max=5., value=options['dQ'])
+    w_T = widgets.BoundedFloatText(description="Temperature", min=0.001, max=5000., value=options['T'])
+    w_Ecutoff = widgets.BoundedFloatText(description="Max energy of phonons", min=5, max=1000., value=options['Ecutoff'])
+    w_ElasticPeakMin = widgets.BoundedFloatText(description="Emin of elastic peak", min=-300., max=-1., value=options['ElasticPeakMin'])
+    w_ElasticPeakMax = widgets.BoundedFloatText(description="Emax of elastic peak", min=0.2, max=300., value=options['ElasticPeakMax'])
+    w_M = widgets.BoundedFloatText(description="Average atom mass", min=1., max=1000., value=options['M'])
+    w_C_ms = widgets.BoundedFloatText(description="C_ms", min=0., max=10., value=options['C_ms'])
+    w_Ei = widgets.BoundedFloatText(description="Ei", min=1, max=2000., value=options['Ei'])
+    w_workdir = widgets.Text(description="work dir", value=options['workdir'])
 
     w_inputs = (
         w_Emin, w_Emax, w_dE,
         w_Qmin, w_Qmax, w_dQ,
         w_T, w_Ecutoff,
         w_ElasticPeakMin, w_ElasticPeakMax,
-        w_mass, w_C_ms, w_Ei
+        w_M, w_C_ms, w_Ei, w_workdir
     )
 
     w_Run = widgets.Button(description="Run")
@@ -81,15 +93,42 @@ def notebookUI(eventnxs):
             Qmin=w_Qmin.value, Qmax=w_Qmax.value, dQ=w_dQ.value,
             T=w_T.value, Ecutoff=w_Ecutoff.value, 
             elastic_E_cutoff=(w_ElasticPeakMin.value, w_ElasticPeakMax.value),
-            M=w_mass.value,
+            M=w_M.value,
             C_ms=w_C_ms.value, Ei=w_Ei.value,
-            workdir='work')
-        import pprint
+            workdir=w_workdir.value,
+            )
+        import pprint, os, yaml
         pprint.pprint(eventnxs)
         pprint.pprint(kargs)
+        workdir = kargs['workdir']
+        if not os.path.exists(workdir):
+            os.makedirs(workdir)
+        options = dict(kargs)
+        options['ElasticPeakMin']=w_ElasticPeakMin.value
+        options['ElasticPeakMax']=w_ElasticPeakMax.value
+        yaml.dump(options, 
+                  open(os.path.join(workdir, 'getdos-opts.yaml'), 'wt'))
         getDOS(eventnxs, **kargs)
         return
     w_Run.on_click( submit )
     w_all = w_inputs + (w_Run,)
     display(*w_all)
     return
+
+
+default_options = dict(
+    Emin = -70,
+    Emax = 70,
+    dE = 1.,
+    Qmin = 0.,
+    Qmax = 14.,
+    dQ = 0.1,
+    T = 300.,
+    Ecutoff = 50.,
+    ElasticPeakMin = -20,
+    ElasticPeakMax = 7.,
+    M = 50.94,
+    C_ms = 0.3,
+    Ei = 100.,
+    workdir = 'work',
+    )
