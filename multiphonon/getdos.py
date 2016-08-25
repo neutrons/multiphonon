@@ -1,36 +1,32 @@
-def getDOS(eventnxs, Emin=-100, Emax=100, dE=1.,
+import histogram.hdf as hh, numpy as np
+import os
+
+def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9,
+           Emin=-100, Emax=100, dE=1.,
            Qmin=0, Qmax=15., dQ=0.1, T=300, Ecutoff=50., 
            elastic_E_cutoff=(-20., 7), M=50.94,
            C_ms=0.3, Ei=116.446, workdir='work',
            iqe_nxs="iqe.nxs", iqe_h5="iqe.h5"):
     # prepare paths
-    import os
     if not os.path.exists(workdir):
         os.makedirs(workdir)
     if not os.path.isabs(iqe_nxs):
         iqe_nxs = os.path.abspath(os.path.join(workdir, iqe_nxs))
     if not os.path.isabs(iqe_h5):
         iqe_h5 = os.path.abspath(os.path.join(workdir, iqe_h5))
-    #
-    import histogram.hdf as hh, numpy as np
     # reduce
-    print("reducing...")
-    if not os.path.exists(iqe_nxs):
-        cmd = "mcvine instruments arcs nxs reduce "
-        cmd += "%(eventnxs)s --out=%(iqe_nxs)s "
-        cmd += "--eaxis %(Emin)s %(Emax)s %(dE)s "
-        cmd += "--qaxis %(Qmin)s %(Qmax)s %(dQ)s "
-        cmd = cmd % locals()
-        if os.system(cmd):
-            raise RuntimeError("%s failed" % cmd)
-    # to histogram
-    print("to histogram...")
-    if not os.path.exists(iqe_h5):
-        cmd = "mcvine mantid extract_iqe %(iqe_nxs)s %(iqe_h5)s" % locals()
-        if os.system(cmd):
-            raise RuntimeError("%s failed" % cmd)
-    # to DOS
+    Eaxis = Emin, Emax, dE
+    Qaxis = Qmin, Qmax, dQ
+    raw2iqe(sample_nxs, iqe_nxs, iqe_h5, Eaxis, Qaxis)
     iqehist = hh.load(iqe_h5)
+    if mt_nxs is not None:
+        _tomtpath = lambda p: os.path.join(
+            os.path.dirname(p), 'mt-'+os.path.basename(p))
+        mtiqe_nxs = _tomtpath(iqe_nxs)
+        mtiqe_h5 = _tomtpath(iqe_h5)
+        raw2iqe(mt_nxs, mtiqe_nxs, mtiqe_h5, Eaxis, Qaxis)
+        iqehist -= hh.load(mtiqe_h5) * (mt_fraction, 0)
+    # to DOS
     # interpolate data
     from .sqe import interp
     # probably don't need this line
@@ -48,6 +44,27 @@ def getDOS(eventnxs, Emin=-100, Emax=100, dE=1.,
     print("done.")
     return doslist
 
+
+def raw2iqe(eventnxs, iqe_nxs, iqe_h5, Eaxis, Qaxis):
+    Emin, Emax, dE = Eaxis
+    Qmin, Qmax, dQ = Qaxis
+    # reduce
+    print("reducing...")
+    if not os.path.exists(iqe_nxs):
+        cmd = "mcvine instruments arcs nxs reduce "
+        cmd += "%(eventnxs)s --out=%(iqe_nxs)s "
+        cmd += "--eaxis %(Emin)s %(Emax)s %(dE)s "
+        cmd += "--qaxis %(Qmin)s %(Qmax)s %(dQ)s "
+        cmd = cmd % locals()
+        if os.system(cmd):
+            raise RuntimeError("%s failed" % cmd)
+    # to histogram
+    print("to histogram...")
+    if not os.path.exists(iqe_h5):
+        cmd = "mcvine mantid extract_iqe %(iqe_nxs)s %(iqe_h5)s" % locals()
+        if os.system(cmd):
+            raise RuntimeError("%s failed" % cmd)
+    return
 
 def notebookUI(eventnxs, options=None, load_options_path=None):
     import yaml
