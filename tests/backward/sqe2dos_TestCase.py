@@ -51,10 +51,10 @@ class TestCase(unittest.TestCase):
     def test2a(self):
         iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
         from multiphonon.sqe import interp
-        newiqe = interp(iqehist, newE = np.arange(-55, 80, 1.))
+        newiqe = interp(iqehist, newE = np.arange(-15, 80, 1.))
         hh.dump(newiqe, 'V-iqe-interped.h5')
         iterdos = sqe2dos.sqe2dos(
-            newiqe, T=300, Ecutoff=45., elastic_E_cutoff=(-12., 6.7), M=50.94,
+            newiqe, T=300, Ecutoff=55., elastic_E_cutoff=(-12., 6.7), M=50.94,
             C_ms=.2, Ei=120., workdir='work-V')
         for i, dos in enumerate(iterdos):
             # print dos

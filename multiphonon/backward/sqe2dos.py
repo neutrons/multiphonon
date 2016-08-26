@@ -93,6 +93,42 @@ def sqe2dos(
         os.path.join(workdir, 'plot_dos_iteration.py'),
         plot_dos_iteration_code % dict(total_rounds=total_rounds)
     )
+    computeDirtyDOS(sqe, final_dos, M, T, os.path.join(workdir, 'dirdydos'))
+    return
+
+
+def computeDirtyDOS(sqe, dos, M, T, workdir):
+    """dirty dos calculation is procedure that quickly 
+    "correct" sqe using the one-phonon Q multiplier.
+    After correction, the sqe would look like mostly Q-independent,
+    and the sum over Q axis can give a very rough estimate of the DOS.
+    This is mostly for double-checking the calculations.
+    """
+    if not os.path.exists(workdir):
+        os.makedirs(workdir)
+    from ..forward.phonon import computeSNQ, DWExp, kelvin2mev, gamma0
+    beta = 1./(T*kelvin2mev)
+    E = dos.E; Q = sqe.Q; g = dos.I
+    dE = E[1] - E[0]
+    DW2 = DWExp(Q, M, E, g, beta, dE)
+    sq = computeSNQ(DW2, 1)
+    sqe1 = sqe.copy()
+    sqe1.I /= sq[:, np.newaxis]
+    sqe1.E2 /= sq[:, np.newaxis] * sq[:, np.newaxis]
+    hh.dump(sqe1, os.path.join(workdir, 'corrected-sqe.h5'))
+    # compute a sum to obtain S(E)
+    Qdiff = Q[-1]-Q[0]
+    # take the middle part. 1/6 is kind of arbitrary
+    se1 = sqe1[ (Q[0]+Qdiff/6., Q[-1]-Qdiff/6.), (E[0], None) ].sum('Q')
+    hh.dump(se1, os.path.join(workdir, 'se.h5'))
+    assert np.allclose(se1.E, E)
+    # 
+    g0 = gamma0(E,g, beta, dE)
+    fE = (1-np.exp(-se1.E*beta)) * se1.E * g0
+    ddos = se1.copy()
+    ddos.I *= fE
+    ddos.E2 *= fE*fE
+    hh.dump(ddos, os.path.join(workdir, 'ddos.h5'))
     return
 
 
