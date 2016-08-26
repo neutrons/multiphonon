@@ -53,6 +53,7 @@ def raw2iqe(eventnxs, iqe_nxs, iqe_h5, Eaxis, Qaxis):
     if not os.path.exists(iqe_nxs):
         cmd = "mcvine instruments arcs nxs reduce "
         cmd += "%(eventnxs)s --out=%(iqe_nxs)s "
+        cmd += "--ibnorm=ByCurrent "
         cmd += "--eaxis %(Emin)s %(Emax)s %(dE)s "
         cmd += "--qaxis %(Qmin)s %(Qmax)s %(dQ)s "
         cmd = cmd % locals()
@@ -66,7 +67,7 @@ def raw2iqe(eventnxs, iqe_nxs, iqe_h5, Eaxis, Qaxis):
             raise RuntimeError("%s failed" % cmd)
     return
 
-def notebookUI(eventnxs, options=None, load_options_path=None):
+def notebookUI(samplenxs, mtnxs, options=None, load_options_path=None):
     import yaml
     if options is not None and load_options_path:
         raise RuntimeError(
@@ -80,6 +81,7 @@ def notebookUI(eventnxs, options=None, load_options_path=None):
     #
     import ipywidgets as widgets
     from IPython.display import display
+    w_mt_fraction = widgets.BoundedFloatText(description="mt_fraction", min=0., max=1., value=options['mt_fraction'])
     w_Emin = widgets.BoundedFloatText(description="Emin", min=-1000., max=0., value=options['Emin'])
     w_Emax = widgets.BoundedFloatText(description="Emax", min=0., max=1000., value=options['Emax'])
     w_dE = widgets.BoundedFloatText(description="dE", min=0.01, max=50., value=options['dE'])
@@ -96,6 +98,7 @@ def notebookUI(eventnxs, options=None, load_options_path=None):
     w_workdir = widgets.Text(description="work dir", value=options['workdir'])
 
     w_inputs = (
+        w_mt_fraction,
         w_Emin, w_Emax, w_dE,
         w_Qmin, w_Qmax, w_dQ,
         w_T, w_Ecutoff,
@@ -106,6 +109,7 @@ def notebookUI(eventnxs, options=None, load_options_path=None):
     w_Run = widgets.Button(description="Run")
     def submit(b):
         kargs = dict(
+            mt_fraction = w_mt_fraction.value,
             Emin=w_Emin.value, Emax=w_Emax.value, dE=w_dE.value,
             Qmin=w_Qmin.value, Qmax=w_Qmax.value, dQ=w_dQ.value,
             T=w_T.value, Ecutoff=w_Ecutoff.value, 
@@ -115,7 +119,8 @@ def notebookUI(eventnxs, options=None, load_options_path=None):
             workdir=w_workdir.value,
             )
         import pprint, os, yaml
-        pprint.pprint(eventnxs)
+        pprint.pprint(samplenxs)
+        pprint.pprint(mtnxs)
         pprint.pprint(kargs)
         workdir = kargs['workdir']
         if not os.path.exists(workdir):
@@ -125,7 +130,7 @@ def notebookUI(eventnxs, options=None, load_options_path=None):
         options['ElasticPeakMax']=w_ElasticPeakMax.value
         yaml.dump(options, 
                   open(os.path.join(workdir, 'getdos-opts.yaml'), 'wt'))
-        getDOS(eventnxs, **kargs)
+        getDOS(samplenxs, mt_nxs=mtnxs, **kargs)
         return
     w_Run.on_click( submit )
     w_all = w_inputs + (w_Run,)
@@ -134,6 +139,7 @@ def notebookUI(eventnxs, options=None, load_options_path=None):
 
 
 default_options = dict(
+    mt_fraction = 0.9,
     Emin = -70,
     Emax = 70,
     dE = 1.,
