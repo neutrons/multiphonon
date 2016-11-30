@@ -16,6 +16,11 @@ $ python setup.py install
 
 ## Usage
 
+### Through jupyter.sns.gov
+https://www.youtube.com/watch?v=5XOX8RdHBnQ
+
+### Python scripting
+
       import histogram.hdf as hh, os, pylab
       # load data
       iqehist = hh.load("Al-iqe.h5") 
