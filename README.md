@@ -7,7 +7,7 @@ revised by several authors Brandon, Chen, Jennifer, and Dipanshu.
 
 ## Installation
 ### Use conda
-$ conda install -c yxqd multiphonon
+$ conda install -c mcvine multiphonon
 
 ### From source
 Download src tarball and extract, then
