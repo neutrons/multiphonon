@@ -1,13 +1,14 @@
 [![Build Status](https://travis-ci.org/sns-chops/multiphonon.svg?branch=master)](https://travis-ci.org/sns-chops/multiphonon) 
 # multiphonon
-Intended to be a rewrite of multiphonon (getDOS) originally authored by Max Kresch and
-revised by several authors Brandon, Chen, Jennifer, and Dipanshu.
+Intended to be a rewrite of multiphonon (getDOS) originally authored by Max Kresch during the
+[DANSE project](http://danse.us/) and
+revised by several authors including Brandon, Chen, Jennifer, and Dipanshu.
 
 * Main functionality: Compute phonon Density of States (DOS) from powder Inelastic Neutron Scattering (INS) spectrum
 
 ## Installation
 ### Use conda
-$ conda install -c yxqd multiphonon
+$ conda install -c mcvine multiphonon
 
 ### From source
 Download src tarball and extract, then
@@ -15,6 +16,11 @@ Download src tarball and extract, then
 $ python setup.py install
 
 ## Usage
+
+### Through jupyter.sns.gov
+https://www.youtube.com/watch?v=5XOX8RdHBnQ
+
+### Python scripting
 
       import histogram.hdf as hh, os, pylab
       # load data
