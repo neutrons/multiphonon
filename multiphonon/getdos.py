@@ -26,8 +26,8 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9,
     if not os.path.isabs(iqe_h5):
         iqe_h5 = os.path.abspath(os.path.join(workdir, iqe_h5))
     # reduce
-    Eaxis = Emin, Emax, dE
-    Qaxis = Qmin, Qmax, dQ
+    Eaxis = _normalize_axis_setting(Emin, Emax, dE)
+    Qaxis = _normalize_axis_setting(Qmin, Qmax, dQ)
     yield "Convert sample data to powder I(Q,E)"
     raw2iqe(sample_nxs, iqe_nxs, iqe_h5, Eaxis, Qaxis)
     iqehist = hh.load(iqe_h5)
@@ -60,6 +60,14 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9,
         continue
     yield "Done"
     return
+
+
+def _normalize_axis_setting(min, max, delta):
+    # try to deal with numerical error
+    nsteps = round( 1.*(max-min)/delta )
+    if abs(max - (min+nsteps*delta)) < 1e-5:
+        max = max + delta/2.
+    return min, max, delta
 
 
 def raw2iqe(eventnxs, iqe_nxs, iqe_h5, Eaxis, Qaxis):

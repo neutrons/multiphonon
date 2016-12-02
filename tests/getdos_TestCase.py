@@ -15,17 +15,17 @@ class TestCase(unittest.TestCase):
     def test1(self):
         "multiphonon.getdos"
         from multiphonon.getdos import getDOS
-        getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs"))
+        list(getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs")))
         return
         
     def test2(self):
         "multiphonon.getdos"
         from multiphonon.getdos import getDOS
-        getDOS(
+        list(getDOS(
             os.path.join(datadir, "ARCS_V_annulus.nxs"),
             mt_nxs = os.path.join(datadir, "ARCS_V_annulus.nxs"),
             mt_fraction = 0.01,
-        )
+        ))
         return
         
     pass  # end of TestCase
