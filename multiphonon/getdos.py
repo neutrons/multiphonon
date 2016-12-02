@@ -72,7 +72,9 @@ def _normalize_axis_setting(min, max, delta):
 
 def raw2iqe(eventnxs, iqe_nxs, iqe_h5, Eaxis, Qaxis):
     Emin, Emax, dE = Eaxis
+    Emin-=dE/2; Emax-=dE/2 # mantid algo use bin boundaries
     Qmin, Qmax, dQ = Qaxis
+    Qmin-=dQ/2; Qmax-=dQ/2
     # reduce
     if not os.path.exists(iqe_nxs):
         cmd = "mcvine instruments arcs nxs reduce "
@@ -88,7 +90,32 @@ def raw2iqe(eventnxs, iqe_nxs, iqe_h5, Eaxis, Qaxis):
         cmd = "mcvine mantid extract_iqe %(iqe_nxs)s %(iqe_h5)s" % locals()
         if os.system(cmd):
             raise RuntimeError("%s failed" % cmd)
+    # fix energy axis if necessary
+    _fixEaxis(iqe_h5, Eaxis)
     return
+
+
+def _fixEaxis(iqe_h5_path, Eaxis):
+    """when iqe is obtained from a nxs or nxspe file where
+    tof axis is already converted to E, the reduced data may
+    not have the Eaxis as desired. this method fix it by 
+    interpolation
+    """
+    h = hh.load(iqe_h5_path)
+    eaxis = h.axes()[1]
+    centers = eaxis.binCenters()
+    emin, emax, de = Eaxis
+    centers1 = np.arange(emin, emax, de)
+    if centers.size == centers1.size and np.allclose(centers, centers1):
+        return
+    # save a copy of the original histogram
+    import shutil
+    shutil.copyfile(iqe_h5_path, iqe_h5_path+'.bkup-wrongEaxis')
+    from .sqe import interp
+    h1 = interp(h, centers1)
+    hh.dump(h1, iqe_h5_path)
+    return
+
 
 def notebookUI(samplenxs, mtnxs, options=None, load_options_path=None):
     import yaml
