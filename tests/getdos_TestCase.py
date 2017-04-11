@@ -19,13 +19,19 @@ class TestCase(unittest.TestCase):
         return
         
     def test2(self):
-        "multiphonon.getdos"
+        "multiphonon.getdos: MT can"
         from multiphonon.getdos import getDOS
         list(getDOS(
             os.path.join(datadir, "ARCS_V_annulus.nxs"),
             mt_nxs = os.path.join(datadir, "ARCS_V_annulus.nxs"),
             mt_fraction = 0.01,
         ))
+        return
+        
+    def test3(self):
+        "multiphonon.getdos: low T"
+        from multiphonon.getdos import getDOS
+        list(getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs"), T=1.5))
         return
         
     pass  # end of TestCase
