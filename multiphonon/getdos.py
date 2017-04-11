@@ -77,14 +77,13 @@ def raw2iqe(eventnxs, iqe_nxs, iqe_h5, Eaxis, Qaxis):
     Qmin-=dQ/2; Qmax-=dQ/2
     # reduce
     if not os.path.exists(iqe_nxs):
-        cmd = "mcvine instruments arcs nxs reduce "
-        cmd += "%(eventnxs)s --out=%(iqe_nxs)s "
-        cmd += "--ibnorm=ByCurrent "
-        cmd += "--eaxis %(Emin)s %(Emax)s %(dE)s "
-        cmd += "--qaxis %(Qmin)s %(Qmax)s %(dQ)s "
-        cmd = cmd % locals()
-        if os.system(cmd):
-            raise RuntimeError("%s failed" % cmd)
+        qaxis = Qmin, dQ, Qmax
+        eaxis = Emin, dE, Emax
+        if isinstance(eventnxs, unicode):
+            eventnxs = eventnxs.encode()
+        if isinstance(iqe_nxs, unicode):
+            iqe_nxs = iqe_nxs.encode()
+        reduce(eventnxs, qaxis, iqe_nxs, eaxis=eaxis, tof2E='guess', ibnorm='ByCurrent')
     # to histogram
     if not os.path.exists(iqe_h5):
         cmd = "mcvine mantid extract_iqe %(iqe_nxs)s %(iqe_h5)s" % locals()
