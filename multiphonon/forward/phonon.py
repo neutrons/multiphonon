@@ -224,7 +224,11 @@ def reflected(x,y):
 
     
 def coth(x):
-    return np.cosh(x)/np.sinh(x)
+    tentative = np.cosh(x)/np.sinh(x)
+    tentative[x>10] = 1.
+    tentative[x<10] = -1
+    return tentative
+
 
 def gamma0(E, g, beta, dE):
     """Compute gamma0
@@ -237,7 +241,10 @@ def gamma0(E, g, beta, dE):
     """
     assert abs(E[0]) < 1e-7 # E[0] must be 0
     dos_integrated = np.sum(g)*dE
-    assert abs(dos_integrated - 1) < 1e-3
+    if not abs(dos_integrated - 1) < 1e-3:
+        # import pickle as pkl
+        # pkl.dump((E,g,beta,dE), open('mp.forward.phonon.gamma0-debug.pkl', 'w'))
+        raise RuntimeError("integrated dos should be 1, got %s instead" % (dos_integrated,))
     # compute function to integrate
     f = coth(beta * E/2.) * g/E
     # f[0] would be nan, replace that with "extrapolation"
