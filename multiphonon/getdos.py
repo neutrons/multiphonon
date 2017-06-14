@@ -5,7 +5,7 @@ import os
 np.seterr(divide='ignore', invalid='ignore')
 
 
-def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9,
+def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
            Emin=-100, Emax=100, dE=1.,
            Qmin=0, Qmax=15., dQ=0.1, T=300, Ecutoff=50., 
            elastic_E_cutoff=(-20., 7), M=50.94,
@@ -31,6 +31,9 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9,
     yield "Convert sample data to powder I(Q,E)"
     raw2iqe(sample_nxs, iqe_nxs, iqe_h5, Eaxis, Qaxis)
     iqehist = hh.load(iqe_h5)
+    if const_bg_fraction:
+        ave = np.nanmean(iqehist.I)
+        iqehist.I -= ave*const_bg_fraction
     if mt_nxs is not None:
         _tomtpath = lambda p: os.path.join(
             os.path.dirname(p), 'mt-'+os.path.basename(p))
@@ -130,24 +133,25 @@ def notebookUI(samplenxs, mtnxs, options=None, load_options_path=None):
     #
     import ipywidgets as widgets
     from IPython.display import display
-    w_mt_fraction = widgets.BoundedFloatText(description="mt_fraction", min=0., max=1., value=options['mt_fraction'])
+    w_mt_fraction = widgets.BoundedFloatText(description="mt_fraction", min=0., max=100., value=options['mt_fraction'])
+    w_const_bg_fraction = widgets.BoundedFloatText(description="const_bg_fraction", min=0., max=1., value=options.get('const_bg_fraction', 0.0))
     w_Emin = widgets.BoundedFloatText(description="Emin", min=-1000., max=0., value=options['Emin'])
     w_Emax = widgets.BoundedFloatText(description="Emax", min=0., max=1000., value=options['Emax'])
-    w_dE = widgets.BoundedFloatText(description="dE", min=0.01, max=50., value=options['dE'])
-    w_Qmin = widgets.BoundedFloatText(description="Qmin", min=0, max=5., value=options['Qmin'])
-    w_Qmax = widgets.BoundedFloatText(description="Qmax", min=5., max=50., value=options['Qmax'])
-    w_dQ = widgets.BoundedFloatText(description="dQ", min=0.01, max=5., value=options['dQ'])
-    w_T = widgets.BoundedFloatText(description="Temperature", min=0.001, max=5000., value=options['T'])
-    w_Ecutoff = widgets.BoundedFloatText(description="Max energy of phonons", min=5, max=1000., value=options['Ecutoff'])
-    w_ElasticPeakMin = widgets.BoundedFloatText(description="Emin of elastic peak", min=-300., max=-1., value=options['ElasticPeakMin'])
-    w_ElasticPeakMax = widgets.BoundedFloatText(description="Emax of elastic peak", min=0.2, max=300., value=options['ElasticPeakMax'])
+    w_dE = widgets.BoundedFloatText(description="dE", min=0, max=50., value=options['dE'])
+    w_Qmin = widgets.BoundedFloatText(description="Qmin", min=0, max=50., value=options['Qmin'])
+    w_Qmax = widgets.BoundedFloatText(description="Qmax", min=0., max=50., value=options['Qmax'])
+    w_dQ = widgets.BoundedFloatText(description="dQ", min=0, max=5., value=options['dQ'])
+    w_T = widgets.BoundedFloatText(description="Temperature", min=0., max=5000., value=options['T'])
+    w_Ecutoff = widgets.BoundedFloatText(description="Max energy of phonons", min=0, max=1000., value=options['Ecutoff'])
+    w_ElasticPeakMin = widgets.BoundedFloatText(description="Emin of elastic peak", min=-300., max=0., value=options['ElasticPeakMin'])
+    w_ElasticPeakMax = widgets.BoundedFloatText(description="Emax of elastic peak", min=0., max=300., value=options['ElasticPeakMax'])
     w_M = widgets.BoundedFloatText(description="Average atom mass", min=1., max=1000., value=options['M'])
     w_C_ms = widgets.BoundedFloatText(description="C_ms", min=0., max=10., value=options['C_ms'])
-    w_Ei = widgets.BoundedFloatText(description="Ei", min=1, max=2000., value=options['Ei'])
+    w_Ei = widgets.BoundedFloatText(description="Ei", min=0, max=2000., value=options['Ei'])
     w_workdir = widgets.Text(description="work dir", value=options['workdir'])
 
     w_inputs = (
-        w_mt_fraction,
+        w_mt_fraction, w_const_bg_fraction,
         w_Emin, w_Emax, w_dE,
         w_Qmin, w_Qmax, w_dQ,
         w_T, w_Ecutoff,
@@ -165,6 +169,7 @@ def notebookUI(samplenxs, mtnxs, options=None, load_options_path=None):
         #
         kargs = dict(
             mt_fraction = w_mt_fraction.value,
+            const_bg_fraction = w_const_bg_fraction.value,
             Emin=w_Emin.value, Emax=w_Emax.value, dE=w_dE.value,
             Qmin=w_Qmin.value, Qmax=w_Qmax.value, dQ=w_dQ.value,
             T=w_T.value, Ecutoff=w_Ecutoff.value, 
@@ -249,6 +254,7 @@ def log_progress(sequence, every=None, size=None):
 
 default_options = dict(
     mt_fraction = 0.9,
+    const_bg_fraction = 0.,
     Emin = -70,
     Emax = 70,
     dE = 1.,
