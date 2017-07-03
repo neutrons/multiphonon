@@ -6,6 +6,10 @@ revised by several authors including Brandon, Chen, Jennifer, and Dipanshu.
 
 * Main functionality: Compute phonon Density of States (DOS) from powder Inelastic Neutron Scattering (INS) spectrum
 
+It fixes some problems in the original version of getDOS code:
+* No need to pick a rectangular region in the |Q|,E dynamical range. Data in the whole range can be used
+* No need to force the energy axis to have E=0 at the center of a bin
+
 ## Installation
 ### Use conda
 $ conda install -c mcvine multiphonon
