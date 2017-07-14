@@ -8,7 +8,7 @@ import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "data"))
 
 import unittest
-import numpy
+import numpy as np
 
 
 class TestCase(unittest.TestCase):
@@ -20,13 +20,15 @@ class TestCase(unittest.TestCase):
         E, g = loadDOS()
         dE = E[1] - E[0]
         # expand E a bit
-        E = numpy.arange(E[0], 70, dE)
-        g = numpy.concatenate((g, numpy.zeros(len(E)-len(g))))
+        E = np.arange(E[0], 70, dE)
+        g = np.concatenate((g, np.zeros(len(E)-len(g))))
         g/=g.sum()*dE
         from multiphonon.forward.phonon import computeAnESet
         kelvin2mev = 0.0862
         beta = 1./(300*kelvin2mev)
         E, An_set = computeAnESet(N=5, E=E, g=g, beta=beta, dE=dE)
+        self._check(E, np.load('expected_results/phonon.test1.E.npy'))
+        self._check(An_set, np.load('expected_results/phonon.test1.An_set.npy'))
         if interactive:
             import pylab
             for An in An_set:
@@ -42,12 +44,12 @@ class TestCase(unittest.TestCase):
         E,g = loadDOS()
         # expand E a bit
         dE = E[1] - E[0]
-        E = numpy.arange(E[0], 70, dE)
-        g = numpy.concatenate((g, numpy.zeros(len(E)-len(g))))
-        int_g = numpy.sum(g) * dE
+        E = np.arange(E[0], 70, dE)
+        g = np.concatenate((g, np.zeros(len(E)-len(g))))
+        int_g = np.sum(g) * dE
         g/=int_g
         
-        Q = numpy.arange(0, 10, 0.1)
+        Q = np.arange(0, 10, 0.1)
         dQ = Q[1] - Q[0]
         
         kelvin2mev = 0.0862
@@ -79,6 +81,10 @@ class TestCase(unittest.TestCase):
         Q, E, S = sqe(E,g, N=4)
         saveSQE(Q,E,S, 'S_2..5')
         return
+
+
+    def _check(self, a1, a2):
+        self.assert_(np.allclose(a1, a2))
         
         
     pass  # end of TestCase

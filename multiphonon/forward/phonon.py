@@ -226,7 +226,7 @@ def reflected(x,y):
 def coth(x):
     tentative = np.cosh(x)/np.sinh(x)
     tentative[x>10] = 1.
-    tentative[x<10] = -1
+    tentative[x<-10] = -1
     return tentative
 
 
