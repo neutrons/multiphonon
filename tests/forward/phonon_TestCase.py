@@ -11,6 +11,8 @@ import unittest
 import numpy as np
 
 
+expected_results_dir = os.path.join(os.path.dirname(__file__), 'expected_results')
+
 class TestCase(unittest.TestCase):
 
 
@@ -27,8 +29,8 @@ class TestCase(unittest.TestCase):
         kelvin2mev = 0.0862
         beta = 1./(300*kelvin2mev)
         E, An_set = computeAnESet(N=5, E=E, g=g, beta=beta, dE=dE)
-        self._check(E, np.load('expected_results/phonon.test1.E.npy'))
-        self._check(An_set, np.load('expected_results/phonon.test1.An_set.npy'))
+        self._check(E, np.load(os.path.join(expected_results_dir, 'phonon.test1.E.npy')))
+        self._check(An_set, np.load(os.path.join(expected_results_dir, 'phonon.test1.An_set.npy')))
         if interactive:
             import pylab
             for An in An_set:
