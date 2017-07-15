@@ -6,34 +6,50 @@ import numpy as np, histogram as H, histogram.hdf as hh, os
 
 
 def sqe2dos(
-        sqe, T, Ecutoff, elastic_E_cutoff, M, C_ms=None, Ei=None,
+        sqe, T, Ecutoff, elastic_E_cutoff, M,
+        C_ms=None, Ei=None,
         workdir = 'work', 
         MAX_ITERATION = 20, TOLERATION = 1e-4,
         ):
     """Given a SQE, compute DOS
-    * Start with a initial guess of DOS and a SQE
+    * Start with an initial guess of DOS and a SQE
     * Calculate SQE of multiphonon scattering
     * Calculate SQE of multiple scattering using C_ms and multiphonon scattering SQE
     * Subtract MS and MP SQE from the experimental SQE to obtain single-phonon SQE
     * Compute a new DOS from the single-phonon SQE
     * Compare the new DOS to the previous one and calculate the difference
     * If difference is large, continue the iteration. Otherwise the new DOS is what we want
+    
+    Parameters:
+      - sqe: measured S(Q,E) histogram
+      - T: temperature (Kelvin)
+      - Ecutoff: max phonon energy (meV)
+      - elastic_E_cutoff: 2-tuple of floats. cutoff for elastic peak
+      - M: average atomic mass (amu)
+      - C_ms: ratio of multiple scattering over multiphonon scattering
+      - Ei: incident energy
     """
     mask = sqe.I != sqe.I    
     corrected_sqe = sqe
     prev_dos = None
     total_rounds = 0
     for roundno in range(MAX_ITERATION):
-        # compute dos
+        # compute dos.
+        # corrected_sqe: the most recent corrected sqe histogram. same shape as input sqe
         dos = singlephonon_sqe2dos(
             corrected_sqe, T, Ecutoff, elastic_E_cutoff, M)
+        # dos only contains positive portion of the Eaxis of the corrected_sqe
         yield dos
         # compute expected sqe
         from ..forward import dos2sqe
+        # all sqes are histograms and have the same axes of the input experimental sqe
+        # the tot_inel_sqe is masked by the input experimental sqe
         singlephonon_sqe, mpsqe, mssqe, tot_inel_sqe = dos2sqe(
             dos, C_ms, sqe, T, M, Ei
         )
-        # scale exp sqe for comparision
+        # scale exp sqe for comparision.
+        # after scale the total intensity of the E>elastic_E_cutoff[1] portion of the exp sqe
+        # matches that of the tot_inel_sqe
         scale_expsqe_to_match_inel_se(sqe, tot_inel_sqe, elastic_E_cutoff[-1])
         # compute SQE correction
         sqe_correction = mpsqe + mssqe
