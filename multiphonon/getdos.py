@@ -9,7 +9,7 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
            Emin=-100, Emax=100, dE=1.,
            Qmin=0, Qmax=15., dQ=0.1, T=300, Ecutoff=50., 
            elastic_E_cutoff=(-20., 7), M=50.94,
-           C_ms=0.3, Ei=116.446, workdir='work',
+           C_ms=0.3, Ei=116.446, initdos=None, workdir='work',
            iqe_nxs="iqe.nxs", iqe_h5="iqe.h5", maxiter=10):
     """compute DOS from powder spectrum by performing multiphonon and 
     multiple-scattering corrections.
@@ -49,12 +49,15 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
     newiqe = interp(iqehist, newE = np.arange(Emin, Emax, dE))
     # save interpolated data
     hh.dump(newiqe, 'iqe-interped.h5')
+    # init dos
+    if initdos:
+        initdos = hh.load(initdos)
     # create processing engine
     from .backward import sqe2dos
     iterdos = sqe2dos.sqe2dos(
         newiqe, T=T, Ecutoff=Ecutoff, 
         elastic_E_cutoff=elastic_E_cutoff, M=M,
-        C_ms=C_ms, Ei=Ei, workdir='work',
+        C_ms=C_ms, Ei=Ei, initdos=initdos, workdir='work',
         MAX_ITERATION=maxiter)
     doslist = []
     yield "Iterative computation of DOS..."
@@ -119,7 +122,7 @@ def _fixEaxis(iqe_h5_path, Eaxis):
     return
 
 
-def notebookUI(samplenxs, mtnxs, options=None, load_options_path=None):
+def notebookUI(samplenxs, mtnxs, initdos=None, options=None, load_options_path=None):
     import yaml
     if options is not None and load_options_path:
         raise RuntimeError(
@@ -177,6 +180,7 @@ def notebookUI(samplenxs, mtnxs, options=None, load_options_path=None):
             M=w_M.value,
             C_ms=w_C_ms.value, Ei=w_Ei.value,
             workdir=w_workdir.value,
+            initdos=initdos,
             )
         import pprint, os, yaml
         # pprint.pprint(samplenxs)
