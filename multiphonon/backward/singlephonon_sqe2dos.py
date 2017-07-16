@@ -4,7 +4,7 @@
 
 import numpy as np, histogram as H, histogram.hdf as hh, os
 
-def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M):
+def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None):
     """ 
     Given a one-phonon sqe, compute dos
 
@@ -19,6 +19,9 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M):
     Ecutoff: beyond this DOS must be zero
     Elastic_E_cutoff: cutoff energy for removing the elastic line
     M: atomic mass
+    initdos: initial DOS histogram. Its energy axis starts with
+             the positive energy axis of sqe histogram. be aware that
+             it might extend beyond the largest E bin of sqe
 
     The basic procedure is
     * construct an initial guess of DOS
@@ -33,7 +36,13 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M):
     Eplus = Efull[Efull>-dE/2]
     assert Eplus[0] < dE/1e6
     Eplus[0] = 0.
-    initdos = guess_init_dos(Eplus, Ecutoff)
+    if initdos is None:
+        initdos = guess_init_dos(Eplus, Ecutoff)
+    else:
+        # make sure the energy axis is compatible with sqe
+        dos_Eaxis_part1 = initdos[(Eplus[0], Eplus[-1])].E
+        assert np.allclose(dos_Eaxis_part1, Eplus)
+        pass
     # compute sqe from dos
     from ..forward.phonon import computeSQESet, kelvin2mev
     Q = sqe.Q
@@ -41,40 +50,51 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M):
     E = sqe.E
     dE = E[1] - E[0]
     beta = 1./(T*kelvin2mev)    
-    Q2, E2, sqeset = computeSQESet(1, Q,dQ, Eplus,dE, M, initdos, beta)
-    length = min(E2.size, E.size)
-    assert np.allclose(E2[-length:], E[-length:])
+    Q2, E2, sqeset = computeSQESet(1, Q,dQ, initdos.E,dE, M, initdos.I, beta)
     # compute S(E) from SQE
     # - experiment
     # -- only need the positive part
-    expsqe_Epositive = sqe[(), (-dE/2, None)].I
-    expsqeE2_Epositive = sqe[(), (-dE/2, None)].E2
+    expsqe = sqe.copy()
+    expsqe_Epositive = expsqe[(), (-dE/2, None)].I
+    expsqeE2_Epositive = expsqe[(), (-dE/2, None)].E2
     mask = expsqe_Epositive != expsqe_Epositive
     expsqe_Epositive[mask] = 0
     expsqeE2_Epositive[mask] = 0
     expse = expsqe_Epositive.sum(0)
     expse_E2 = expsqeE2_Epositive.sum(0)
     # - simulation
-    simsqe = sqeset[0]
-    simsqe_Epositive = simsqe[:, -expse.shape[-1]:]
-    simsqe_Epositive[mask] = 0
-    simse = simsqe_Epositive.sum(0)
+    simsqe_arr = sqeset[0]
+    simsqe = H.histogram('simsqe', [('Q', Q2, '1./angstrom'), ('E', E2, 'meV')], simsqe_arr)
+    simsqe_Epositive = simsqe[(), (Eplus[0], Eplus[-1])]
+    simsqe_Epositive.I[mask] = 0
+    simse = simsqe_Epositive.I.sum(0)
     # apply scale factor to dos
-    dos = initdos * (expse/simse)
+    # but only at the range of the measurement
+    N_Eplus = Eplus.size
+    dos_in_range = initdos.I[:N_Eplus].copy()
+    # save the expected sum
+    expected_sum = dos_in_range.sum()
+    dos_in_range *= expse/simse
+    # remember the relative error of the dos
     dos_relative_error = expse_E2**.5 / expse
     # clean up bad values
-    dos[dos!=dos] = 0
+    dos_in_range[dos_in_range!=dos_in_range] = 0
     # clean up data near elastic line
     n_small_E = (Eplus<elastic_E_cutoff[1]).sum()
-    dos[:n_small_E] = Eplus[:n_small_E] ** 2 * dos[n_small_E] / Eplus[n_small_E]**2
+    dos_in_range[:n_small_E] = Eplus[:n_small_E] ** 2 * dos_in_range[n_small_E] / Eplus[n_small_E]**2
     # keep positive
-    dos[dos<0] = 0
-    # normalize
-    dos /= dos.sum()*dE
-    dos_error = dos * dos_relative_error
-    Eaxis = H.axis("E", Eplus, 'meV')
-    h = H.histogram("DOS", [Eaxis], data=dos, errors=dos_error**2)
-    return h
+    dos_in_range[dos_in_range<0] = 0
+    # scale
+    sum_now = dos_in_range.sum()
+    dos_in_range *= expected_sum/sum_now
+    # compute error bar
+    dos_error = dos_in_range * dos_relative_error
+    # compute new DOS
+    newdos = initdos.copy()
+    # by updating only the front portion
+    newdos[(Eplus[0], Eplus[-1])].I[:] = dos_in_range
+    newdos[(Eplus[0], Eplus[-1])].E2[:] = dos_error**2
+    return newdos
 
 
 def guess_init_dos(E, cutoff):
@@ -89,7 +109,9 @@ def guess_init_dos(E, cutoff):
     dos[E<end_of_E2_zone] = (E*E/end_of_E2_zone/end_of_E2_zone)[E<end_of_E2_zone]
     dE = E[1] - E[0]
     norm = np.sum(dos) * dE
-    return dos / norm
+    g = dos / norm
+    Eaxis = H.axis("E", E, 'meV')
+    return H.histogram("DOS", [Eaxis], data=g)
 
 
 # End of file 
