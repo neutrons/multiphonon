@@ -48,6 +48,19 @@ class TestCase(unittest.TestCase):
         return
         
         
+    def test1c(self):
+        iqehist = hh.load(os.path.join(datadir, "graphite-Ei_130-iqe.h5"))
+        initdos = hh.load(os.path.join(datadir, "graphite-Ei_300-dos.h5"))
+        newdos = sqe2dos.singlephonon_sqe2dos(
+            iqehist, T=300, Ecutoff=125., elastic_E_cutoff=(-30., 15), M=12., initdos=initdos)
+        # plot
+        if interactive:
+            pylab.plot(initdos.E, initdos.I)
+            pylab.plot(newdos.E, newdos.I)
+            pylab.show()
+        return
+        
+        
     def test2a(self):
         iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
         from multiphonon.sqe import interp
