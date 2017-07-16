@@ -22,9 +22,10 @@ class TestCase(unittest.TestCase):
         E, g = loadDOS()
         Eaxis = H.axis('E', unit='meV', centers=E)
         doshist = H.histogram('DOS', [Eaxis], g)
+        dE = E[1]-E[0]
         iqe = hh.load(os.path.join(datadir, 'V-iqe.h5'))
         from multiphonon.sqe import interp
-        newiqe = interp(iqe, newE = np.arange(-15, 80, 1.))
+        newiqe = interp(iqe, newE = np.arange(iqe.energy[0], 80., dE))
         hh.dump(newiqe, 'V-iqe-interped.h5')
         from multiphonon.forward import dos2sqe
         sqe = dos2sqe(doshist, 0.01, newiqe, 300, 50.94, 120.)
