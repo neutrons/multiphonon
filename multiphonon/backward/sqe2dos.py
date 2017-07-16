@@ -10,6 +10,7 @@ def sqe2dos(
         C_ms=None, Ei=None,
         workdir = 'work', 
         MAX_ITERATION = 20, TOLERATION = 1e-4,
+        initdos = None
         ):
     """Given a SQE, compute DOS
     * Start with an initial guess of DOS and a SQE
@@ -31,13 +32,13 @@ def sqe2dos(
     """
     mask = sqe.I != sqe.I    
     corrected_sqe = sqe
-    prev_dos = None
+    prev_dos = initdos
     total_rounds = 0
     for roundno in range(MAX_ITERATION):
         # compute dos.
         # corrected_sqe: the most recent corrected sqe histogram. same shape as input sqe
         dos = singlephonon_sqe2dos(
-            corrected_sqe, T, Ecutoff, elastic_E_cutoff, M)
+            corrected_sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=prev_dos)
         # dos only contains positive portion of the Eaxis of the corrected_sqe
         yield dos
         # compute expected sqe
@@ -124,6 +125,7 @@ def computeDirtyDOS(sqe, dos, M, T, workdir):
         os.makedirs(workdir)
     from ..forward.phonon import computeSNQ, DWExp, kelvin2mev, gamma0
     beta = 1./(T*kelvin2mev)
+    dos1 = dos[(None, sqe.E[-1])]
     E = dos.E; Q = sqe.Q; g = dos.I
     dE = E[1] - E[0]
     DW2 = DWExp(Q, M, E, g, beta, dE)
@@ -137,8 +139,8 @@ def computeDirtyDOS(sqe, dos, M, T, workdir):
     # take the middle part. 1/6 is kind of arbitrary
     se1 = sqe1[ (Q[0]+Qdiff/6., Q[-1]-Qdiff/6.), (E[0], None) ].sum('Q')
     hh.dump(se1, os.path.join(workdir, 'se.h5'))
-    assert np.allclose(se1.E, E)
-    # 
+    assert np.allclose(se1.E, dos1.E)
+    #
     g0 = gamma0(E,g, beta, dE)
     fE = (1-np.exp(-se1.E*beta)) * se1.E * g0
     ddos = se1.copy()

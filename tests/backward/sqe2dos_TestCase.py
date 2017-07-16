@@ -102,6 +102,27 @@ class TestCase(unittest.TestCase):
         return
         
         
+    def test2c(self):
+        iqehist = hh.load(os.path.join(datadir, "graphite-Ei_130-iqe.h5"))
+        initdos = hh.load(os.path.join(datadir, "graphite-Ei_300-dos.h5"))
+        iterdos = sqe2dos.sqe2dos(
+            iqehist, T=300, Ecutoff=125., 
+            elastic_E_cutoff=(-30., 15), M=12.,
+            C_ms=0.02, Ei=130., workdir='work-graphite',
+            initdos=initdos
+        )
+        for i, dos in enumerate(iterdos):
+            # print dos
+            # plot
+            if interactive:
+                # print '*' * 70
+                pylab.plot(dos.E, dos.I, label='%d' % i)
+        if interactive:
+            pylab.legend()
+            pylab.show()
+        return
+        
+        
     pass  # end of TestCase
 
 
