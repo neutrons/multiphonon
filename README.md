@@ -44,3 +44,10 @@ https://www.youtube.com/watch?v=5XOX8RdHBnQ
       for i, dos in enumerate(iterdos):
         pylab.plot(dos.E, dos.I, label='%d' % i)
       pylab.show()
+
+## Features
+
+* Handle inputs in nxs and nxspe files for sample and empty can measurements
+* Can be used with data measured at multiple incident energies to progressivley obtain better density of states
+* Intermediate results are saved for further investigation
+* The full I(Q,E) dynamic range measured is utilized
