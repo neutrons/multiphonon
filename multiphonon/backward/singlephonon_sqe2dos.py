@@ -84,17 +84,24 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None):
     dos_in_range[:n_small_E] = Eplus[:n_small_E] ** 2 * dos_in_range[n_small_E] / Eplus[n_small_E]**2
     # keep positive
     dos_in_range[dos_in_range<0] = 0
-    # scale
-    sum_now = dos_in_range.sum()
-    dos_in_range *= expected_sum/sum_now
+    # update
+    return update_dos_keep_area(initdos, Eplus[0], Eplus[-1], g=dos_in_range, gerr=dos_in_range*dos_relative_error)
+
+
+def update_dos_keep_area(original_dos_hist, Emin, Emax, g, gerr):
+    "update the lower E portion of the dos by keeping the area of the updated portion intact"
+    expected_sum = original_dos_hist[(Emin, Emax)].I.sum()
+    sum_now = g.sum()
+    g *= expected_sum/sum_now
     # compute error bar
-    dos_error = dos_in_range * dos_relative_error
+    gerr *= expected_sum/sum_now
     # compute new DOS
-    newdos = initdos.copy()
+    newdos = original_dos_hist.copy()
     # by updating only the front portion
-    newdos[(Eplus[0], Eplus[-1])].I[:] = dos_in_range
-    newdos[(Eplus[0], Eplus[-1])].E2[:] = dos_error**2
+    newdos[(Emin, Emax)].I[:] = g
+    newdos[(Emin, Emax)].E2[:] = gerr**2
     return newdos
+    
 
 
 def guess_init_dos(E, cutoff):
@@ -104,7 +111,7 @@ def guess_init_dos(E, cutoff):
     maximum E.
     """
     dos = np.ones(E.size, dtype=float)
-    dos[E>cutoff] = 0
+    dos[E>cutoff] = 1e-10
     end_of_E2_zone = cutoff/3.
     dos[E<end_of_E2_zone] = (E*E/end_of_E2_zone/end_of_E2_zone)[E<end_of_E2_zone]
     dE = E[1] - E[0]
