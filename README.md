@@ -7,7 +7,7 @@ revised by several authors including Brandon, Chen, Jennifer, and Dipanshu.
 * Main functionality: Compute phonon Density of States (DOS) from powder Inelastic Neutron Scattering (INS) spectrum
 
 It fixes some problems in the earlier versions of getDOS code and implemented new features.
-The original requirements of this project is captured at #32.
+The original requirements of this project is captured at [this ticket](https://github.com/sns-chops/multiphonon/issues/32).
 And details of the features of this code can be found below.
 
 ## Installation
