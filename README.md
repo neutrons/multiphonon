@@ -12,12 +12,12 @@ It fixes some problems in the original version of getDOS code:
 
 ## Installation
 ### Use conda
-$ conda install -c mcvine multiphonon
+```$ conda install -c mcvine multiphonon```
 
 ### From source
 Download src tarball and extract, then
 
-$ python setup.py install
+```$ python setup.py install```
 
 ## Usage
 
