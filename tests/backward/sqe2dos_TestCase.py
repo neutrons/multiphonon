@@ -30,8 +30,9 @@ class TestCase(unittest.TestCase):
         # plot
         if interactive:
             import pylab
-            pylab.plot(E1, g1)
-            pylab.plot(E1, ginterp)
+            pylab.plot(E1, g1, label="Original DOS")
+            pylab.plot(E1, ginterp, label="DOS from SQE")
+            pylab.legend()
             pylab.show()
         return
         
@@ -106,7 +107,7 @@ class TestCase(unittest.TestCase):
         iqehist = hh.load(os.path.join(datadir, "graphite-Ei_130-iqe.h5"))
         initdos = hh.load(os.path.join(datadir, "graphite-Ei_300-dos.h5"))
         iterdos = sqe2dos.sqe2dos(
-            iqehist, T=300, Ecutoff=125., 
+            iqehist, T=300, Ecutoff=100., 
             elastic_E_cutoff=(-30., 15), M=12.,
             C_ms=0.02, Ei=130., workdir='work-graphite',
             initdos=initdos
