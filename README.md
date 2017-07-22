@@ -21,9 +21,6 @@ Download src tarball and extract, then
 
 ## Usage
 
-### Through jupyter.sns.gov
-https://www.youtube.com/watch?v=5XOX8RdHBnQ
-
 ### Python scripting
 
       import histogram.hdf as hh, os, pylab
@@ -44,6 +41,9 @@ https://www.youtube.com/watch?v=5XOX8RdHBnQ
       for i, dos in enumerate(iterdos):
         pylab.plot(dos.E, dos.I, label='%d' % i)
       pylab.show()
+
+### Through jupyter.sns.gov for SNS users
+https://www.youtube.com/watch?v=5XOX8RdHBnQ
 
 ## Features
 
