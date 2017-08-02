@@ -15,7 +15,7 @@ And details of the features of this code can be found below.
 ### Use conda
 
       $ conda install -c mantid mantid-framework
-      $ conda install -c mcvine multiphonon```
+      $ conda install -c mcvine multiphonon
 
 ## Usage
 
