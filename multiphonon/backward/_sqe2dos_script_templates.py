@@ -111,8 +111,8 @@ plot_residual_code = """#!/usr/bin/env python
 import histogram.hdf as hh, os, numpy as np
 curdir = os.path.dirname(__file__)
 
-exp_pos_se = hh.load(os.path.join('I_E-exp-posE.h5'))
-residual_pos_se = hh.load(os.path.join('residual_E-posE.h5'))
+exp_pos_se = hh.load(os.path.join(curdir, 'I_E-exp-posE.h5'))
+residual_pos_se = hh.load(os.path.join(curdir, 'residual_E-posE.h5'))
 E = exp_pos_se.E
 
 import matplotlib.pyplot as plt

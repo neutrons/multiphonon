@@ -100,8 +100,8 @@ def sqe2dos(
         return s.sum('Q')
     residual_pos_se = get_pos_se(residual_sqe)
     exp_pos_se = get_pos_se(sqe)
-    hh.dump(exp_pos_se, 'I_E-exp-posE.h5')
-    hh.dump(residual_pos_se, 'residual_E-posE.h5')
+    hh.dump(exp_pos_se, os.path.join(workdir, 'I_E-exp-posE.h5'))
+    hh.dump(residual_pos_se, os.path.join(workdir, 'residual_E-posE.h5'))
     # limit the range of update
     if Ecutoff < residual_pos_se.E[-1]:
         residual_pos_se = residual_pos_se[(None, Ecutoff)]
