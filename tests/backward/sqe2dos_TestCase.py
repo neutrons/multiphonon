@@ -117,7 +117,9 @@ class TestCase(unittest.TestCase):
             # plot
             if interactive:
                 # print '*' * 70
-                pylab.plot(dos.E, dos.I, label='%d' % i)
+                pylab.errorbar(dos.E, dos.I, dos.E2**.5, label='%d' % i)
+        dos = hh.load('work-graphite/final-dos.h5')
+        pylab.errorbar(dos.E, dos.I, dos.E2**.5, label='final')
         if interactive:
             pylab.legend()
             pylab.show()
