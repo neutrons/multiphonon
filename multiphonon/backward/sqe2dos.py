@@ -99,10 +99,15 @@ def sqe2dos(
         return s.sum('Q')
     residual_pos_se = get_pos_se(residual_sqe)
     exp_pos_se = get_pos_se(sqe)
+    # limit the range of update
+    if Ecutoff < residual_pos_se.E[-1]:
+        residual_pos_se = residual_pos_se[(None, Ecutoff)]
+        exp_pos_se = exp_pos_se[(None, Ecutoff)]
+    # compute relative error
     rel_err_from_residual = np.abs(residual_pos_se.I)/exp_pos_se.I
     # add to the error bar
     final_dos = dos.copy()
-    final_dos_subset = final_dos[(residual_pos_se.E[0], residual_pos_se.E[-1])]
+    final_dos_subset = final_dos[(residual_pos_se.E[0], min(Ecutoff, residual_pos_se.E[-1]))]
     final_dos_subset.E2 += (final_dos_subset.I * rel_err_from_residual)**2
     hh.dump(final_dos, os.path.join(workdir, "final-dos.h5"))
     #
