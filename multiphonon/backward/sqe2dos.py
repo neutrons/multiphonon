@@ -96,9 +96,12 @@ def sqe2dos(
     def get_pos_se(sqe):
         s = sqe[(), (elastic_E_cutoff[-1],None)].copy()
         s.I[s.I!=s.I] = 0
+        s.E2[s.E2!=s.E2] = 0
         return s.sum('Q')
     residual_pos_se = get_pos_se(residual_sqe)
     exp_pos_se = get_pos_se(sqe)
+    hh.dump(exp_pos_se, 'I_E-exp-posE.h5')
+    hh.dump(residual_pos_se, 'residual_E-posE.h5')
     # limit the range of update
     if Ecutoff < residual_pos_se.E[-1]:
         residual_pos_se = residual_pos_se[(None, Ecutoff)]
@@ -114,6 +117,10 @@ def sqe2dos(
     create_script(
         os.path.join(workdir, 'plot_dos_iteration.py'),
         plot_dos_iteration_code % dict(total_rounds=total_rounds)
+    )
+    create_script(
+        os.path.join(workdir, 'plot_residual.py'),
+        plot_residual_code,
     )
     computeDirtyDOS(sqe, final_dos, M, T, os.path.join(workdir, 'dirdydos'))
     return
@@ -251,7 +258,8 @@ def normalizeExpSQE_inelonly(sqe, dos, M, beta, elastic_E_cutoff):
 
 # 
 from singlephonon_sqe2dos import sqe2dos as singlephonon_sqe2dos
-from ._sqe2dos_script_templates import plot_intermediate_result_sqe_code,\
-    plot_intermediate_result_se_code, plot_dos_iteration_code
+from ._sqe2dos_script_templates import \
+    plot_intermediate_result_sqe_code,plot_intermediate_result_se_code, \
+    plot_dos_iteration_code, plot_residual_code
 
 # End of file 

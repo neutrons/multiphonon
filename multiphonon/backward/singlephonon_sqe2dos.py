@@ -166,7 +166,7 @@ def guess_init_dos(E, cutoff):
     maximum E.
     """
     dos = np.ones(E.size, dtype=float)
-    dos[E>cutoff] = 1e-10
+    dos[E>cutoff] = 0.
     end_of_E2_zone = cutoff/3.
     dos[E<end_of_E2_zone] = (E*E/end_of_E2_zone/end_of_E2_zone)[E<end_of_E2_zone]
     dE = E[1] - E[0]

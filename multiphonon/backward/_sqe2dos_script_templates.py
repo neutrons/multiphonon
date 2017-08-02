@@ -104,3 +104,21 @@ for round_no in range(%(total_rounds)d):
 plt.legend()
 plt.show()
 """
+
+
+plot_residual_code = """#!/usr/bin/env python
+
+import histogram.hdf as hh, os, numpy as np
+curdir = os.path.dirname(__file__)
+
+exp_pos_se = hh.load(os.path.join('I_E-exp-posE.h5'))
+residual_pos_se = hh.load(os.path.join('residual_E-posE.h5'))
+E = exp_pos_se.E
+
+import matplotlib.pyplot as plt
+plt.errorbar(E, exp_pos_se.I, exp_pos_se.E2**.5, label='exp S(E)')
+plt.errorbar(E, residual_pos_se.I, residual_pos_se.E2**.5, label='residual')
+plt.plot([E[0], E[-1]], [0,0], 'k', label='baseline')
+plt.legend()
+plt.show()
+"""

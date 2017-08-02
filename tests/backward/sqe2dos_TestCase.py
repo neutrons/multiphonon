@@ -76,6 +76,7 @@ class TestCase(unittest.TestCase):
             if interactive:
                 # print '*' * 70
                 pylab.plot(dos.E, dos.I, label='%d' % i)
+                pass
         if interactive:
             pylab.legend()
             pylab.show()
