@@ -1,6 +1,6 @@
 package:
   name: multiphonon
-  version: "0.1.1unstable"
+  version: "0.1.1a1"
 
 source:
   git_rev: master
