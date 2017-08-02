@@ -13,12 +13,9 @@ And details of the features of this code can be found below.
 
 ## Installation
 ### Use conda
-```$ conda install -c mcvine multiphonon```
 
-### From source
-Download src tarball and extract, then
-
-```$ python setup.py install```
+      $ conda install -c mantid mantid-framework
+      $ conda install -c mcvine multiphonon```
 
 ## Usage
 
