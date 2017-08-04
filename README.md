@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/sns-chops/multiphonon.svg?branch=master)](https://travis-ci.org/sns-chops/multiphonon) 
 # multiphonon
-This is a rewrite of multiphonon (getDOS) that was originally authored by 
+This is a rewrite of multiphonon (getDOS) code that was originally authored by 
 Max Kresch during the [DANSE project](http://danse.us/) and
 was then revised by several authors including Brandon, Chen, Jennifer, and Dipanshu
 (their work were recorded as branches in this repo).
