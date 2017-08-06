@@ -4,6 +4,9 @@
 
 import numpy as np, histogram as H, histogram.hdf as hh, os
 
+class EnergyAxisMissingBinCenterAtZero(Exception): pass
+
+
 def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None):
     """ 
     Given a one-phonon sqe, compute dos
@@ -33,8 +36,10 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None):
     # create initial guess of dos
     Efull = sqe.E
     dE = sqe.E[1] - sqe.E[0]
+    assert dE>0, "Energy axis must be incremental"
     Eplus = Efull[Efull>-dE/2]
-    assert Eplus[0] < dE/1e6
+    if abs(Eplus[0]) > dE/1e6:
+        raise EnergyAxisMissingBinCenterAtZero('"0" must be one of the bin centers of the energy axis')
     Eplus[0] = 0.
     if initdos is None:
         initdos = guess_init_dos(Eplus, Ecutoff)

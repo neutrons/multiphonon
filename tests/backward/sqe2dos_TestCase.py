@@ -48,6 +48,17 @@ class TestCase(unittest.TestCase):
         return
         
         
+    def test1b2(self):
+        iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
+        from multiphonon.sqe import interp
+        newiqe = interp(iqehist, newE = np.arange(-50.5, 50, 1.))
+        from multiphonon.backward.singlephonon_sqe2dos import EnergyAxisMissingBinCenterAtZero
+        with self.assertRaises(EnergyAxisMissingBinCenterAtZero):
+            DOS = sqe2dos.singlephonon_sqe2dos(
+                newiqe, T=300, Ecutoff=65., elastic_E_cutoff=(-20., 6.7), M=50.94)
+        return
+        
+        
     def test1c(self):
         iqehist = hh.load(os.path.join(datadir, "graphite-Ei_130-iqe.h5"))
         initdos = hh.load(os.path.join(datadir, "graphite-Ei_300-dos.h5"))
