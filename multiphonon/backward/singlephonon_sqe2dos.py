@@ -7,7 +7,7 @@ import numpy as np, histogram as H, histogram.hdf as hh, os
 class EnergyAxisMissingBinCenterAtZero(Exception): pass
 
 
-def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None):
+def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None, update_weights=None):
     """ 
     Given a one-phonon sqe, compute dos
 
@@ -25,6 +25,7 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None):
     initdos: initial DOS histogram. Its energy axis starts with
              the positive energy axis of sqe histogram. be aware that
              it might extend beyond the largest E bin of sqe
+    update_weights: weights for DOS update strategies (continuity, area conservation)
 
     The basic procedure is
     * construct an initial guess of DOS
@@ -91,9 +92,10 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None):
     dos_to_update = dos_in_range[(Eplus[0], min(Eplus[-1], Ecutoff))]
     # update
     return update_dos(initdos, dos_to_update.E[0], dos_to_update.E[-1],
-                      g=dos_to_update.I, gerr=dos_to_update.I*dos_relative_error[:dos_to_update.I.size])
+                      g=dos_to_update.I, gerr=dos_to_update.I*dos_relative_error[:dos_to_update.I.size],
+                      weights=update_weights)
 
-def update_dos(original_dos_hist, Emin, Emax, g, gerr):
+def update_dos(original_dos_hist, Emin, Emax, g, gerr, weights=None):
     import warnings
     scale1 = compute_scalefactor_using_continuous_criteria(original_dos_hist, Emin, Emax, g)
     scale2 = compute_scalefactor_using_area_criteria(original_dos_hist, Emin, Emax, g)
@@ -109,7 +111,9 @@ def update_dos(original_dos_hist, Emin, Emax, g, gerr):
                 "Scaling factor to combine DOSes calculated is not stable: %s (using continuous criteria) vs %s (using area criteria)\n"
                 "You may want to consider adjusting the parameters such as E range (Emax more specifically)" % (scale1, scale2)
             )
-        scale = (scale1+scale2)/2.
+        if weights is None:
+            weights = [.5, .5]
+        scale = np.dot([scale1, scale2], weights)
     assert scale == scale and not np.isinf(scale), "scale is a bad number: %s" % scale
     g *= scale
     # compute error bar
