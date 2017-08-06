@@ -30,7 +30,7 @@ install:
   - conda update conda
   - conda create -n testenv pip pytest python=$TRAVIS_PYTHON_VERSION
   - conda install -n testenv numpy scipy matplotlib
-  - conda install -n testenv -c histogram
+  - conda install -n testenv -c mcvine histogram
 # These commented out lines are needed for getdos method
 #  - conda install -n testenv -c mantid mantid-framework
   - source activate testenv
