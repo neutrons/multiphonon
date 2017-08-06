@@ -92,6 +92,24 @@ class TestCase(unittest.TestCase):
         return
         
         
+    def test2a2(self):
+        iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
+        from multiphonon.sqe import interp
+        newiqe = interp(iqehist, newE = np.arange(-15.5, 80, 1.))
+        iterdos = sqe2dos.sqe2dos(
+            newiqe, T=300, Ecutoff=55., elastic_E_cutoff=(-12., 6.7), M=50.94,
+            C_ms=.2, Ei=120., workdir='work-V')
+        from multiphonon.backward.singlephonon_sqe2dos import EnergyAxisMissingBinCenterAtZero
+        with self.assertRaises(EnergyAxisMissingBinCenterAtZero):
+            for i, dos in enumerate(iterdos):
+                # print dos
+                # plot
+                if interactive:
+                    # print '*' * 70
+                    pylab.plot(dos.E, dos.I, label='%d' % i)
+        return
+        
+        
     def test2b(self):
         iqehist = hh.load(os.path.join(datadir, "Al-iqe.h5"))
         from multiphonon.sqe import interp
