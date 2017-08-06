@@ -27,6 +27,7 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
         iqe_h5 = os.path.abspath(os.path.join(workdir, iqe_h5))
     # reduce
     Eaxis = _normalize_axis_setting(Emin, Emax, dE)
+    Eaxis = _checkEaxis(*Eaxis)
     Qaxis = _normalize_axis_setting(Qmin, Qmax, dQ)
     yield "Convert sample data to powder I(Q,E)"
     raw2iqe(sample_nxs, iqe_nxs, iqe_h5, Eaxis, Qaxis)
@@ -46,7 +47,7 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
     # interpolate data
     from .sqe import interp
     # probably don't need this line
-    newiqe = interp(iqehist, newE = np.arange(Emin, Emax, dE))
+    newiqe = interp(iqehist, newE = np.arange(*Eaxis))
     # save interpolated data
     hh.dump(newiqe, 'iqe-interped.h5')
     # init dos
@@ -67,6 +68,22 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
     yield "Done"
     return
 
+
+def _checkEaxis(Emin, Emax, dE):
+    saved = Emin, Emax, dE
+    centers = np.arange(Emin, Emax, dE)
+    if np.isclose(centers, 0.).any():
+        return saved
+    import warnings
+    Emin = int(Emin/dE) * dE
+    Emax = int(Emax/dE) * dE
+    new = Emin, Emax, dE
+    warnings.warn(
+        "Zero has to be one of the ticks in the energy axis.\n"
+        "Energy axis modified from %s to %s \n" % (saved, new)
+        )
+    return new
+    
 
 def _normalize_axis_setting(min, max, delta):
     # try to deal with numerical error
