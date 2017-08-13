@@ -8,7 +8,7 @@ import sys, os
 datadir = os.path.join(os.path.dirname(__file__), "../data")
 sys.path.insert(0, datadir)
 
-import unittest
+import unittest, warnings
 import numpy as np, histogram.hdf as hh, histogram as H
 from multiphonon.backward import sqe2dos
 from dos import loadDOS
@@ -25,13 +25,20 @@ class TestCase(unittest.TestCase):
         iterdos = sqe2dos.sqe2dos(
             newiqe, T=300, Ecutoff=55., elastic_E_cutoff=(-12., 6.7), M=50.94,
             C_ms=.2, Ei=120., workdir='work-V')
-        for i, dos in enumerate(iterdos):
-            # print dos
-            # plot
-            if interactive:
-                # print '*' * 70
-                pylab.plot(dos.E, dos.I, label='%d' % i)
-                pass
+        
+        with warnings.catch_warnings(record=True) as ws:
+            warnings.simplefilter('always')
+            for i, dos in enumerate(iterdos):
+                # print dos
+                # plot
+                if interactive:
+                    # print '*' * 70
+                    pylab.plot(dos.E, dos.I, label='%d' % i)
+                    pass
+            # check warning
+            for w in ws:
+                assert 'Scaling factor' not in str(w)
+                
         if interactive:
             pylab.legend()
             pylab.show()

@@ -99,7 +99,8 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None, update_weights=N
 def update_dos(original_dos_hist, Emin, Emax, g, gerr, weights=None):
     # only if the spectrum is nontrivial beyond Emax, we need rescale
     assert original_dos_hist.E[-1] >= Emax
-    g_beyond_range = original_dos_hist[(Emax,None)].I
+    dE = original_dos_hist.E[1]-original_dos_hist.E[0]
+    g_beyond_range = original_dos_hist[(Emax+dE,None)].I
     assert np.all(g_beyond_range >= 0)
     rescale = g_beyond_range.sum() > 0
     if rescale:
