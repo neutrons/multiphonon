@@ -9,7 +9,7 @@ here = os.path.dirname(__file__)
 datadir = os.path.join(here, "../data")
 sys.path.insert(0, datadir)
 
-import unittest
+import unittest, warnings
 import numpy as np, histogram.hdf as hh, histogram as H
 from multiphonon.backward import sqe2dos
 from dos import loadDOS
@@ -20,8 +20,12 @@ class TestCase(unittest.TestCase):
 
     def test1a(self):
         S = hh.load(os.path.join(datadir, "V-S1.h5"))
-        DOS = sqe2dos.singlephonon_sqe2dos(
-            S, T=300, Ecutoff=55., elastic_E_cutoff=(0.,0.), M=50.94)
+        with warnings.catch_warnings(record=True) as ws:
+            warnings.simplefilter('always')
+            DOS = sqe2dos.singlephonon_sqe2dos(
+                S, T=300, Ecutoff=55., elastic_E_cutoff=(0.,0.), M=50.94)
+            for w in ws:
+                assert 'Scaling factor' not in str(w)
         E = DOS.E
         g = DOS.I
         # compare to the original dos data
@@ -113,8 +117,15 @@ class TestCase(unittest.TestCase):
     def test1d(self):
         iqehist = hh.load(os.path.join(datadir, "graphite-Ei_30-iqe.h5"))
         initdos = hh.load(os.path.join(datadir, "graphite-Ei_130-dos.h5"))
-        newdos = sqe2dos.singlephonon_sqe2dos(
-            iqehist, T=300, Ecutoff=20., elastic_E_cutoff=(-10., 8), M=12., initdos=initdos)
+        with warnings.catch_warnings(record=True) as ws:
+            warnings.simplefilter('always')
+            newdos = sqe2dos.singlephonon_sqe2dos(
+                iqehist, T=300, Ecutoff=20., elastic_E_cutoff=(-10., 8), M=12., initdos=initdos)
+            has_scaling_factor_warning = False
+            for w in ws:
+                has_scaling_factor_warning = has_scaling_factor_warning or ('Scaling factor' in str(w))
+                continue
+            self.assert_(has_scaling_factor_warning)
         # plot
         if interactive:
             pylab.plot(initdos.E, initdos.I)
