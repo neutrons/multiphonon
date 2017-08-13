@@ -10,7 +10,7 @@ def sqe2dos(
         C_ms=None, Ei=None,
         workdir = 'work', 
         MAX_ITERATION = 20, TOLERATION = 1e-4,
-        initdos = None
+        initdos = None, update_strategy_weights = None,
         ):
     """Given a SQE, compute DOS
     * Start with an initial guess of DOS and a SQE
@@ -29,6 +29,8 @@ def sqe2dos(
       - M: average atomic mass (amu)
       - C_ms: ratio of multiple scattering over multiphonon scattering
       - Ei: incident energy
+      - initdos: initial DOS
+      - update_strategy_weights: weights for DOS update strategies (continuity, area conservation)
     """
     mask = sqe.I != sqe.I    
     corrected_sqe = sqe
@@ -38,7 +40,8 @@ def sqe2dos(
         # compute dos.
         # corrected_sqe: the most recent corrected sqe histogram. same shape as input sqe
         dos = singlephonon_sqe2dos(
-            corrected_sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=prev_dos)
+            corrected_sqe, T, Ecutoff, elastic_E_cutoff, M,
+            initdos=prev_dos, update_weights=update_strategy_weights)
         # dos only contains positive portion of the Eaxis of the corrected_sqe
         yield dos
         # compute expected sqe

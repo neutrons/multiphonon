@@ -9,7 +9,8 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
            Emin=-100, Emax=100, dE=1.,
            Qmin=0, Qmax=15., dQ=0.1, T=300, Ecutoff=50., 
            elastic_E_cutoff=(-20., 7), M=50.94,
-           C_ms=0.3, Ei=116.446, initdos=None, workdir='work',
+           C_ms=0.3, Ei=116.446, initdos=None, update_strategy_weights=None,
+           workdir='work',
            iqe_nxs="iqe.nxs", iqe_h5="iqe.h5", maxiter=10):
     """compute DOS from powder spectrum by performing multiphonon and 
     multiple-scattering corrections.
@@ -58,7 +59,9 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
     iterdos = sqe2dos.sqe2dos(
         newiqe, T=T, Ecutoff=Ecutoff, 
         elastic_E_cutoff=elastic_E_cutoff, M=M,
-        C_ms=C_ms, Ei=Ei, initdos=initdos, workdir='work',
+        C_ms=C_ms, Ei=Ei,
+        initdos=initdos, update_strategy_weights=update_strategy_weights,
+        workdir='work',
         MAX_ITERATION=maxiter)
     doslist = []
     yield "Iterative computation of DOS..."
@@ -170,13 +173,22 @@ def notebookUI(samplenxs, mtnxs, initdos=None, options=None, load_options_path=N
     w_Ei = widgets.BoundedFloatText(description="Ei", min=0, max=2000., value=options['Ei'])
     w_workdir = widgets.Text(description="work dir", value=options['workdir'])
 
+    update_strategy_weights = options.get('update_strategy_weights', (.5, .5))
+    w_update_weight_continuity = widgets.BoundedFloatText(
+        description='"enforce continuity" weight for DOS update strategy',
+        min=0., max=1., value=update_strategy_weights[0])
+    w_update_weight_area = widgets.BoundedFloatText(
+        description='"area conservation" weight for DOS update strategy',
+        min=0., max=1., value=update_strategy_weights[1])
+
     w_inputs = (
         w_mt_fraction, w_const_bg_fraction,
         w_Emin, w_Emax, w_dE,
         w_Qmin, w_Qmax, w_dQ,
         w_T, w_Ecutoff,
         w_ElasticPeakMin, w_ElasticPeakMax,
-        w_M, w_C_ms, w_Ei, w_workdir
+        w_M, w_C_ms, w_Ei, w_workdir,
+        w_update_weight_continuity, w_update_weight_area
     )
 
     w_Run = widgets.Button(description="Run")
@@ -186,6 +198,7 @@ def notebookUI(samplenxs, mtnxs, initdos=None, options=None, load_options_path=N
         # suppress warning from h5py
         import warnings
         warnings.simplefilter(action = "ignore", category = FutureWarning)
+        dos_update_weights = _get_dos_update_weights(w_update_weight_continuity.value, w_update_weight_area.value)
         #
         kargs = dict(
             mt_fraction = w_mt_fraction.value,
@@ -198,6 +211,7 @@ def notebookUI(samplenxs, mtnxs, initdos=None, options=None, load_options_path=N
             C_ms=w_C_ms.value, Ei=w_Ei.value,
             workdir=w_workdir.value,
             initdos=initdos,
+            update_strategy_weights = dos_update_weights,
             )
         import pprint, os, yaml
         # pprint.pprint(samplenxs)
@@ -219,6 +233,15 @@ def notebookUI(samplenxs, mtnxs, initdos=None, options=None, load_options_path=N
     w_Run.on_click( submit )
     display(*w_all)
     return
+
+
+def _get_dos_update_weights(*w):
+    # w should be all positive
+    wsum = sum(w)
+    if wsum <= 0:
+        N = len(w)
+        return [1./N]*N
+    return [t/wsum for t in w]
 
 
 # modified from https://github.com/alexanderkuk/log-progress
