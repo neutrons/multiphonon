@@ -100,9 +100,13 @@ def update_dos(original_dos_hist, Emin, Emax, g, gerr, weights=None):
     # only if the spectrum is nontrivial beyond Emax, we need rescale
     assert original_dos_hist.E[-1] >= Emax
     dE = original_dos_hist.E[1]-original_dos_hist.E[0]
-    g_beyond_range = original_dos_hist[(Emax+dE,None)].I
-    assert np.all(g_beyond_range >= 0)
-    rescale = g_beyond_range.sum() > 0
+    if Emax+dE > original_dos_hist.E[-1]:
+        rescale = False
+    else:
+        g_beyond_range = original_dos_hist[(Emax+dE,None)].I
+        assert np.all(g_beyond_range >= 0)
+        rescale = g_beyond_range.sum() > 0
+    # if need rescale, calculate the factor using some strategies and take weighted average
     if rescale:
         import warnings
         scale1 = compute_scalefactor_using_continuous_criteria(original_dos_hist, Emin, Emax, g)
