@@ -31,8 +31,8 @@ class TestCase(unittest.TestCase):
         return
         
     def test1b(self):
-        "multiphonon.getdos"
-        work = 'work.getdos'
+        "multiphonon.getdos: reuse reduction results"
+        work = 'work.getdos-reuse-reduction-results'
         if os.path.exists(work):
             import shutil
             shutil.rmtree(work)
