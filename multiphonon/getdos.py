@@ -97,6 +97,14 @@ def _normalize_axis_setting(min, max, delta):
 
 
 def raw2iqe(eventnxs, iqe_nxs, iqe_h5, Eaxis, Qaxis):
+    # if iqe_nxs exists and the parameters do not match, we need to remove the old result
+    parameters_fn = os.path.join(os.path.dirname(iqe_nxs), 'raw2iqe.params')
+    parameters_text = 'Eaxis=%s\nQxis=%s\n' % (Eaxis, Qaxis)
+    if os.path.exists(iqe_nxs) and os.path.exists(parameters_fn):
+        saved = open(parameters_fn).read()
+        if saved != parameters_text:
+            os.remove(iqe_nxs)
+    # 
     from .redutils import reduce, extract_iqe
     Emin, Emax, dE = Eaxis
     Emin-=dE/2; Emax-=dE/2 # mantid algo use bin boundaries
@@ -111,11 +119,16 @@ def raw2iqe(eventnxs, iqe_nxs, iqe_h5, Eaxis, Qaxis):
         if isinstance(iqe_nxs, unicode):
             iqe_nxs = iqe_nxs.encode()
         reduce(eventnxs, qaxis, iqe_nxs, eaxis=eaxis, tof2E='guess', ibnorm='ByCurrent')
+    else:
+        import warnings
+        warnings.warn("Reusing old reduction result from %s" % iqe_nxs)
     # to histogram
     if not os.path.exists(iqe_h5):
         extract_iqe(iqe_nxs, iqe_h5)
     # fix energy axis if necessary
     _fixEaxis(iqe_h5, Eaxis)
+    # save parameters
+    open(parameters_fn, 'wt').write(parameters_text)
     return
 
 

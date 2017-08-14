@@ -30,6 +30,31 @@ class TestCase(unittest.TestCase):
                 break
         return
         
+    def test1b(self):
+        "multiphonon.getdos"
+        work = 'work.getdos'
+        if os.path.exists(work):
+            import shutil
+            shutil.rmtree(work)
+        import warnings
+        with warnings.catch_warnings(record=True) as ws:
+            warnings.simplefilter('always')
+            list(getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs"), workdir=work))
+            for w in ws:
+                self.assert_('Reusing old reduction' not in str(w))
+                continue
+        # get dos again, this time we should see a warning
+        with warnings.catch_warnings(record=True) as ws:
+            warnings.simplefilter('always')
+            list(getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs"), workdir=work))
+            warned = False
+            for w in ws:
+                warned = warned or ('Reusing old reduction' in str(w))
+                if warned: break
+                continue
+            self.assert_(warned)
+        return
+        
     def test2(self):
         "multiphonon.getdos: MT can"
         list(getDOS(
