@@ -19,30 +19,14 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
 
       >>> output = list(getDOS(...))
     """
-    # prepare paths
-    if not os.path.exists(workdir):
-        os.makedirs(workdir)
-    if not os.path.isabs(iqe_nxs):
-        iqe_nxs = os.path.abspath(os.path.join(workdir, iqe_nxs))
-    if not os.path.isabs(iqe_h5):
-        iqe_h5 = os.path.abspath(os.path.join(workdir, iqe_h5))
-    # reduce
-    Eaxis = _normalize_axis_setting(Emin, Emax, dE)
-    Eaxis = _checkEaxis(*Eaxis)
-    Qaxis = _normalize_axis_setting(Qmin, Qmax, dQ)
-    yield "Convert sample data to powder I(Q,E)"
-    raw2iqe(sample_nxs, iqe_nxs, iqe_h5, Eaxis, Qaxis)
+    for msg in reduce2iqe(sample_nxs, Emin,Emax,dE, Qmin,Qmax,dQ, mt_nxs, iqe_nxs, iqe_h5, workdir):
+        yield msg
+    iqe_h5, mtiqe_h5, Qaxis, Eaxis = msg
     iqehist = hh.load(iqe_h5)
     if const_bg_fraction:
         ave = np.nanmean(iqehist.I)
         iqehist.I -= ave*const_bg_fraction
     if mt_nxs is not None:
-        _tomtpath = lambda p: os.path.join(
-            os.path.dirname(p), 'mt-'+os.path.basename(p))
-        mtiqe_nxs = _tomtpath(iqe_nxs)
-        mtiqe_h5 = _tomtpath(iqe_h5)
-        yield "Convert MT data to powder I(Q,E)"
-        raw2iqe(mt_nxs, mtiqe_nxs, mtiqe_h5, Eaxis, Qaxis)
         iqehist -= hh.load(mtiqe_h5) * (mt_fraction, 0)
     # to DOS
     # interpolate data
@@ -72,6 +56,32 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
     return
 
 
+def reduce2iqe(sample_nxs, Emin,Emax,dE, Qmin,Qmax,dQ, mt_nxs=None, iqe_nxs='iqe.nxs', iqe_h5='iqe.h5', workdir='work'):
+    # prepare paths
+    if not os.path.exists(workdir):
+        os.makedirs(workdir)
+    if not os.path.isabs(iqe_nxs):
+        iqe_nxs = os.path.abspath(os.path.join(workdir, iqe_nxs))
+    if not os.path.isabs(iqe_h5):
+        iqe_h5 = os.path.abspath(os.path.join(workdir, iqe_h5))
+    # reduce
+    Eaxis = _normalize_axis_setting(Emin, Emax, dE)
+    Eaxis = _checkEaxis(*Eaxis)
+    Qaxis = _normalize_axis_setting(Qmin, Qmax, dQ)
+    yield "Convert sample data to powder I(Q,E)"
+    raw2iqe(sample_nxs, iqe_nxs, iqe_h5, Eaxis, Qaxis, type='sample')
+    if mt_nxs is not None:
+        _tomtpath = lambda p: os.path.join(
+            os.path.dirname(p), 'mt-'+os.path.basename(p))
+        mtiqe_nxs = _tomtpath(iqe_nxs)
+        mtiqe_h5 = _tomtpath(iqe_h5)
+        yield "Convert MT data to powder I(Q,E)"
+        raw2iqe(mt_nxs, mtiqe_nxs, mtiqe_h5, Eaxis, Qaxis, type='MT')
+    else:
+        mtiqe_h5=None
+    yield iqe_h5, mtiqe_h5, Qaxis, Eaxis
+
+
 def _checkEaxis(Emin, Emax, dE):
     saved = Emin, Emax, dE
     centers = np.arange(Emin, Emax, dE)
@@ -96,14 +106,25 @@ def _normalize_axis_setting(min, max, delta):
     return min, max, delta
 
 
-def raw2iqe(eventnxs, iqe_nxs, iqe_h5, Eaxis, Qaxis):
+def _md5(s):
+    import hashlib
+    return hashlib.md5(s).hexdigest()
+
+
+def raw2iqe(eventnxs, iqe_nxs, iqe_h5, Eaxis, Qaxis, type):
     # if iqe_nxs exists and the parameters do not match, we need to remove the old result
-    parameters_fn = os.path.join(os.path.dirname(iqe_nxs), 'raw2iqe.params')
-    parameters_text = 'Eaxis=%s\nQxis=%s\n' % (Eaxis, Qaxis)
-    if os.path.exists(iqe_nxs) and os.path.exists(parameters_fn):
-        saved = open(parameters_fn).read()
-        if saved != parameters_text:
-            os.remove(iqe_nxs)
+    parameters_fn = os.path.join(os.path.dirname(iqe_nxs), 'raw2iqe-%s.params' % type)
+    parameters_text = 'nxs=%s\nEaxis=%s\nQxis=%s\n' % (eventnxs, Eaxis, Qaxis)
+    remove_cache = False
+    if os.path.exists(iqe_nxs):
+        if os.path.exists(parameters_fn):
+            saved = open(parameters_fn).read()
+            if saved != parameters_text:
+                remove_cache = True
+        else:
+            remove_cache = True
+    if remove_cache:
+        os.remove(iqe_nxs); os.remove(iqe_h5)
     # 
     from .redutils import reduce, extract_iqe
     Emin, Emax, dE = Eaxis
