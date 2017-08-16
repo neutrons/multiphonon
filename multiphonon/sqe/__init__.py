@@ -5,6 +5,25 @@
 
 import histogram as H, numpy as np
 
+def plot(iqe):
+    Q = iqe.Q
+    try:
+        E= iqe.energy
+    except:
+        E = iqe.E
+        pass
+    Qg, Eg = np.mgrid[Q[0]:Q[-1]+1e-5:Q[1]-Q[0], E[0]:E[-1]+1e-5:E[1]-E[0]]
+    import numpy.ma as ma
+    Zm = ma.array(iqe.I, mask=np.isnan(iqe.I))
+    from matplotlib import pyplot as plt
+    plt.pcolormesh(Qg, Eg, Zm)
+    plt.clim(0, np.nanmax(iqe.I))
+    plt.xlim(np.min(Q), np.max(Q))
+    plt.ylim(np.min(E), np.max(E))
+    plt.colorbar()
+    return
+
+
 def interp(iqehist, newE):
     """compute a new IQE histogram using the new energy array
     
