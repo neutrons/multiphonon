@@ -1,0 +1,24 @@
+C_ms: 0.05
+Eaxis: !!python/tuple [-130.0, 125.5, 1.0]
+Ecutoff: 100.0
+Ei: 130.0
+ElasticPeakMax: 8.0
+ElasticPeakMin: -20.0
+Emax: 125.0
+Emin: -130.0
+M: 12.0
+Qaxis: !!python/tuple [0.0, 20.05, 0.1]
+Qmax: 20.0
+Qmin: 0.0
+T: 300.0
+const_bg_fraction: 0.0
+dE: 1.0
+dQ: 0.1
+initdos: /SNS/ARCS/IPTS-15398/shared/getdos/graphite-Ei_300-dos.h5
+iqe_h5: /SNS/users/lj7/reduction/ARCS/getdos2-demo-multipleEi/work/iqe.h5
+mt_fraction: 0.95
+mt_nxs: /SNS/ARCS/IPTS-15398/shared/mantid_reduce/MT/MT_130p00.nxspe
+mtiqe_h5: /SNS/users/lj7/reduction/ARCS/getdos2-demo-multipleEi/work/mt-iqe.h5
+sample_nxs: /SNS/ARCS/IPTS-15398/shared/mantid_reduce/non-radC/non-radC_130p00.nxspe
+update_strategy_weights: !!python/tuple [0.5, 0.5]
+workdir: work

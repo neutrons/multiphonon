@@ -1,0 +1,24 @@
+C_ms: 0.2
+Eaxis: !!python/tuple [-75.0, 75.5, 1.0]
+Ecutoff: 55.0
+Ei: 80.0
+ElasticPeakMax: 6.0
+ElasticPeakMin: -11.0
+Emax: 75.0
+Emin: -75.0
+M: 27.0
+Qaxis: !!python/tuple [0.0, 13.05, 0.1]
+Qmax: 13.0
+Qmin: 0.0
+T: 300.0
+const_bg_fraction: 0.0
+dE: 1.0
+dQ: 0.1
+initdos: null
+iqe_h5: /SNS/users/lj7/reduction/ARCS/getdos-demo-test/work/iqe.h5
+mt_fraction: 0.99
+mt_nxs: null
+mtiqe_h5: null
+sample_nxs: /SNS/ARCS/2014_1_18_CAL/0/47435/NeXus/ARCS_47435_event.nxs
+update_strategy_weights: !!python/tuple [0.5, 0.5]
+workdir: work
