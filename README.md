@@ -11,6 +11,13 @@ It fixes some problems in the earlier versions of getDOS code and implemented ne
 The original requirements of this project is captured at [this ticket](https://github.com/sns-chops/multiphonon/issues/32).
 And details of the features of this code can be found below.
 
+## Features
+
+* Handle inputs in nxs and nxspe files for sample and empty can measurements
+* Can be used with data measured at multiple incident energies to progressivley obtain better density of states
+* Intermediate results are saved for further investigation
+* The full I(Q,E) dynamic range measured is utilized
+
 ## Installation
 ### Use conda
 
@@ -43,9 +50,3 @@ And details of the features of this code can be found below.
 ### Through jupyter.sns.gov for SNS users
 https://www.youtube.com/watch?v=5XOX8RdHBnQ
 
-## Features
-
-* Handle inputs in nxs and nxspe files for sample and empty can measurements
-* Can be used with data measured at multiple incident energies to progressivley obtain better density of states
-* Intermediate results are saved for further investigation
-* The full I(Q,E) dynamic range measured is utilized
