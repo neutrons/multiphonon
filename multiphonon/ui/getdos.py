@@ -8,6 +8,11 @@ import os, numpy as np, yaml, inspect
 class Context(wiz.Context):
 
     # defaults
+    Ei = 100.
+    sample_nxs = None
+    mt_nxs = None
+    Emin = Emax = dE = None
+    Qmin = Qmax = dQ = None
     mt_fraction = 0.9
     const_bg_fraction = 0.
     T = 300.
@@ -17,6 +22,7 @@ class Context(wiz.Context):
     M = 50.94
     C_ms = 0.1
     workdir = 'work'
+    initdos = None
     update_strategy_weights = (0.5, 0.5)
 
     # yaml IO. requirement: all properties are simple as strs, ints, floats
@@ -63,7 +69,12 @@ class GetSampleNxs(wiz.Step):
         return ipyw.VBox(children=widgets)
     
     def createFS(self):
-        self.fs = fileselector.FileSelectorPanel("Select a file", start_dir='/SNS/ARCS', type='file')
+        context = self.context
+        if context.sample_nxs:
+            start_dir = os.path.dirname(context.sample_nxs)
+        else:
+            start_dir = '/SNS/ARCS'
+        self.fs = fileselector.FileSelectorPanel("Select a file", start_dir=start_dir, type='file')
         def next(s):
             self.sample_nxs = self.fs.selected
             self.handle_next_button_click(s)
@@ -94,13 +105,15 @@ class GetMTNxs(wiz.Step):
     def createPanel(self):
         explanation = ipyw.HTML("Please choose the empty can (MT) nxs or nxspe file:")
         self.warning = ipyw.HTML()
+        self.skip_button = ipyw.Button(description='Skip', tooltip='Skip empty can')
+        self.skip_button.on_click(self.skip)
         self.createFS()
         # the last one must be fileselector. see "validate" below
-        widgets= [explanation, self.warning, self.fs.panel]
+        widgets= [explanation, self.skip_button, self.warning, self.fs.panel]
         return ipyw.VBox(children=widgets)
     
     def createFS(self):
-        start_dir = os.path.dirname(self.context.sample_nxs)
+        start_dir = os.path.dirname(self.context.mt_nxs or self.context.sample_nxs)
         self.fs = fileselector.FileSelectorPanel(
             "Select a file", start_dir=start_dir, type='file')
         def next(s):
@@ -110,6 +123,12 @@ class GetMTNxs(wiz.Step):
         self.fs.next = next
         return
     
+    def skip(self, s):
+        self.mt_nxs = None
+        self.remove()
+        self.nextStep()
+        return
+
     def validate(self):
         ext = os.path.splitext(self.mt_nxs)[-1]
         if ext not in ['.nxs', '.nxspe']:
@@ -130,10 +149,11 @@ class GetEiT(wiz.Step):
     "Exp conditions: Ei, T"
     
     def createPanel(self):
+        context = self.context
         self.text_Ei = ipyw.BoundedFloatText(
-            description="Ei (meV)", value=100., min=0., max=10000)
+            description="Ei (meV)", value=context.Ei, min=0., max=10000)
         self.text_T = ipyw.BoundedFloatText(
-            description="Temperature (Kelvin)", value=300., min=0., max=10000)
+            description="Temperature (Kelvin)", value=context.T, min=0., max=10000)
         OK = ipyw.Button(description='OK')
         OK.on_click(self.handle_next_button_click)
         widgets= [self.text_Ei, self.text_T, OK]
@@ -160,17 +180,14 @@ class GetEAxis(wiz.Step):
     "E axis"
     
     def createPanel(self):
-        Ei = self.context.Ei
-        Emax = Ei*.95
-        Emin = -Emax
-        dE = round2(Ei/100.)
-
+        context = self.context
+        Ei = context.Ei
         self.text_Emin = ipyw.BoundedFloatText(
-            description='Emin', value=Emin, min=Emin*5, max=0)
+            description='Emin', value=(-Ei*.95 if context.Emin is None else context.Emin), min=-Ei*5, max=0)
         self.text_Emax = ipyw.BoundedFloatText(
-            description='Emax', value=Emax, min=0., max=Ei)
+            description='Emax', value=(Ei*.95 if context.Emax is None else context.Emax), min=0., max=Ei)
         self.text_dE = ipyw.BoundedFloatText(
-            description='dE', value=dE, min=0., max=Emax/5)
+            description='dE', value=(round2(Ei/100.) if context.dE is None else context.dE), min=0., max=Ei/5)
         OK = ipyw.Button(description='OK')
         OK.on_click(self.handle_next_button_click)
         widgets= [self.text_Emin, self.text_Emax, self.text_dE, OK]
@@ -193,18 +210,17 @@ class GetQAxis(wiz.Step):
     "Q axis"
     
     def createPanel(self):
-        Ei = self.context.Ei
+        context = self.context
+        Ei = context.Ei
         Qmin = 0
         from multiphonon.units.neutron import e2k
-        Qmax = round2(e2k(Ei)*2*1.5, digits=2)
-        dQ = round2(Qmax/100.)
-        
+        Qmax = round2(e2k(Ei)*2*1.5, digits=2)        
         self.text_Qmin = ipyw.BoundedFloatText(
-            description='Qmin', value=Qmin, min=0., max=Qmax)
+            description='Qmin', value=(Qmin if context.Qmin is None else context.Qmin), min=Qmin, max=Qmax)
         self.text_Qmax = ipyw.BoundedFloatText(
-            description='Qmax', value=Qmax, min=0., max=Qmax)
+            description='Qmax', value=(Qmax if context.Qmax is None else context.Qmax), min=Qmin, max=Qmax)
         self.text_dQ = ipyw.BoundedFloatText(
-            description='dQ', value=dQ, min=0., max=Qmax/5)
+            description='dQ', value=(round2(Qmax/100.) if context.dQ is None else context.dQ), min=0., max=Qmax/5)
         OK = ipyw.Button(description='OK')
         OK.on_click(self.handle_next_button_click)
         widgets= [self.text_Qmin, self.text_Qmax, self.text_dQ, OK]
@@ -239,7 +255,10 @@ class GetQAxis(wiz.Step):
 class GetInitDOS(wiz.Step):
     
     def createPanel(self):
-        explanation = ipyw.HTML("Please choose the DOS histogram for initial input (you can skip this step) :")
+        explanation = ipyw.HTML(
+            "If you are combining data from different incident energies, it is desirable to provide an DOS computed from higher Ei. "
+            "Please choose the DOS histogram for initial input (you can also skip this step) :"
+        )
         self.warning = ipyw.HTML()
         self.skip_button = ipyw.Button(description='Skip', tooltip='Skip initial DOS')
         self.skip_button.on_click(self.skip)
@@ -249,7 +268,9 @@ class GetInitDOS(wiz.Step):
         return ipyw.VBox(children=widgets)
     
     def createFS(self):
-        self.fs = fileselector.FileSelectorPanel("Select a file", start_dir='/SNS/ARCS', type='file')
+        context = self.context
+        start_dir = '/SNS/ARCS' if context.initdos is None else os.path.dirname(context.initdos)
+        self.fs = fileselector.FileSelectorPanel("Select a file", start_dir=start_dir, type='file')
         def next(s):
             self.initdos = self.fs.selected
             self.handle_next_button_click(s)
@@ -301,40 +322,53 @@ class GetParameters(wiz.Step):
         return True
     
     def nextStep(self):
+        context = self.context
         # suppress warning from h5py
         import warnings
         warnings.simplefilter(action = "ignore", category = FutureWarning)
-        from .getdos0 import _get_dos_update_weights
-        w_inputs = self.w_inputs; context = self.context
-        w_update_weight_continuity, w_update_weight_area = w_inputs['update_weights']
-        dos_update_weights = _get_dos_update_weights(w_update_weight_continuity.value, w_update_weight_area.value)
-        #
+        # some parameters from context
         Emin, Emax, dE = context.Eaxis; Qmin, Qmax, dQ = context.Qaxis;
-        _getval = lambda w: w.value
+        w_inputs = self.w_inputs
+        # special: update_strategy_weights
+        w_update_weight_continuity, w_update_weight_area = w_inputs['update_weights']
+        context.update_strategy_weights = w_update_weight_continuity.value, w_update_weight_area.value
+        from .getdos0 import _get_dos_update_weights
+        dos_update_weights = _get_dos_update_weights(*context.update_strategy_weights)
+        # special: elastic_E_cutoff
+        w_ElasticPeakMin, w_ElasticPeakMax = w_inputs['ElasticPeakRange']
+        elastic_E_cutoff = context.ElasticPeakMin, context.ElasticPeakMax = w_ElasticPeakMin.value, w_ElasticPeakMax.value
+        # other parameters
+        maxiter = 10
+        # build args to be passed to getDOS method
         kargs = dict(
             mt_fraction = w_inputs['mt_fraction'].value,
             const_bg_fraction = w_inputs['const_bg_fraction'].value,
             Emin=Emin, Emax=Emax, dE=dE,
             Qmin=Qmin, Qmax=Qmax, dQ=dQ,
             T=context.T, Ecutoff=w_inputs['Ecutoff'].value, 
-            elastic_E_cutoff=map(_getval, w_inputs['ElasticPeakRange']),
+            elastic_E_cutoff=elastic_E_cutoff,
             M=w_inputs['M'].value,
             C_ms=w_inputs['C_ms'].value, Ei=context.Ei,
             initdos=context.initdos,
             workdir=context.workdir,
             update_strategy_weights = dos_update_weights,
+            sample_nxs=context.sample_nxs,
+            mt_nxs=context.mt_nxs,
+            maxiter=maxiter,
             )
+        # update context
+        for k in ['mt_fraction', 'const_bg_fraction', 'Ecutoff', 'M', 'C_ms']:
+            setattr(context, k, kargs[k])
+        # run getdos
         import pprint, os, yaml
         workdir = context.workdir
         if not os.path.exists(workdir): os.makedirs(workdir)
-        maxiter = 10
+        # save kargs sent to getDOS
+        yaml.dump(kargs, open(os.path.join(workdir, 'getdos-kargs.yaml'), 'wt'))
         from ..getdos import getDOS
         from .getdos0 import log_progress
-        log_progress(getDOS(context.sample_nxs, mt_nxs=context.mt_nxs, maxiter=maxiter, **kargs), every=1, size=maxiter+2)
+        log_progress(getDOS(**kargs), every=1, size=maxiter+2)
         return
-#    w_Run.on_click( submit )
-#    display(*w_all)
-#    return
 
 
 def createParameterInputWidgets(context):
