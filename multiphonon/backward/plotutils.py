@@ -3,7 +3,12 @@ import matplotlib.pyplot as plt, matplotlib as mpl, numpy as np
 import histogram.hdf as hh, os
 
 
-def plot_dos_iteration(curdir, total_rounds):
+def plot_dos_iteration(curdir, total_rounds=None):
+    if total_rounds is None:
+        import glob
+        dirs = glob.glob(os.path.join(curdir, 'round-*'))
+        _get_round_no = lambda p: int(os.path.basename(p).lstrip('round-'))
+        total_rounds = max(map(_get_round_no, dirs)) + 1
     # mpl.rcParams['figure.figsize'] = 6,4.5
     for round_no in range(total_rounds):
         fn = os.path.join(curdir, 'round-' + str(round_no), 'dos.h5')
