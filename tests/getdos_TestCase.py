@@ -28,7 +28,7 @@ class TestCase(unittest.TestCase):
         list(getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs")))
         return
         
-    def test1a(self):
+    def _test1a(self):
         "multiphonon.getdos: check energy axis"
         import warnings
         with warnings.catch_warnings(record=True) as w:
@@ -39,7 +39,7 @@ class TestCase(unittest.TestCase):
                 break
         return
         
-    def test1b(self):
+    def _test1b(self):
         "multiphonon.getdos: reuse reduction results"
         work = 'work.getdos-reuse-reduction-results'
         if os.path.exists(work):
@@ -74,7 +74,7 @@ class TestCase(unittest.TestCase):
             self.assert_(iqe.energy[0]==0.)
         return
         
-    def test2(self):
+    def _test2(self):
         "multiphonon.getdos: MT can"
         list(getDOS(
             os.path.join(datadir, "ARCS_V_annulus.nxs"),
@@ -83,7 +83,7 @@ class TestCase(unittest.TestCase):
         ))
         return
         
-    def test3(self):
+    def _test3(self):
         "multiphonon.getdos: low T"
         list(getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs"), T=1.5))
         return
