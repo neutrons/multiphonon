@@ -23,23 +23,26 @@ before_install:
   - chmod +x miniconda.sh
   - ./miniconda.sh -b -p /home/travis/mc
   - export PATH=/home/travis/mc/bin:$PATH
+  - mkdir -p $HOME/.mantid
+  - echo "default.facility=SNS" > $HOME/.mantid/Mantid.user.properties
 
 install:
   - export GIT_FULL_HASH=`git rev-parse HEAD`
   - conda config --set always_yes true
   - conda update conda
+  - conda config --add channels conda-forge
   - conda create -n testenv pip pytest python=$TRAVIS_PYTHON_VERSION
   - conda install -n testenv numpy scipy matplotlib
   - conda install -n testenv -c mcvine histogram
 # These commented out lines are needed for getdos method
-#  - conda install -n testenv -c mantid mantid-framework
+  - conda install -n testenv -c mantid mantid-framework
   - source activate testenv
   - python setup.py install
 #  - pip install coveralls
 #  - pip install codecov
 
 script:
-   - py.test
+   - travis_wait 50 py.test
 
 notifications:
   email:
