@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 #
 
-import pytest
-pytestmark = pytest.mark.skipif(True, reason="only run mannually")
+# import pytest
+# pytestmark = pytest.mark.skipif(True, reason="only run mannually")
 
 interactive = False
 
@@ -13,6 +13,15 @@ from multiphonon.getdos import getDOS
 
 import unittest
 class TestCase(unittest.TestCase):
+
+    def setUp(self):
+        dest = os.path.join(datadir, 'ARCS_V_annulus.nxs')
+        if os.path.exists(dest): return
+        url = "https://www.dropbox.com/s/tbh4jcwiags410d/ARCS_V_annulus.nxs?dl=1"
+        cmd = 'wget %r -O %r' % (url, dest)
+        if os.system(cmd):
+            raise RuntimeError("%s failed" % cmd)
+        return
 
     def test1(self):
         "multiphonon.getdos"
