@@ -7,6 +7,7 @@ interactive = False
 import sys, os
 datadir = os.path.join(os.path.dirname(__file__), "../data")
 sys.path.insert(0, datadir)
+here = os.path.dirname(__file__)
 
 import unittest, warnings
 import numpy as np, histogram.hdf as hh, histogram as H
@@ -18,6 +19,7 @@ class TestCase(unittest.TestCase):
 
 
     def test2a(self):
+        "sqe2dos: V exp"
         iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
         from multiphonon.sqe import interp
         newiqe = interp(iqehist, newE = np.arange(-15, 80, 1.))
@@ -38,7 +40,8 @@ class TestCase(unittest.TestCase):
             # check warning
             for w in ws:
                 assert 'Scaling factor' not in str(w)
-                
+
+        self.assert_(np.allclose(dos.I, hh.load(os.path.join(here, 'expected_results', 'sqe2dos-test2a-final-dos.h5')).I))
         if interactive:
             pylab.legend()
             pylab.show()
@@ -46,6 +49,7 @@ class TestCase(unittest.TestCase):
         
         
     def test2a2(self):
+        "sqe2dos: check energy axis"
         iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
         from multiphonon.sqe import interp
         newiqe = interp(iqehist, newE = np.arange(-15.5, 80, 1.))
@@ -78,6 +82,7 @@ class TestCase(unittest.TestCase):
             if interactive:
                 # print '*' * 70
                 pylab.plot(dos.E, dos.I, label='%d' % i)
+        self.assert_(np.allclose(dos.I, hh.load(os.path.join(here, 'expected_results', 'sqe2dos-test2b-final-dos.h5')).I))
         if interactive:
             pylab.legend()
             pylab.show()
@@ -99,6 +104,7 @@ class TestCase(unittest.TestCase):
             if interactive:
                 # print '*' * 70
                 pylab.errorbar(dos.E, dos.I, dos.E2**.5, label='%d' % i)
+        self.assert_(np.allclose(dos.I, hh.load(os.path.join(here, 'expected_results', 'sqe2dos-test2c-final-dos.h5')).I))
         if interactive:
             dos = hh.load('work-graphite/final-dos.h5')
             pylab.errorbar(dos.E, dos.I, dos.E2**.5, label='final')
