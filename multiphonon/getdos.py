@@ -45,7 +45,7 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
         elastic_E_cutoff=elastic_E_cutoff, M=M,
         C_ms=C_ms, Ei=Ei,
         initdos=initdos, update_strategy_weights=update_strategy_weights,
-        workdir='work',
+        workdir=workdir,
         MAX_ITERATION=maxiter)
     doslist = []
     yield "Iterative computation of DOS..."
