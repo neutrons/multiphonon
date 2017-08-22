@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 #
 
-# import pytest
-# pytestmark = pytest.mark.skipif(True, reason="only run mannually")
+import pytest
+pytestmark = pytest.mark.skipif(True, reason="only run mannually")
 
 interactive = False
 
