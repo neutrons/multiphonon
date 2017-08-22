@@ -8,7 +8,7 @@ import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "data"))
 
 import unittest
-import numpy as np
+import numpy as np, histogram.hdf as hh
 
 
 expected_results_dir = os.path.join(os.path.dirname(__file__), 'expected_results')
@@ -68,7 +68,8 @@ class TestCase(unittest.TestCase):
         for i, Sn in enumerate(S_set):
             # pylab.imshow(Sn.T)
             # pylab.show()
-            save(Sn, 'S%s' % (i+1))
+            # save(Sn, 'S%s' % (i+1))
+            self._check(Sn, hh.load(os.path.join(expected_results_dir, 'S%s.h5' % (i+1,))).I)
             continue
         summed = S_set.sum(axis=0)
         save(summed, 'S')
@@ -81,13 +82,13 @@ class TestCase(unittest.TestCase):
         E,g = loadDOS()
         from multiphonon.forward.phonon import sqe
         Q, E, S = sqe(E,g, N=4)
-        saveSQE(Q,E,S, 'S_2..5')
+        # saveSQE(Q,E,S, 'S_2..5')
+        self._check(S, hh.load(os.path.join(expected_results_dir, 'S_2..5.h5')).I)
         return
 
 
     def _check(self, a1, a2):
         self.assert_(np.allclose(a1, a2))
-        
         
     pass  # end of TestCase
 
