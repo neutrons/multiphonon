@@ -48,6 +48,9 @@ class TestCase(unittest.TestCase):
         newiqe = interp(iqehist, newE = np.arange(-50, 50, 1.))
         DOS = sqe2dos.singlephonon_sqe2dos(
             newiqe, T=300, Ecutoff=65., elastic_E_cutoff=(-20., 6.7), M=50.94)
+        path = os.path.join(here, 'expected_results', 'test1b-dos.h5')
+        expected = hh.load(path)
+        self.assert_(np.allclose(DOS.I, expected.I))
         # plot
         if interactive:
             H.plot(DOS)
