@@ -19,6 +19,7 @@ class TestCase(unittest.TestCase):
 
 
     def test1a(self):
+        "singlephonon_sqe2dos: simulated vanadium SQE -> DOS"
         S = hh.load(os.path.join(datadir, "V-S1.h5"))
         with warnings.catch_warnings(record=True) as ws:
             warnings.simplefilter('always')
@@ -43,11 +44,15 @@ class TestCase(unittest.TestCase):
         
         
     def test1b(self):
+        "singlephonon_sqe2dos: exp vanadium SQE -> DOS"
         iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
         from multiphonon.sqe import interp
         newiqe = interp(iqehist, newE = np.arange(-50, 50, 1.))
         DOS = sqe2dos.singlephonon_sqe2dos(
             newiqe, T=300, Ecutoff=65., elastic_E_cutoff=(-20., 6.7), M=50.94)
+        path = os.path.join(here, 'expected_results', 'test1b-dos.h5')
+        expected = hh.load(path)
+        self.assert_(np.allclose(DOS.I, expected.I))
         # plot
         if interactive:
             H.plot(DOS)
@@ -55,6 +60,7 @@ class TestCase(unittest.TestCase):
         
         
     def test1b2(self):
+        "singlephonon_sqe2dos: check energy axis"
         iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
         from multiphonon.sqe import interp
         newiqe = interp(iqehist, newE = np.arange(-50.5, 50, 1.))
@@ -66,6 +72,7 @@ class TestCase(unittest.TestCase):
         
         
     def test1c(self):
+        "singlephonon_sqe2dos: partial update"
         iqehist = hh.load(os.path.join(datadir, "graphite-Ei_130-iqe.h5"))
         initdos = hh.load(os.path.join(datadir, "graphite-Ei_300-dos.h5"))
         newdos = sqe2dos.singlephonon_sqe2dos(
@@ -79,6 +86,7 @@ class TestCase(unittest.TestCase):
         
         
     def test1c1(self):
+        "singlephonon_sqe2dos: partial update -- keep area"
         iqehist = hh.load(os.path.join(datadir, "graphite-Ei_130-iqe.h5"))
         initdos = hh.load(os.path.join(datadir, "graphite-Ei_300-dos.h5"))
         newdos = sqe2dos.singlephonon_sqe2dos(
@@ -97,6 +105,7 @@ class TestCase(unittest.TestCase):
         
         
     def test1c2(self):
+        "singlephonon_sqe2dos: partial update -- force continuous"
         iqehist = hh.load(os.path.join(datadir, "graphite-Ei_130-iqe.h5"))
         initdos = hh.load(os.path.join(datadir, "graphite-Ei_300-dos.h5"))
         newdos = sqe2dos.singlephonon_sqe2dos(
@@ -115,6 +124,7 @@ class TestCase(unittest.TestCase):
         
         
     def test1d(self):
+        "singlephonon_sqe2dos: partial update -- warnings"
         iqehist = hh.load(os.path.join(datadir, "graphite-Ei_30-iqe.h5"))
         initdos = hh.load(os.path.join(datadir, "graphite-Ei_130-dos.h5"))
         with warnings.catch_warnings(record=True) as ws:
