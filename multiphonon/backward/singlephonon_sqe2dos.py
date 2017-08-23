@@ -79,7 +79,8 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None, update_weights=N
     # but only at the range of the measurement
     N_Eplus = Eplus.size
     dos_in_range = initdos[(Eplus[0], Eplus[-1])].copy()
-    dos_in_range.I *= expse/simse
+    with np.errstate(divide='ignore', invalid='ignore'):
+        dos_in_range.I *= expse/simse
     # remember the relative error of the dos
     dos_relative_error = expse_E2**.5 / expse
     # clean up bad values

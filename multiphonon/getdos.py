@@ -143,7 +143,8 @@ def raw2iqe(eventnxs, iqe_nxs, iqe_h5, Eaxis, Qaxis, type):
         reduce(eventnxs, qaxis, iqe_nxs, eaxis=eaxis, tof2E='guess', ibnorm='ByCurrent')
     else:
         import warnings
-        warnings.warn("Reusing old reduction result from %s" % iqe_nxs)
+        msg = "Reusing old reduction result from %s" % iqe_nxs
+        warnings.warn(msg)
     # to histogram
     if not os.path.exists(iqe_h5):
         extract_iqe(iqe_nxs, iqe_h5)

@@ -15,6 +15,8 @@ Some of the implementation here were taken from
 Max Kresch's original multiphonon code.
 """
 
+import warnings
+
 
 def sqehist(E, g, **kwds):
     "a simple wrapper of method sqe to return a histogram"
@@ -197,8 +199,12 @@ def computeA1E(E,g, beta, dE):
     g0 = gamma0(E,g, beta, dE)
     E, g = reflected(E,g)
     # t = 1./(np.exp(E*beta) - 1) # XXX
-    t = 1./(1-np.exp(-E*beta)) # XXX
-    t = g/(E*g0)*t
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore')
+        with np.errstate(divide='ignore'):
+            t = 1./(1-np.exp(-E*beta)) # XXX
+    with np.errstate(invalid='ignore'):
+        t = g/(E*g0)*t
     z = zero_ind
     # remove NaN
     t[z] = max(0, t[z+1] + ( t[z+1] - t[z+2] ))
@@ -224,7 +230,10 @@ def reflected(x,y):
 
     
 def coth(x):
-    tentative = np.cosh(x)/np.sinh(x)
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore')
+        with np.errstate(divide='ignore'):
+            tentative = np.cosh(x)/np.sinh(x)
     tentative[x>10] = 1.
     tentative[x<-10] = -1
     return tentative
@@ -246,7 +255,8 @@ def gamma0(E, g, beta, dE):
         # pkl.dump((E,g,beta,dE), open('mp.forward.phonon.gamma0-debug.pkl', 'w'))
         raise RuntimeError("integrated dos should be 1, got %s instead" % (dos_integrated,))
     # compute function to integrate
-    f = coth(beta * E/2.) * g/E
+    with np.errstate(invalid='ignore'):
+        f = coth(beta * E/2.) * g/E
     # f[0] would be nan, replace that with "extrapolation"
     f[0] = f[1] - (f[2] - f[1])
     return np.sum(f) * dE 
