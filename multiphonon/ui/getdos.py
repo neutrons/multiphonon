@@ -27,7 +27,7 @@ class Context(wiz.Context):
 
     # yaml IO. requirement: all properties are simple as strs, ints, floats
     def to_yaml(self, path):
-        d = self._to_dict()
+        d = self.to_dict()
         yaml.dump(d, open(path, 'wt'))
         return
     def from_yaml(self, path):
@@ -38,11 +38,11 @@ class Context(wiz.Context):
         return
     
     def __str__(self):
-        d = self._to_dict()
+        d = self.to_dict()
         l = ['%s=%s' % (k,v) for k,v in d.items()]
         return '\n'.join(l)
     
-    def _to_dict(self):
+    def to_dict(self):
         d = dict()
         for k in dir(self):
             if k.startswith('_'): continue
@@ -322,54 +322,49 @@ class GetParameters(wiz.Step):
         return True
     
     def nextStep(self):
-        context = self.context
-        # suppress warning from h5py
-        import warnings
-        warnings.simplefilter(action = "ignore", category = FutureWarning)
-        # some parameters from context
-        Emin, Emax, dE = context.Eaxis; Qmin, Qmax, dQ = context.Qaxis;
-        w_inputs = self.w_inputs
-        # special: update_strategy_weights
-        w_update_weight_continuity, w_update_weight_area = w_inputs['update_weights']
-        context.update_strategy_weights = w_update_weight_continuity.value, w_update_weight_area.value
-        from .getdos0 import _get_dos_update_weights
-        dos_update_weights = _get_dos_update_weights(*context.update_strategy_weights)
-        # special: elastic_E_cutoff
-        w_ElasticPeakMin, w_ElasticPeakMax = w_inputs['ElasticPeakRange']
-        elastic_E_cutoff = context.ElasticPeakMin, context.ElasticPeakMax = w_ElasticPeakMin.value, w_ElasticPeakMax.value
-        # other parameters
-        maxiter = 10
-        # build args to be passed to getDOS method
-        kargs = dict(
-            mt_fraction = w_inputs['mt_fraction'].value,
-            const_bg_fraction = w_inputs['const_bg_fraction'].value,
-            Emin=Emin, Emax=Emax, dE=dE,
-            Qmin=Qmin, Qmax=Qmax, dQ=dQ,
-            T=context.T, Ecutoff=w_inputs['Ecutoff'].value, 
-            elastic_E_cutoff=elastic_E_cutoff,
-            M=w_inputs['M'].value,
-            C_ms=w_inputs['C_ms'].value, Ei=context.Ei,
-            initdos=context.initdos,
-            workdir=context.workdir,
-            update_strategy_weights = dos_update_weights,
-            sample_nxs=context.sample_nxs,
-            mt_nxs=context.mt_nxs,
-            maxiter=maxiter,
-            )
-        # update context
-        for k in ['mt_fraction', 'const_bg_fraction', 'Ecutoff', 'M', 'C_ms']:
-            setattr(context, k, kargs[k])
+        context = self._updateContext()
+        kargs = context2kargs(context)
         # run getdos
         import pprint, os, yaml
         workdir = context.workdir
         if not os.path.exists(workdir): os.makedirs(workdir)
-        # save kargs sent to getDOS
+        # save kargs sent to getDOS. just for the record
         yaml.dump(kargs, open(os.path.join(workdir, 'getdos-kargs.yaml'), 'wt'))
         from ..getdos import getDOS
         from .getdos0 import log_progress
-        log_progress(getDOS(**kargs), every=1, size=maxiter+2)
+        log_progress(getDOS(**kargs), every=1, size=context.maxiter+2)
         return
 
+    def _updateContext(self):
+        # retrieve users inputs and update context
+        context = self.context
+        # suppress warning from h5py
+        import warnings
+        warnings.simplefilter(action = "ignore", category = FutureWarning)
+        w_inputs = self.w_inputs
+        # special: update_strategy_weights
+        w_update_weight_continuity, w_update_weight_area = w_inputs['update_weights']
+        context.update_strategy_weights = w_update_weight_continuity.value, w_update_weight_area.value
+        # special: elastic_E_cutoff
+        w_ElasticPeakMin, w_ElasticPeakMax = w_inputs['ElasticPeakRange']
+        context.ElasticPeakMin, context.ElasticPeakMax = w_ElasticPeakMin.value, w_ElasticPeakMax.value
+        # other parameters
+        context.maxiter = 10
+        # update context
+        for k in ['mt_fraction', 'const_bg_fraction', 'Ecutoff', 'M', 'C_ms']:
+            setattr(context, k, w_inputs[k].value)
+            continue
+        return context
+
+def context2kargs(context):
+    d = context.to_dict()
+    d['Emin'], d['Emax'], d['dE'] = context.Eaxis
+    d['Qmin'], d['Qmax'], d['dQ'] = context.Qaxis
+    from .getdos0 import _get_dos_update_weights
+    d['update_strategy_weights'] = _get_dos_update_weights(*context.update_strategy_weights)
+    d['elastic_E_cutoff'] = context.ElasticPeakMin, context.ElasticPeakMax
+    del d['ElasticPeakMax'], d['ElasticPeakMin'], d['Eaxis'], d['Qaxis'], d['mtiqe_h5']
+    return d
 
 def createParameterInputWidgets(context):
     from collections import OrderedDict

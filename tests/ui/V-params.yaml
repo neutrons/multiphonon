@@ -1,0 +1,22 @@
+mt_fraction: 0.99
+const_bg_fraction: 0.0
+Eaxis: !!python/tuple [-75.0, 75.5, 1.0]
+Emin: -75.0
+Emax: 75.0
+dE: 1.0
+Qaxis: !!python/tuple [0.0, 13.05, 0.1]
+Qmin: 0.0
+Qmax: 13.0
+dQ: 0.1
+T: 300.0
+Ecutoff: 55.0
+ElasticPeakMin: -11.0
+ElasticPeakMax: 6.0
+M: 27.0
+C_ms: 0.3
+Ei: 116.
+initdos: null
+update_strategy_weights: !!python/tuple [0.5, 0.5]
+workdir: work
+iqe_h5: /SNS/users/lj7/reduction/ARCS/getdos-demo-test/work/iqe.h5
+mtiqe_h5: null
