@@ -34,7 +34,7 @@ install:
   - conda create -n testenv pip pytest python=$TRAVIS_PYTHON_VERSION
   - conda install -n testenv numpy scipy matplotlib
   - conda install -n testenv -c mcvine histogram
-# These commented out lines are needed for getdos method
+  - conda install -n testenv -c neutrons ipywe
   - conda install -n testenv -c mantid mantid-framework
   - source activate testenv
   - python setup.py install
@@ -43,8 +43,8 @@ install:
 
 script:
    - py.test
-   - travis_wait 40 python tests/getdos_TestCase.py
-   - travis_wait 20 python tests/getdos_TestCase2.py
+#   - travis_wait 40 python tests/getdos_TestCase.py
+#   - travis_wait 20 python tests/getdos_TestCase2.py
    - travis_wait 30 python tests/ui/batch_TestCase.py
 
 notifications:
