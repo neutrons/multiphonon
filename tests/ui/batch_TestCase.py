@@ -38,7 +38,7 @@ class TestCase(unittest.TestCase):
         _p = lambda f: os.path.join(self.tmpdir, f)
         sample_nxs_list = [_p('1.nxs'), _p('2.nxs')]
         mt_nxs_list = [None, None]
-        batch.process(sample_nxs_list, mt_nxs_list, 'V-params.yaml')
+        batch.process(sample_nxs_list, mt_nxs_list, os.path.join(here, 'V-params.yaml'))
         self.assert_(np.allclose(
             hh.load('work-1.nxs,None/final-dos.h5').I,
             hh.load(os.path.join(here, 'expected_results', 'batch-1-final-dos.h5')).I
