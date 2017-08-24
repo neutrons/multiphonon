@@ -21,8 +21,11 @@ And details of the features of this code can be found below.
 ## Installation
 ### Use conda
 
-      $ conda install -c mantid mantid-framework
-      $ conda install -c mcvine multiphonon
+      $ conda config --add channels conda-forge
+      $ conda config --add channels mantid
+      $ conda config --add channels mcvine
+      $ conda config --add channels neutrons
+      $ conda install multiphonon
 
 ## Usage
 

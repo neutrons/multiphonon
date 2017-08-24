@@ -18,8 +18,10 @@ requirements:
     - numpy
     - histogram
     - scipy
+    - matplotlib
     - pytest
     - mantid-framework
+    - ipywe
 
 test:
   imports:
