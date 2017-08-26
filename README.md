@@ -19,6 +19,8 @@ And details of the features of this code can be found below.
 * The full I(Q,E) dynamic range measured is utilized
 
 ## Installation
+SNS users can skip this step and [use this software package directly at SNS analysis cluster](https://github.com/sns-chops/multiphonon/wiki#getdos-at-sns-analysis-cluster-using-jupyter). 
+
 ### Use conda
 
       $ conda config --add channels conda-forge
