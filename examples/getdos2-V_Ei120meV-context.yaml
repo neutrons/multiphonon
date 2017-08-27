@@ -1,0 +1,25 @@
+C_ms: 0.26
+Eaxis: !!python/tuple [-115.0, 115.5, 1.0]
+Ecutoff: 40.0
+Ei: 120.0
+ElasticPeakMax: 7.0
+ElasticPeakMin: -15.0
+Emax: 115.0
+Emin: -115.0
+M: 50.94
+Qaxis: !!python/tuple [0.0, 17.05, 0.1]
+Qmax: 17.0
+Qmin: 0.0
+T: 300.0
+const_bg_fraction: 0.004
+dE: 1.0
+dQ: 0.1
+initdos: null
+iqe_h5: /home/linjiao/tmp/multiphonon/examples/V_Ei120meV/work/iqe.h5
+maxiter: 10
+mt_fraction: 0.9
+mt_nxs: null
+mtiqe_h5: null
+sample_nxs: /home/linjiao/tmp/multiphonon/examples/V_Ei120meV/ARCS_V_annulus.nxs
+update_strategy_weights: !!python/tuple [0.5, 0.5]
+workdir: work
