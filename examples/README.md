@@ -21,3 +21,5 @@ Start jupyter server
     $ jupyter notebook
     
 Open an example notebook and follow instructions
+
+**Note:** For an example notebook, look for a pdf with same name. It should contain expected outputs and plots.
