@@ -65,3 +65,7 @@ The following script is an example of working with a SQE histogram already reduc
       for i, dos in enumerate(iterdos):
         pylab.plot(dos.E, dos.I, label='%d' % i)
       pylab.show()
+
+# References
+* Max Kresch et al., https://journals.aps.org/prb/abstract/10.1103/PhysRevB.75.104301
+* Brent Fultz et al., http://www.cacr.caltech.edu/projects/danse/doc/Inelastic_Book.pdf
