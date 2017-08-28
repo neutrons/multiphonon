@@ -19,7 +19,7 @@ And details of the features of this code can be found below.
 * The full I(Q,E) dynamic range measured is utilized
 
 ## Installation
-SNS users can skip this step and use this software package directly at SNS analysis cluster (see below). 
+**NOTE:** SNS users can skip this step and use this software package directly at SNS analysis cluster (see below). 
 
 The multiphonon package can be installed using conda on a 64bit linux machine:
 
