@@ -69,3 +69,6 @@ The following script is an example of working with a SQE histogram already reduc
 ## References
 * Max Kresch et al., https://journals.aps.org/prb/abstract/10.1103/PhysRevB.75.104301, Appendix
 * Brent Fultz et al., http://www.cacr.caltech.edu/projects/danse/doc/Inelastic_Book.pdf, Section 6.5 "Calculation of Multiphonon Scattering"
+
+## History
+[Releases](https://github.com/sns-chops/multiphonon/releases)
