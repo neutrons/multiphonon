@@ -13,10 +13,10 @@ And details of the features of this code can be found below.
 
 ## Features
 
-* Handle inputs in nxs and nxspe files for sample and empty can measurements
+* The full I(Q,E) dynamic range measured is utilized, leading to better statistics
 * Can be used with data measured at multiple incident energies to progressivley obtain better density of states
 * Intermediate results are saved for further investigation
-* The full I(Q,E) dynamic range measured is utilized
+* Handle inputs in nxs and nxspe files for sample and empty can measurements
 
 ## Installation
 **NOTE:** SNS users can skip this step and use this software package directly at SNS analysis cluster (see below). 
