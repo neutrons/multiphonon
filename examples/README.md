@@ -10,16 +10,24 @@ To run the example notebooks, first create a conda environment, activate it, and
     $ conda config --add channels neutrons
     $ conda install multiphonon
     $ conda install jupyter
-    
-Obtain example notebooks
+
+
+Obtain examples
 
     $ git clone https://github.com/sns-chops/multiphonon
     $ cd multiphonon/examples
-    
-Start jupyter server
+
+## Run jupyter notebook examples
 
     $ jupyter notebook
     
 Open an example notebook and follow instructions
 
 **Note:** For an example notebook, look for a pdf with same name. It should contain expected outputs and plots.
+
+
+## Run python script examples
+
+For example
+
+    $ python getdos-Al.py
