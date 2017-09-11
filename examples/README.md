@@ -18,10 +18,11 @@ Obtain examples
     $ cd multiphonon/examples
 
 ## Run jupyter notebook examples
+Start a jupyter server
 
     $ jupyter notebook
     
-Open an example notebook and follow instructions
+And then open an example notebook and follow instructions
 
 **Note:** For an example notebook, look for a pdf with same name. It should contain expected outputs and plots.
 
