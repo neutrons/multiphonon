@@ -1,3 +1,9 @@
+"""
+This is a simple example where I(Q,E) data is already in the form 
+of a histogram, reduced from the raw experimental data.
+All this script does is to convert I(Q,E) to Density of States
+by performing multiphonon correction.
+"""
 import histogram.hdf as hh, os, numpy as np
 from matplotlib import pyplot as plt
 # load data
