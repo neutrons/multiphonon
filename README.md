@@ -11,7 +11,7 @@ And details of the features of this code can be found below.
 Main functionality: **Compute phonon Density of States (DOS) from powder Inelastic Neutron Scattering (INS) spectrum**
 
 Inelastic neutron scattering (INS) are important probes of dynamics in materials [2].  Powder spectra measured by inelastic neutron spectrometers provide information such as phonon density of states (DOS), a fundamental property of a solid.
-The measure spectra, however, is two-dimensional, in axes of Q (momentum transfer) and E (energy transfer).
+The measured spectra, however, are two-dimensional in axes of Q (momentum transfer) and E (energy transfer).
 This code converts a S(Q,E) INS spectrum to DOS.
 
 ## Features
@@ -48,7 +48,7 @@ For any user, GetDOS can be performed with a local installation of GetDOS and ju
 Examples and instructions can be found [here](/examples)
 
 ## Algorithm
-It is an iterative procedure:
+The core algorithm is an iterative procedure:
 - Start with the input SQE and an initial guess of DOS
 - Calculate SQE of multiphonon scattering (MP)
 - Calculate SQE of multiple scattering (MS) using C\_ms and multiphonon scattering SQE
