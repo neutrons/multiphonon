@@ -21,7 +21,7 @@ And details of the features of this code can be found below.
 ## Installation
 **NOTE:** SNS users can skip this step and use this software package directly at SNS analysis cluster (see below). 
 
-The multiphonon package can be installed using conda on a 64bit linux machine:
+The multiphonon package can be installed using conda on a recent 64bit linux (ubuntu/fedora/centos) distribution:
 
       $ conda config --add channels conda-forge
       $ conda config --add channels mantid
