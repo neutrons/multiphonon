@@ -11,8 +11,9 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-
-
+.. autofunction:: multiphonon.getdos.getDOS
+.. autofunction:: multiphonon.backward.sqe2dos.sqe2dos
+		
 Indices and tables
 ==================
 
