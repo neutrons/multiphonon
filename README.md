@@ -59,6 +59,9 @@ The core algorithm is an iterative procedure:
 
 For more details of the basic principles of SQE->DOS conversion, please refer to Appendix of [1] and Section 6.5 "Calculation of Multiphonon Scattering" of [2].
 
+## API doc
+See http://sns-chops.github.io/multiphonon/
+
 ## References
 [1] Max Kresch et al., https://journals.aps.org/prb/abstract/10.1103/PhysRevB.75.104301
 
