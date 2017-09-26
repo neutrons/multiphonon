@@ -12,12 +12,65 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
            C_ms=0.3, Ei=116.446, initdos=None, update_strategy_weights=None,
            workdir='work',
            iqe_nxs="iqe.nxs", iqe_h5="iqe.h5", maxiter=10):
-    """compute DOS from powder spectrum by performing multiphonon and 
-    multiple-scattering corrections.
+    """compute DOS from powder spectrum from S(Q,E)
+    
+    By performing multiphonon and multiple-scattering corrections.
     This is an iterator. so call it with an evaluation of the iteration.
     For example:
 
       >>> output = list(getDOS(...))
+
+    Parameters
+    ----------
+    sample_nxs : str
+        Sample Nexus file
+
+    mt_nxs : str
+        Empty can Nexus file
+
+    mt_fraction : float
+        0<=mt_fraction<=1. Amount of empty can data to be subtracted from sample data
+
+    const_bg_fraction : float
+        Constant background fraction
+
+    Emin, Emax, dE : floats
+        Energy transfer axis setting
+
+    Qmin, Qmax, dQ : floats
+        Momentum transfer axis setting
+
+    T : float
+        Temperature (Kelvin)
+
+    Ecutoff : float
+        Maximum phonon energy
+
+    elastic_E_cutoff: 2-tuple of floats
+        cutoff for elastic peak (meV)
+
+    M : float
+        Average atomic mass (u)
+
+    C_ms: float
+        MS = C_ms * MP
+
+    Ei : float
+        Incident energy (meV)
+
+    initdos : histogram
+        initial guess of DOS
+
+    update_strategy_weights : floats
+        Weights for the update strategies (force continuity, area conservation). 
+        Useful only if multiple Ei.
+
+    work : str
+        Work directory
+
+    maxiter: int
+        Max iteration
+
     """
     for msg in reduce2iqe(sample_nxs, Emin,Emax,dE, Qmin,Qmax,dQ, mt_nxs, iqe_nxs, iqe_h5, workdir):
         yield msg

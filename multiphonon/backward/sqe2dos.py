@@ -13,6 +13,7 @@ def sqe2dos(
         initdos = None, update_strategy_weights = None,
         ):
     """Given a SQE, compute DOS
+
     * Start with an initial guess of DOS and a SQE
     * Calculate SQE of multiphonon scattering
     * Calculate SQE of multiple scattering using C_ms and multiphonon scattering SQE
@@ -22,15 +23,44 @@ def sqe2dos(
     * If difference is large, continue the iteration. Otherwise the new DOS is what we want
     
     Parameters:
-      - sqe: measured S(Q,E) histogram
-      - T: temperature (Kelvin)
-      - Ecutoff: max phonon energy (meV)
-      - elastic_E_cutoff: 2-tuple of floats. cutoff for elastic peak
-      - M: average atomic mass (amu)
-      - C_ms: ratio of multiple scattering over multiphonon scattering
-      - Ei: incident energy
-      - initdos: initial DOS
-      - update_strategy_weights: weights for DOS update strategies (continuity, area conservation)
+    -----------
+    sqe : histogram
+        S(Q, E)
+
+    T : float
+        Temperature (Kelvin)
+
+    Ecutoff : float
+        Maximum phonon energy
+
+    elastic_E_cutoff: 2-tuple of floats
+        cutoff for elastic peak (meV)
+
+    M : float
+        Average atomic mass (u)
+
+    C_ms: float
+        MS = C_ms * MP
+
+    Ei : float
+        Incident energy (meV)
+
+    workdir : str
+        Work directory
+
+    initdos : histogram
+        initial guess of DOS
+
+    update_strategy_weights : floats
+        Weights for the update strategies (force continuity, area conservation). 
+        Useful only if multiple Ei.
+
+    MAX_ITERATION: int
+        Max iteration
+
+    TOLERATION: float
+        Toleration for convergence test
+
     """
     mask = sqe.I != sqe.I    
     corrected_sqe = sqe
