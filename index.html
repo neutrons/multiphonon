@@ -1,1 +1,200 @@
-Hello world
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>API documentation for multiphonon package &#8212; multiphonon 0.1.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="api-documentation-for-multiphonon-package">
+<h1>API documentation for multiphonon package<a class="headerlink" href="#api-documentation-for-multiphonon-package" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<dl class="function">
+<dt id="multiphonon.getdos.getDOS">
+<code class="descclassname">multiphonon.getdos.</code><code class="descname">getDOS</code><span class="sig-paren">(</span><em>sample_nxs</em>, <em>mt_nxs=None</em>, <em>mt_fraction=0.9</em>, <em>const_bg_fraction=0.0</em>, <em>Emin=-100</em>, <em>Emax=100</em>, <em>dE=1.0</em>, <em>Qmin=0</em>, <em>Qmax=15.0</em>, <em>dQ=0.1</em>, <em>T=300</em>, <em>Ecutoff=50.0</em>, <em>elastic_E_cutoff=(-20.0</em>, <em>7)</em>, <em>M=50.94</em>, <em>C_ms=0.3</em>, <em>Ei=116.446</em>, <em>initdos=None</em>, <em>update_strategy_weights=None</em>, <em>workdir='work'</em>, <em>iqe_nxs='iqe.nxs'</em>, <em>iqe_h5='iqe.h5'</em>, <em>maxiter=10</em><span class="sig-paren">)</span><a class="headerlink" href="#multiphonon.getdos.getDOS" title="Permalink to this definition">¶</a></dt>
+<dd><p>compute DOS from powder spectrum from S(Q,E)</p>
+<p>By performing multiphonon and multiple-scattering corrections.
+This is an iterator. so call it with an evaluation of the iteration.
+For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">output</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">getDOS</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>sample_nxs <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>Sample Nexus file</dd>
+<dt>mt_nxs <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>Empty can Nexus file</dd>
+<dt>mt_fraction <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>0&lt;=mt_fraction&lt;=1. Amount of empty can data to be subtracted from sample data</dd>
+<dt>const_bg_fraction <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Constant background fraction</dd>
+<dt>Emin, Emax, dE <span class="classifier-delimiter">:</span> <span class="classifier">floats</span></dt>
+<dd>Energy transfer axis setting</dd>
+<dt>Qmin, Qmax, dQ <span class="classifier-delimiter">:</span> <span class="classifier">floats</span></dt>
+<dd>Momentum transfer axis setting</dd>
+<dt>T <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Temperature (Kelvin)</dd>
+<dt>Ecutoff <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Maximum phonon energy</dd>
+<dt>elastic_E_cutoff: 2-tuple of floats</dt>
+<dd>cutoff for elastic peak (meV)</dd>
+<dt>M <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Average atomic mass (u)</dd>
+<dt>C_ms: float</dt>
+<dd>MS = C_ms * MP</dd>
+<dt>Ei <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Incident energy (meV)</dd>
+<dt>initdos <span class="classifier-delimiter">:</span> <span class="classifier">histogram</span></dt>
+<dd>initial guess of DOS</dd>
+<dt>update_strategy_weights <span class="classifier-delimiter">:</span> <span class="classifier">floats</span></dt>
+<dd>Weights for the update strategies (force continuity, area conservation). 
+Useful only if multiple Ei.</dd>
+<dt>work <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>Work directory</dd>
+<dt>maxiter: int</dt>
+<dd>Max iteration</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiphonon.backward.sqe2dos.sqe2dos">
+<code class="descclassname">multiphonon.backward.sqe2dos.</code><code class="descname">sqe2dos</code><span class="sig-paren">(</span><em>sqe</em>, <em>T</em>, <em>Ecutoff</em>, <em>elastic_E_cutoff</em>, <em>M</em>, <em>C_ms=None</em>, <em>Ei=None</em>, <em>workdir='work'</em>, <em>MAX_ITERATION=20</em>, <em>TOLERATION=0.0001</em>, <em>initdos=None</em>, <em>update_strategy_weights=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiphonon.backward.sqe2dos.sqe2dos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a SQE, compute DOS</p>
+<ul class="simple">
+<li>Start with an initial guess of DOS and a SQE</li>
+<li>Calculate SQE of multiphonon scattering</li>
+<li>Calculate SQE of multiple scattering using C_ms and multiphonon scattering SQE</li>
+<li>Subtract MS and MP SQE from the experimental SQE to obtain single-phonon SQE</li>
+<li>Compute a new DOS from the single-phonon SQE</li>
+<li>Compare the new DOS to the previous one and calculate the difference</li>
+<li>If difference is large, continue the iteration. Otherwise the new DOS is what we want</li>
+</ul>
+<dl class="docutils">
+<dt>sqe <span class="classifier-delimiter">:</span> <span class="classifier">histogram</span></dt>
+<dd>S(Q, E)</dd>
+<dt>T <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Temperature (Kelvin)</dd>
+<dt>Ecutoff <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Maximum phonon energy</dd>
+<dt>elastic_E_cutoff: 2-tuple of floats</dt>
+<dd>cutoff for elastic peak (meV)</dd>
+<dt>M <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Average atomic mass (u)</dd>
+<dt>C_ms: float</dt>
+<dd>MS = C_ms * MP</dd>
+<dt>Ei <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Incident energy (meV)</dd>
+<dt>workdir <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>Work directory</dd>
+<dt>initdos <span class="classifier-delimiter">:</span> <span class="classifier">histogram</span></dt>
+<dd>initial guess of DOS</dd>
+<dt>update_strategy_weights <span class="classifier-delimiter">:</span> <span class="classifier">floats</span></dt>
+<dd>Weights for the update strategies (force continuity, area conservation). 
+Useful only if multiple Ei.</dd>
+<dt>MAX_ITERATION: int</dt>
+<dd>Max iteration</dd>
+<dt>TOLERATION: float</dt>
+<dd>Toleration for convergence test</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">API documentation for multiphonon package</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Jiao Lin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
