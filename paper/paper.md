@@ -22,18 +22,16 @@ bibliography: paper.bib
 
 multiphonon is a python package that calculates phonon density
 of states from inelastic neutron scattering (see, for example [@FultzINSbook])
-spectrum from powder sample.
+spectrum from a powder sample.
 The algorithm is a self-consistent iterative procedure
-until the measured spectrum can be accounted for by
+that finishes when
+the measured spectrum can be accounted for by
 the one-phonon scattering, multi-phonon scattering, and multiple
 scattering from the deduced phonon density of states,
 assuming incoherent approximation
 (Appendix of [@KreschNickel2007] and Section 6.5 "Calculation of Multiphonon Scattering" of [@FultzINSbook]).
 
 -![S(Q,E) -> DOS](sqe2dos.png)
-
-# References
-paper.bib
 
 # Notice of Copyright
 This manuscript has been authored by UT-Battelle, LLC under Contract
@@ -56,3 +54,5 @@ Department of Energy, Office of Science, Office of Basic Energy
 Sciences, User Facilities under contract number DE-AC05-00OR22725.
 
 
+# References
+paper.bib
