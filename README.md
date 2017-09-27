@@ -24,7 +24,7 @@ This code converts a S(Q,E) INS spectrum to DOS.
 ## Installation
 **NOTE:** SNS users can skip this step and use this software package directly at SNS analysis cluster (see below). 
 
-The multiphonon package can be installed using conda on a recent 64bit linux (ubuntu/fedora/centos) distribution:
+The multiphonon package can be installed using conda (python 2) on a recent 64bit linux (ubuntu/fedora/centos) distribution:
 
       $ conda config --add channels conda-forge
       $ conda config --add channels mantid
