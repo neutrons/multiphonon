@@ -6,7 +6,9 @@
 
 \title{Multiphonon: Phonon Density of States tools for Inelastic Neutron Scattering Powder Data}
 \author[1]{Jiao Lin}
+\author[2]{Max Kresch}
 \affil[1]{Neutron Data Analysis and Visualization Division, Oak Ridge National Lab}
+\affil[2]{mkresch@gmail.com}
 
 \date{September 2017}
 
@@ -16,18 +18,21 @@
 
 \section{Summary}\label{summary}
 
-multiphonon is a python package that calculates phonon density of states
-from inelastic neutron scattering (see, for example \cite{FultzINSbook})
-spectrum from a powder sample. The algorithm is a self-consistent
+The multiphonon python package calculates a phonon density of states from
+inelastic neutron scattering (see, for example \cite{FultzINSbook})
+spectrum from a powder sample. The algorithm is a self-consistent,
 iterative procedure that finishes when
 the measured spectrum can be accounted for by
 the one-phonon scattering, multi-phonon scattering, and multiple
-scattering from the deduced phonon density of states, assuming
+scattering from the deduced phonon density of states, under the
 incoherent approximation (Appendix of \cite{KreschNickel2007} and
 Section 6.5 ``Calculation of Multiphonon Scattering'' of
 \cite{FultzINSbook}).
 
-\includegraphics[scale=0.25]{sqe2dos}
+\begin{figure}
+  \includegraphics[scale=0.25]{sqe2dos}
+  \caption{The multiphonon package takes the inelastic neutron scattering spectrum, shown on the left, and produces the phonon density of states shown on the right.}
+\end{figure}
 
 
 \section{Notice of Copyright}\label{notice-of-copyright}
