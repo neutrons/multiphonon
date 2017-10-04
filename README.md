@@ -30,6 +30,7 @@ The multiphonon package can be installed using conda (python 2) on a recent 64bi
       $ conda config --add channels mantid
       $ conda config --add channels mcvine
       $ conda config --add channels neutrons
+      $ conda install numpy
       $ conda install multiphonon
 
 Information on dependencies of this code can be found at [the conda recipe](/conda-recipe/meta.yaml)

@@ -8,6 +8,7 @@ To run the example notebooks, first create a conda environment, activate it, and
     $ conda config --add channels mantid
     $ conda config --add channels mcvine
     $ conda config --add channels neutrons
+    $ conda install numpy
     $ conda install multiphonon
     $ conda install jupyter
 
