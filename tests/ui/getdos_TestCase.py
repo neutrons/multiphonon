@@ -23,10 +23,11 @@ class TestCase(unittest.TestCase):
         context2 = getdos.Context()
         context2.from_yaml('context.yaml')
         s = str(context)
-        
+
+        context.sample_nxs = 'sample.nxs'
         wiz = getdos.NxsWizardStart(context)
         wiz.show()
-        wiz.sample_nxs = 'sample.nxs'
+        wiz.sample_nxs = context.sample_nxs
         wiz.validate()
         wiz.nextStep()
         
@@ -52,7 +53,8 @@ class TestCase(unittest.TestCase):
         wiz.validate()
         context.Qmin, context.Qmax, context.dQ = 0., 15., .1
         # wiz.nextStep()
-        
+
+        context.initdos = 'initdos.h5'
         wiz = getdos.GetInitDOS(context)
         wiz.show()
         wiz.initdos = 'initdos.h5'
