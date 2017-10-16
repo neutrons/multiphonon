@@ -2,7 +2,7 @@
 #
 
 import pytest
-pytestmark = pytest.mark.skipif(True, reason="only run mannually")
+pytestmark = pytest.mark.skipif(False, reason="only run mannually")
 
 interactive = False
 
@@ -33,8 +33,8 @@ class TestCase(unittest.TestCase):
             hh.load(os.path.join(here, 'expected_results', 'getdos-test1-final-dos.h5')).I
         ))
         return
-        
-    def test2(self):
+    
+    def _test2(self):
         "multiphonon.getdos: MT can"
         list(getDOS(
             os.path.join(datadir, "ARCS_V_annulus.nxs"),
@@ -48,7 +48,7 @@ class TestCase(unittest.TestCase):
         ))
         return
         
-    def test3(self):
+    def _test3(self):
         "multiphonon.getdos: low T"
         list(getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs"), T=1.5, workdir='work-lowT'))
         self.assert_(np.allclose(
