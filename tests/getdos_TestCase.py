@@ -2,7 +2,7 @@
 #
 
 import pytest
-pytestmark = pytest.mark.skipif(True, reason="only run mannually")
+pytestmark = pytest.mark.skipif(False, reason="only run mannually")
 
 interactive = False
 
@@ -33,7 +33,7 @@ class TestCase(unittest.TestCase):
             hh.load(os.path.join(here, 'expected_results', 'getdos-test1-final-dos.h5')).I
         ))
         return
-        
+    
     def test2(self):
         "multiphonon.getdos: MT can"
         list(getDOS(

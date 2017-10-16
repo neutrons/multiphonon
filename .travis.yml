@@ -31,21 +31,24 @@ install:
   - conda config --set always_yes true
   - conda update conda
   - conda config --add channels conda-forge
-  - conda create -n testenv pip pytest python=$TRAVIS_PYTHON_VERSION
+  - conda create -n testenv pip pytest pytest-cov python=$TRAVIS_PYTHON_VERSION
   - conda install -n testenv numpy scipy matplotlib
   - conda install -n testenv -c mcvine histogram
   - conda install -n testenv -c neutrons ipywe
   - conda install -n testenv -c mantid mantid-framework
   - source activate testenv
   - python setup.py install
-#  - pip install coveralls
+  - pip install coveralls
 #  - pip install codecov
 
 script:
-   - py.test
-   - travis_wait 40 python tests/getdos_TestCase.py
-   - travis_wait 20 python tests/getdos_TestCase2.py
-   - travis_wait 20 python tests/ui/batch_TestCase.py
+   - travis_wait 60 py.test --cov=multiphonon tests
+#   - travis_wait 40 python tests/getdos_TestCase.py
+#   - travis_wait 20 python tests/getdos_TestCase2.py
+#   - travis_wait 20 python tests/ui/batch_TestCase.py
+
+after_success:
+   - coveralls
 
 notifications:
   email:
