@@ -42,7 +42,7 @@ install:
 #  - pip install codecov
 
 script:
-   - travis_wait 40 py.test --cov=multiphonon tests
+   - travis_wait 60 py.test --cov=multiphonon tests
 #   - travis_wait 40 python tests/getdos_TestCase.py
 #   - travis_wait 20 python tests/getdos_TestCase2.py
 #   - travis_wait 20 python tests/ui/batch_TestCase.py
