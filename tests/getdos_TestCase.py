@@ -34,7 +34,7 @@ class TestCase(unittest.TestCase):
         ))
         return
     
-    def _test2(self):
+    def test2(self):
         "multiphonon.getdos: MT can"
         list(getDOS(
             os.path.join(datadir, "ARCS_V_annulus.nxs"),
@@ -48,7 +48,7 @@ class TestCase(unittest.TestCase):
         ))
         return
         
-    def _test3(self):
+    def test3(self):
         "multiphonon.getdos: low T"
         list(getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs"), T=1.5, workdir='work-lowT'))
         self.assert_(np.allclose(
