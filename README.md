@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/sns-chops/multiphonon.svg?branch=master)](https://travis-ci.org/sns-chops/multiphonon) 
+[![Coverage Status](https://coveralls.io/repos/github/sns-chops/multiphonon/badge.svg?branch=master)](https://coveralls.io/github/sns-chops/multiphonon?branch=master)
+
 # multiphonon
 This is a rewrite of multiphonon (getDOS) code that was originally authored by 
 Max Kresch during the [DANSE project](http://danse.us/) and
