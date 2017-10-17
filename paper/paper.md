@@ -22,15 +22,35 @@ bibliography: paper.bib
 
 # Summary
 
-The multiphonon python package calculates a phonon density of states from
+The multiphonon python package calculates phonon density of states,
+a reduced representation of vibrational property of condensed matter (see, for example,
+Section "Density of Normal Modes" in
+Chapter 23 "Quantum Theory of the Harmonic Crystal" of [@ashcroftmermin]),
+from
 inelastic neutron scattering (see, for example [@FultzINSbook])
-spectrum from a powder sample. The algorithm is a self-consistent,
+spectrum from a powder sample.
+Inelastic neutron spectroscopy (INS) is a probe of excitations in solids of
+vibrational or magnetic origins.
+In INS, neutrons can lose(gain) energy 
+to(from) the solid in the form of quantized lattice vibrations -- phonons.
+Measuring phonon density of states is usually the first step
+in determining the phonon properties of a material experimentally.
+Phonons play a very important role in understanding the physical properties of a solid,
+including thermal conductivity and electrical conductivity.
+Hence, INS is an important tool for studying thermoelectric materials [@budai2014, @lichen2015],
+where
+low thermal conductivity and high electirical conductivity are desired.
+Study of phonon entropy also made important contributions to
+the research of thermal dynamics and phase stability of materials
+[@FULTZ2010, bogdanoff2002phonon, swan2006vibrational].
+
+The algorithm implemented in this package is a self-consistent,
 iterative procedure that finishes when
-the measured spectrum can be accounted for by
+the measured INS spectrum can be accounted for by
 the one-phonon scattering, multi-phonon scattering, and multiple
 scattering from the deduced phonon density of states, under the
 incoherent approximation (Appendix of [@KreschNickel2007] and
-Section 6.5 "Calculation of Multiphonon Scattering" of
+Section 6.5 ``Calculation of Multiphonon Scattering'' of
 [@FultzINSbook]).
 
 -![S(Q,E) -> DOS](sqe2dos.png)
