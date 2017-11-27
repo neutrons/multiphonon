@@ -36,6 +36,16 @@ The multiphonon package can be installed using conda (python 2) on a recent 64bi
       $ conda install multiphonon
 
 Information on dependencies of this code can be found at [the conda recipe](/conda-recipe/meta.yaml)
+
+### Why not PyPI installation
+Some dependencies of multiphonon contain sophistated C++ libraries so it is much easier to rely
+on the conda environment for installation. However, multiphonon package itself is a pure python package,
+and can be installed by
+
+    $ python setup.py install
+    
+if all dependecies are already installed.
+
 ## Usage
 
 ### GetDOS at SNS analysis cluster using jupyter 
