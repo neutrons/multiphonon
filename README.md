@@ -50,6 +50,21 @@ For SNS users, GetDOS can be performed at SNS analysis cluster through the jupyt
 For any user, GetDOS can be performed with a local installation of GetDOS and jupyter.
 Examples and instructions can be found [here](/examples)
 
+## Community guidelines
+
+**How to contribute**
+
+Please clone the repository, make changes and make a pull request.
+
+**How to report issues**
+
+Please use [the github issues](https://github.com/sns-chops/multiphonon/issues) to report issues or bug reports.
+
+**Support**
+
+Please either use [the github issues](https://github.com/sns-chops/multiphonon/issues) to ask for support, or contact the authors directly using email.
+
+
 ## Algorithm
 The core algorithm is an iterative procedure:
 - Start with the input SQE and an initial guess of DOS
