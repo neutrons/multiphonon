@@ -219,6 +219,7 @@ def create_script(fn, content):
     return
 
 
+"""
 def removeElasticPeak(sqe, elastic_E_cutoff):
     negEcut, posEcut = elastic_E_cutoff
     E = sqe.E; dE = E[1]-E[0]
@@ -287,7 +288,7 @@ def normalizeExpSQE_inelonly(sqe, dos, M, beta, elastic_E_cutoff):
     sqe.I *= norm
     sqe.E2 *= norm*norm
     return sqe
-    
+"""
 
 # 
 from singlephonon_sqe2dos import sqe2dos as singlephonon_sqe2dos
