@@ -90,6 +90,13 @@ For more details of the basic principles of SQE->DOS conversion, please refer to
 ## API doc
 See http://sns-chops.github.io/multiphonon/
 
+## Run tests
+Tests are run automatically at [travis CI](https://travis-ci.org/sns-chops/multiphonon/builds). 
+
+To manually run tests, install multiphonon, clone this repository, and cd into the new directory, and then run
+
+    $ py.test
+
 ## References
 [1] Max Kresch et al., https://journals.aps.org/prb/abstract/10.1103/PhysRevB.75.104301
 
