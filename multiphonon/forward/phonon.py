@@ -262,20 +262,21 @@ def gamma0(E, g, beta, dE):
     return np.sum(f) * dE 
 
 
+"""
 # this is an implementation that tries to deal with
 # low E part differently. 
 # later we decided that it is better to just replace
 # the lowe E part with a parabolic. 
 # see implementation in mcvine-debye-waller-core-from-phonon-dos
 def gamma0a(E, g, beta, dE):
-    """Compute gamma0
-    gamma0 = \int coth(E/2kBT) g(E)/E dE
-
-    E,g: numpy arrays of energies and density of states
-         it must be normalized
-    beta: 1/kBT
-    dE:  delta E in E array
-    """
+    # Compute gamma0
+    # gamma0 = \int coth(E/2kBT) g(E)/E dE
+    #
+    # E,g: numpy arrays of energies and density of states
+    #      it must be normalized
+    # beta: 1/kBT
+    # dE:  delta E in E array
+    
     dos_integrated = np.sum(g)*dE
     assert abs(dos_integrated - 1) < 1e-3
     # when E is small, we need special treatment
@@ -306,7 +307,7 @@ def gamma0a(E, g, beta, dE):
     # pylab.show()
     # the final result is a sum of two terms
     return atzero * (E1[0] - dE/2) + np.sum(f) * dE 
-
+"""
 
 def fitparabolic(x,y):
     x2 = x*x
