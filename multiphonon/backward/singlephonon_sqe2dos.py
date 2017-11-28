@@ -179,6 +179,7 @@ def guess_init_dos(E, cutoff):
     return H.histogram("DOS", [Eaxis], data=g)
 
 # the following methods are obsolete
+"""
 def update_dos_continuous(original_dos_hist, Emin, Emax, g, gerr):
     return update_dos_(original_dos_hist, Emin, Emax, g, gerr, compute_scalefactor_using_continuous_criteria)
 
@@ -202,5 +203,6 @@ def update_dos_(original_dos_hist, Emin, Emax, g, gerr, compute_scalefactor):
     newdos.I/=norm
     newdos.E2/=norm*norm
     return newdos
+"""
 
 # End of file 
