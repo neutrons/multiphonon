@@ -20,8 +20,8 @@ requirements:
     - scipy
     - matplotlib
     - pytest
-    - mantid-framework
-    - ipywe
+#    - mantid-framework
+#    - ipywe
 
 test:
   imports:
