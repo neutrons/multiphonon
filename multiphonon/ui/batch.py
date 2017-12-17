@@ -11,7 +11,7 @@ def process(sample_nxs_list, mt_nxs_list, parameter_yaml):
     implement his/her own methods.
     """
     import os
-    from .getdos import Context, context2kargs
+    from . import Context, context2kargs
     from ..getdos import getDOS
     assert len(sample_nxs_list) == len(mt_nxs_list)
     # load parameters
