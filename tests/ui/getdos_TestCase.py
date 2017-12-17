@@ -2,6 +2,7 @@
 #
 
 import pytest
+pytestmark = pytest.mark.needs_ipywe
 
 interactive = False
 

@@ -108,9 +108,9 @@ See http://sns-chops.github.io/multiphonon/
 ## Run tests
 Tests are run automatically at [travis CI](https://travis-ci.org/sns-chops/multiphonon/builds). 
 
-To manually run tests that do not depend on mantid, install multiphonon, clone this repository, and cd into the new directory, and then run
+To manually run the minimal test suite, install multiphonon, clone this repository, and run
 
-    $ py.test -m "not needs_mantid"
+    $ cd multiphonon/tests && py.test -m "not needs_mantid and not needs_ipywe"
 
 If mantid was installed, you can run all tests by
 
