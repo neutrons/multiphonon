@@ -2,7 +2,8 @@
 #
 
 import pytest
-pytestmark = pytest.mark.skipif(False, reason="only run mannually")
+# pytestmark = pytest.mark.skipif(False, reason="only run mannually")
+pytestmark = pytest.mark.needs_mantid
 
 interactive = False
 

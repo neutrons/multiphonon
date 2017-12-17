@@ -24,18 +24,34 @@ This code converts a S(Q,E) INS spectrum to DOS.
 * Handle inputs in nxs and nxspe files for sample and empty can measurements
 
 ## Installation
+
 **NOTE:** SNS users can skip this step and use this software package directly at SNS analysis cluster (see below). 
 
 The multiphonon package can be installed using conda (python 2) on a recent 64bit linux (ubuntu/fedora/centos) distribution:
 
       $ conda config --add channels conda-forge
-      $ conda config --add channels mantid
       $ conda config --add channels mcvine
-      $ conda config --add channels neutrons
       $ conda install numpy
       $ conda install multiphonon
 
 Information on dependencies of this code can be found at [the conda recipe](/conda-recipe/meta.yaml)
+
+The multiphonon package converts a I(Q,E) spectrum to DOS.
+Experimental data obtained from direct-geometry inelastic neutron spectrometers first need to
+be converted to I(Q,E) spectra.
+Those experimental data are usually in the form of nexus files
+(including event mode nexus files, histogram mode nexus files,
+and nxspe files) and can be reduced to I(Q,E) spectra using [mantid](http://mantidproject.org).
+Convenient methods and example notebooks exist in multiphonon for this preprocessing step.
+For those methods and notebooks to work, the following installation is needed
+
+      $ conda config --add channels mantid
+      $ conda install mantid
+
+Finally, example jupyter notebooks need [ipywe](https://github.com/scikit-beam/ipywe)
+
+      $ conda config --add channels neutrons
+      $ conda install ipywe
 
 ### Why not PyPI installation
 Some dependencies of multiphonon contain sophistated C++ libraries so it is much easier to rely
@@ -57,7 +73,7 @@ For SNS users, GetDOS can be performed at SNS analysis cluster through the jupyt
   - [Run GetDOS2](https://www.youtube.com/embed/uTEEyifpG-k) (this works for SNS data only)
 
 ### GetDOS using local installation
-For any user, GetDOS can be performed with a local installation of GetDOS and jupyter.
+For any user, GetDOS can be performed with a local installation of multiphonon.
 Examples and instructions can be found [here](/examples)
 
 ## Community guidelines
@@ -93,7 +109,11 @@ See http://sns-chops.github.io/multiphonon/
 ## Run tests
 Tests are run automatically at [travis CI](https://travis-ci.org/sns-chops/multiphonon/builds). 
 
-To manually run tests, install multiphonon, clone this repository, and cd into the new directory, and then run
+To manually run tests that do not depend on mantid, install multiphonon, clone this repository, and cd into the new directory, and then run
+
+    $ py.test -m "not needs_mantid"
+
+If mantid was installed, you can run all tests by
 
     $ py.test
 
