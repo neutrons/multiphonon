@@ -22,6 +22,7 @@ def _checkMantid():
         raise RuntimeError("Please install mantid")
     global mantid_checked
     mantid_checked = True
+    print "  - Done."
     return
 if not mantid_checked:
     _checkMantid()
