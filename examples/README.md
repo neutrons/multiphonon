@@ -27,7 +27,7 @@ To run the example notebooks, install in the same conda environment some extra p
 
     $ conda config --add channels mantid
     $ conda config --add channels neutrons
-    $ conda install mantid ipywe jupyter
+    $ conda install mantid-framework ipywe jupyter
 
 Start a jupyter server
 
