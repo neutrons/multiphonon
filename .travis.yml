@@ -24,7 +24,7 @@ before_install:
   - ./miniconda.sh -b -p /home/travis/mc
   - export PATH=/home/travis/mc/bin:$PATH
   - mkdir -p $HOME/.mantid
-  - echo "default.facility=SNS" > $HOME/.mantid/Mantid.user.properties
+#  - echo "default.facility=SNS" > $HOME/.mantid/Mantid.user.properties
 
 install:
   - export GIT_FULL_HASH=`git rev-parse HEAD`
