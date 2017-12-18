@@ -19,7 +19,14 @@ import warnings
 
 
 def sqehist(E, g, **kwds):
-    "a simple wrapper of method sqe to return a histogram"
+   """ a simple wrapper of method sqe to return a histogram
+    
+    Parameters
+    ----------
+    E,g: numpy arrays of energies and density of states
+          it must be normalized
+
+    """
     Q,E,S = sqe(E,g, **kwds)
     import histogram as H
     Qaxis = H.axis('Q', Q, '1./angstrom')
