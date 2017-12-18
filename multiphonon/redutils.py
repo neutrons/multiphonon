@@ -10,7 +10,7 @@ def _createDefaultMantidUserConfig(facility='SNS'):
                 of.write('default.facility=%s' % facility)
     return
 # this should be done before mantid is imported
-_createMantidUserConfig()
+_createDefaultMantidUserConfig()
 
 
 def reduce(nxsfile, qaxis, outfile, use_ei_guess=False, ei_guess=None, eaxis=None, tof2E=True, ibnorm='ByCurrent'):
