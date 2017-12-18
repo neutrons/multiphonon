@@ -13,6 +13,20 @@ def _createDefaultMantidUserConfig(facility='SNS'):
 _createDefaultMantidUserConfig()
 
 
+mantid_checked = False
+def _checkMantid():
+    print "* Checking Mantid ..."
+    import subprocess as sp, shlex
+    sp.call(shlex.split("python -c 'import mantid'"), stdout=sp.PIPE, stderr=sp.PIPE) # sometimes mantid import for the first time may fail
+    if sp.call(shlex.split("python -c 'import mantid'")):
+        raise RuntimeError("Please install mantid")
+    global mantid_checked
+    mantid_checked = True
+    return
+if not mantid_checked:
+    _checkMantid()
+
+
 def reduce(nxsfile, qaxis, outfile, use_ei_guess=False, ei_guess=None, eaxis=None, tof2E=True, ibnorm='ByCurrent'):
     from mantid.simpleapi import DgsReduction, SofQW3, SaveNexus, Load
     if tof2E == 'guess':
