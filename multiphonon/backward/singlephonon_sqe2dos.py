@@ -11,21 +11,28 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None, update_weights=N
     """ 
     Given a one-phonon sqe, compute dos
 
-    sqe:
-      For a simulated sqe, this is easy.
-      For an experimental sqe, the part around elastic line
-      has be masked as NaNs.
-      It is assumed that the E axis is symmetric about
-      zero, and zero is one of the E values (or close to zero).
+    Parameters
+    ----------
+    sqe:histogram
+	S(Q,E)
 
-    T: temperature (kelvin)
-    Ecutoff: beyond this DOS must be zero
-    Elastic_E_cutoff: cutoff energy for removing the elastic line
-    M: atomic mass
-    initdos: initial DOS histogram. Its energy axis starts with
-             the positive energy axis of sqe histogram. be aware that
-             it might extend beyond the largest E bin of sqe
-    update_weights: weights for DOS update strategies (continuity, area conservation)
+    T:float
+      Temperature (kelvin)
+
+    Ecutoff:float 
+	Cutoff energy beyond which DOS must be zero
+    
+    Elastic_E_cutoff:float 
+	Cutoff energy for removing the elastic line
+    
+    M:float 
+	Atomic mass
+    
+    initdos:histogram
+	 initial guess of DOS
+
+    update_weights:float 
+	weights for DOS update strategies (continuity, area conservation)
 
     The basic procedure is
     * construct an initial guess of DOS
