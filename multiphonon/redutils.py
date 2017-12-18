@@ -14,7 +14,6 @@ _createDefaultMantidUserConfig()
 
 
 def reduce(nxsfile, qaxis, outfile, use_ei_guess=False, ei_guess=None, eaxis=None, tof2E=True, ibnorm='ByCurrent'):
-    "reduce Nexus file to I(Q,E)"
     from mantid.simpleapi import DgsReduction, SofQW3, SaveNexus, Load
     if tof2E == 'guess':
         # XXX: this is a simple guess. all raw data files seem to have root "entry"
