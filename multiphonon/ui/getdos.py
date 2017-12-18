@@ -4,7 +4,7 @@ import ipywe.wizard as wiz
 import ipywidgets as ipyw
 from ipywe import fileselector
 import os, numpy as np
-from . import Context
+from . import Context, context2kargs
 
 # ------------------------------------------------------------
 # Wizard: Get Nexus files
