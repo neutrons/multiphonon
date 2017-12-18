@@ -44,7 +44,7 @@ and nxspe files) and can be reduced to I(Q,E) spectra using [mantid](http://mant
 Convenient methods and example notebooks exist in multiphonon for this preprocessing step.
 For those methods and notebooks to work, the following installation is needed
 
-      $ conda config --add channels mantid
+      $ conda config --add channels mantid-framework
       $ conda install mantid
 
 Finally, example jupyter notebooks need [ipywe](https://github.com/scikit-beam/ipywe)
