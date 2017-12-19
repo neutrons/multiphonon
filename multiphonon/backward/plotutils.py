@@ -8,12 +8,14 @@ def plot_dos_iteration(curdir, total_rounds=None):
    
     Parameters
     ----------
-   curdir: str
-	path to the current directory
+
+    curdir: str
+        path to the current directory
  
-   total_rounds: integer
-	number of iterations
-   """
+    total_rounds: integer
+        number of iterations
+
+    """
     if total_rounds is None:
         import glob
         dirs = glob.glob(os.path.join(curdir, 'round-*'))
@@ -30,13 +32,15 @@ def plot_dos_iteration(curdir, total_rounds=None):
 
 
 def plot_residual(curdir):
-   """plot the  residual DOS
+    """plot the  residual DOS
    
     Parameters
     ----------
-   curdir: str
+
+    curdir: str
         path to the current directory
-   """
+
+    """
 
     exp_pos_se = hh.load(os.path.join(curdir, 'I_E-exp-posE.h5'))
     residual_pos_se = hh.load(os.path.join(curdir, 'residual_E-posE.h5'))
@@ -49,13 +53,15 @@ def plot_residual(curdir):
 
 
 def plot_intermediate_result_sqe(curdir):
-     """plot the  intermediate S(Q,E)
-   
+    """plot the  intermediate S(Q,E)
+
     Parameters
     ----------
-   curdir: str
+
+    curdir: str
         path to the current directory
-   """
+
+    """
 
     from ._sqe2dos_script_templates import plots_table as plots
     plots = plots.strip().splitlines()
@@ -88,9 +94,11 @@ def plot_intermediate_result_se(curdir):
    
     Parameters
     ----------
-   curdir: str
+
+    curdir: str
         path to the current directory
-   """
+
+    """
 
     # mpl.rcParams['figure.figsize'] = 12,9
     from ._sqe2dos_script_templates import plots_table as plots

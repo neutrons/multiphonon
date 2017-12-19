@@ -4,35 +4,36 @@
 
 import numpy as np, histogram as H, histogram.hdf as hh, os
 
+
 class EnergyAxisMissingBinCenterAtZero(Exception): pass
 
 
 def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None, update_weights=None):
-    """ 
+    """
     Given a one-phonon sqe, compute dos
 
     Parameters
     ----------
     sqe:histogram
-	S(Q,E)
+        S(Q,E)
 
     T:float
       Temperature (kelvin)
 
-    Ecutoff:float 
-	Cutoff energy beyond which DOS must be zero
+    Ecutoff:float
+        Cutoff energy beyond which DOS must be zero
     
-    Elastic_E_cutoff:float 
-	Cutoff energy for removing the elastic line
+    Elastic_E_cutoff:float
+        Cutoff energy for removing the elastic line
     
-    M:float 
-	Atomic mass
+    M:float
+        Atomic mass
     
     initdos:histogram
-	 initial guess of DOS
+        initial guess of DOS
 
-    update_weights:float 
-	weights for DOS update strategies (continuity, area conservation)
+    update_weights:float
+        weights for DOS update strategies (continuity, area conservation)
 
     The basic procedure is
     * construct an initial guess of DOS
@@ -40,13 +41,13 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None, update_weights=N
     * for both exp and sim SQE, integrate along Q to obtain S(E)
     * scale the initial guess DOS by the S(E) ratio
     * optionally we can do this again
-    """ 
+    """
     # create initial guess of dos
     Efull = sqe.E
     dE = sqe.E[1] - sqe.E[0]
-    assert dE>0, "Energy axis must be incremental"
-    Eplus = Efull[Efull>-dE/2]
-    if abs(Eplus[0]) > dE/1e6:
+    assert dE > 0, "Energy axis must be incremental"
+    Eplus = Efull[Efull > -dE / 2]
+    if abs(Eplus[0]) > dE / 1e6:
         raise EnergyAxisMissingBinCenterAtZero('"0" must be one of the bin centers of the energy axis')
     Eplus[0] = 0.
     if initdos is None:
@@ -63,14 +64,14 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None, update_weights=N
     dQ = Q[1] - Q[0]
     E = sqe.E
     dE = E[1] - E[0]
-    beta = 1./(T*kelvin2mev)    
-    Q2, E2, sqeset = computeSQESet(1, Q,dQ, initdos.E,dE, M, initdos.I, beta)
+    beta = 1. / (T * kelvin2mev)
+    Q2, E2, sqeset = computeSQESet(1, Q, dQ, initdos.E, dE, M, initdos.I, beta)
     # compute S(E) from SQE
     # - experiment
     # -- only need the positive part
     expsqe = sqe.copy()
-    expsqe_Epositive = expsqe[(), (-dE/2, None)].I
-    expsqeE2_Epositive = expsqe[(), (-dE/2, None)].E2
+    expsqe_Epositive = expsqe[(), (-dE / 2, None)].I
+    expsqeE2_Epositive = expsqe[(), (-dE / 2, None)].E2
     mask = expsqe_Epositive != expsqe_Epositive
     expsqe_Epositive[mask] = 0
     expsqeE2_Epositive[mask] = 0
@@ -87,31 +88,54 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None, update_weights=N
     N_Eplus = Eplus.size
     dos_in_range = initdos[(Eplus[0], Eplus[-1])].copy()
     with np.errstate(divide='ignore', invalid='ignore'):
-        dos_in_range.I *= expse/simse
+        dos_in_range.I *= expse / simse
     # remember the relative error of the dos
-    dos_relative_error = expse_E2**.5 / expse
+    dos_relative_error = expse_E2 ** .5 / expse
     # clean up bad values
-    dos_in_range.I[dos_in_range.I!=dos_in_range.I] = 0
+    dos_in_range.I[dos_in_range.I != dos_in_range.I] = 0
     # clean up data near elastic line
-    n_small_E = (Eplus<elastic_E_cutoff[1]).sum()
-    dos_in_range.I[:n_small_E] = Eplus[:n_small_E] ** 2 * dos_in_range.I[n_small_E] / Eplus[n_small_E]**2
+    n_small_E = (Eplus < elastic_E_cutoff[1]).sum()
+    dos_in_range.I[:n_small_E] = Eplus[:n_small_E] ** 2 * dos_in_range.I[n_small_E] / Eplus[n_small_E] ** 2
     # keep positive
-    dos_in_range.I[dos_in_range.I<0] = 0
+    dos_in_range.I[dos_in_range.I < 0] = 0
     # DOS range to update should be smaller than SQE E range, so we need to
     dos_to_update = dos_in_range[(Eplus[0], min(Eplus[-1], Ecutoff))]
     # update
     return update_dos(initdos, dos_to_update.E[0], dos_to_update.E[-1],
-                      g=dos_to_update.I, gerr=dos_to_update.I*dos_relative_error[:dos_to_update.I.size],
+                      g=dos_to_update.I, gerr=dos_to_update.I * dos_relative_error[:dos_to_update.I.size],
                       weights=update_weights)
+
 
 def update_dos(original_dos_hist, Emin, Emax, g, gerr, weights=None):
     # only if the spectrum is nontrivial beyond Emax, we need rescale
+    """ Parameters
+    ----------
+    original_dos_hist:histogram
+        original phonon density of states
+
+    Emin:float
+        minimum value for energy transfer axis
+
+    Emax:float 
+        maximum value for energy transfer axis
+    
+    g:float 
+        updated phonon density of states
+    
+    gerr:float 
+        error for phonon density of states
+    
+    weights:float 
+        weights for DOS update strategies (continuity, area conservation)
+
+    """
+
     assert original_dos_hist.E[-1] >= Emax
-    dE = original_dos_hist.E[1]-original_dos_hist.E[0]
-    if Emax+dE > original_dos_hist.E[-1]:
+    dE = original_dos_hist.E[1] - original_dos_hist.E[0]
+    if Emax + dE > original_dos_hist.E[-1]:
         rescale = False
     else:
-        g_beyond_range = original_dos_hist[(Emax+dE,None)].I
+        g_beyond_range = original_dos_hist[(Emax + dE, None)].I
         assert np.all(g_beyond_range >= 0)
         rescale = g_beyond_range.sum() > 0
     # if need rescale, calculate the factor using some strategies and take weighted average
@@ -123,13 +147,14 @@ def update_dos(original_dos_hist, Emin, Emax, g, gerr, weights=None):
             # this can happen if the original dos has value zero
             warnings.warn(
                 "fail to use the continuous criteria to determine the scale factor for combining DOSes"
-                )
+            )
             scale = scale2
         else:
-            if abs(scale1-scale2)/scale1 > 0.05:
+            if abs(scale1 - scale2) / scale1 > 0.05:
                 warnings.warn(
                     "Scaling factor to combine DOSes calculated is not stable: %s (using continuous criteria) vs %s (using area criteria)\n"
-                    "You may want to consider adjusting the parameters such as E range (Emax more specifically)" % (scale1, scale2)
+                    "You may want to consider adjusting the parameters such as E range (Emax more specifically)" % (
+                    scale1, scale2)
                 )
             if weights is None:
                 weights = [.5, .5]
@@ -143,30 +168,37 @@ def update_dos(original_dos_hist, Emin, Emax, g, gerr, weights=None):
     # by updating only the front portion
     lowEportion = newdos[(Emin, Emax)]
     lowEportion.I[:] = g
-    lowEportion.E2[:] = gerr**2
+    lowEportion.E2[:] = gerr ** 2
     # now renormalize
     return normalize_dos(newdos)
 
 
 def normalize_dos(dos_hist):
-    dE = dos_hist.E[1]-dos_hist.E[0]
-    norm = dos_hist.I.sum()*dE
-    dos_hist.I/=norm
-    dos_hist.E2/=norm*norm
+    """ Parameters
+        ----------
+        dos_hist:histogram
+            phonon density of states
+
+    """
+    dE = dos_hist.E[1] - dos_hist.E[0]
+    norm = dos_hist.I.sum() * dE
+    dos_hist.I /= norm
+    dos_hist.E2 /= norm * norm
     return dos_hist
-    
+
 
 def compute_scalefactor_using_area_criteria(original_dos_hist, Emin, Emax, g):
     "update the lower E portion of the dos by keeping the area of the updated portion intact"
     expected_sum = original_dos_hist[(Emin, Emax)].I.sum()
     sum_now = g.sum()
-    return expected_sum/sum_now
+    return expected_sum / sum_now
+
 
 def compute_scalefactor_using_continuous_criteria(original_dos_hist, Emin, Emax, g):
     "update the lower E portion of the dos by keeping the DOS value at maximum E the same as the original DOS"
     v_at_Emax = original_dos_hist[Emax][0]
     v_now_at_Emax = g[-1]
-    return v_at_Emax/v_now_at_Emax
+    return v_at_Emax / v_now_at_Emax
 
 
 def guess_init_dos(E, cutoff):
@@ -176,14 +208,15 @@ def guess_init_dos(E, cutoff):
     maximum E.
     """
     dos = np.ones(E.size, dtype=float)
-    dos[E>cutoff] = 0.
-    end_of_E2_zone = cutoff/3.
-    dos[E<end_of_E2_zone] = (E*E/end_of_E2_zone/end_of_E2_zone)[E<end_of_E2_zone]
+    dos[E > cutoff] = 0.
+    end_of_E2_zone = cutoff / 3.
+    dos[E < end_of_E2_zone] = (E * E / end_of_E2_zone / end_of_E2_zone)[E < end_of_E2_zone]
     dE = E[1] - E[0]
     norm = np.sum(dos) * dE
     g = dos / norm
     Eaxis = H.axis("E", E, 'meV')
     return H.histogram("DOS", [Eaxis], data=g)
+
 
 # the following methods are obsolete
 """
@@ -212,4 +245,4 @@ def update_dos_(original_dos_hist, Emin, Emax, g, gerr, compute_scalefactor):
     return newdos
 """
 
-# End of file 
+# End of file

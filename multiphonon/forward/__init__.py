@@ -11,23 +11,24 @@ def dos2sqe(dos, C_ms, sqe, T, M, Ei):
 
     Parameters
     ----------
+
     dos: histogram
-	Phonon density of states
+        Phonon density of states
 
     C_ms:float
-	MS = C_ms * MP
+        MS = C_ms * MP
 
     sqe:histogram
-	S(Q,E)
+        S(Q,E)
 
     T: float
-	Temperature (Kelvin)
+        Temperature (Kelvin)
     
     M: float
-	Atomic mass
+        Atomic mass
     
     Ei: float
-	Incident energy (meV)
+        Incident energy (meV)
   
 
     """

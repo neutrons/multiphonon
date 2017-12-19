@@ -19,16 +19,16 @@ import warnings
 
 
 def sqehist(E, g, **kwds):
-   """ a simple wrapper of method sqe to return a histogram
+    """ a simple wrapper of method sqe to return a histogram
     
     Parameters
     ----------
    
     E:float
-	 numpy arrays of energies
+        numpy arrays of energies
 
     g:float
-	numpy arrays of density of states
+        numpy arrays of density of states
           
 
     """
@@ -52,32 +52,31 @@ def sqe(
     ----------
 
     E:float
-         energy transfer axis
+        energy transfer axis
 
     g:float
         input density of states
 
-    
     Qmx:float
-	mximum value for momentum transfer axis
+        mximum value for momentum transfer axis
 
     Qmin:float
         minimum value for momentum transfer axis
 
-   dQ:float
-	the step size for momentum transfer axis
+    dQ:float
+        the step size for momentum transfer axis
    
-   T:float
-	 temperature (Kelvin)
+    T:float
+        temperature (Kelvin)
 
-   M:float
-	 atomic mass
+    M:float
+        atomic mass
  
-   N:integer
-	 maximum number of order for multi-phonon scattering
+    N:integer
+        maximum number of order for multi-phonon scattering
     
-   starting_order:integer
-	 starting number for phonon scattering
+    starting_order:integer
+        starting number for phonon scattering
 
     """
     dos_sample = len(E)
@@ -122,28 +121,28 @@ def iterSQESet(N, Q,dQ, E,dE, M, g, beta):
     ----------
 
     N:integer
-         number of iterations
+        number of iterations
 
     Q:float
-	momentum transfer axis
+        momentum transfer axis
 
     dQ:float
-	step size for momentum transfer axis
+        step size for momentum transfer axis
  
     E: float
-	energy transfer axis
+        energy transfer axis
 
     dE:float
-	step size for energy transfer axis
+        step size for energy transfer axis
  
     M:float
-	atomic  mass
+        atomic  mass
 
     g:float
-	 phonon DOS for the given E
+        phonon DOS for the given E
 
     beta:float
-	 1/(kBT)
+        1/(kBT)
 
     """
 
@@ -169,25 +168,25 @@ def computeSQESet(N, Q,dQ, E,dE, M, g, beta):
          number of iterations
 
     Q:float
-	momentum transfer axis
+        momentum transfer axis
 
     dQ:float
-	step size for momentum transfer axis
+        step size for momentum transfer axis
  
     E: float
-	energy transfer axis
+        energy transfer axis
 
     dE:float
-	step size for energy transfer axis
+        step size for energy transfer axis
  
     M:float
-	atomic  mass
+        atomic  mass
 
     g:float
-	 phonon DOS for the given E
+        phonon DOS for the given E
 
     beta:float
-	 1/(kBT)
+        1/(kBT)
     
     """
     
@@ -211,10 +210,10 @@ def computeSnQSet(N, DW2):
     ----------
 
     N:integer
-         number of iterations
+        number of iterations
 
     DW2: float
-	Debye Waller factor
+        Debye Waller factor
 
     """
     SNQ = []
@@ -248,19 +247,19 @@ def computeAnESet(N, E,g, beta, dE):
     ----------
 
     N:integer
-         number of iterations
+        number of iterations
  
     E: float
-	energy transfer axis
+        energy transfer axis
 
     dE:float
-	step size for energy transfer axis
+        step size for energy transfer axis
 
     g:float
-	 phonon DOS for the given E
+        phonon DOS for the given E
 
     beta:float
-	 1/(kBT)
+        1/(kBT)
 
     """
     E, A1E = computeA1E(E,g, beta, dE)
@@ -282,13 +281,13 @@ def AnE_from_n_1(A1E, Anm1E, dE):
     ----------
 
     A1E:float
-         array of energies
+        array of energies
 
-   Anm1E:float
-	array of previous energies
+    Anm1E:float
+        array of previous energies
 
-   dE:float
-	step size for energy transfer axis
+    dE:float
+        step size for energy transfer axis
 
     """
     Y = np.zeros( 4*len(Anm1E),'d' )
@@ -313,8 +312,8 @@ def convMatrix(y):
     Parameters
     ----------
 
-    y:float  
-         a vector
+    y:float
+        a vector
 
     """
     M = np.zeros( ( len(y),len(y) ) , 'd' )
@@ -337,16 +336,17 @@ def computeA1E(E,g, beta, dE):
     ----------
 
     E: float
-	energy transfer axis
+        energy transfer axis
 
     dE:float
-	step size for energy transfer axis
+        step size for energy transfer axis
  
     g:float
-	 phonon DOS for the given E
+        phonon DOS for the given E
 
     beta:float
-	 1/(kBT)
+        1/(kBT)
+
     """
     zero_ind = len(E) - 1
     g0 = gamma0(E,g, beta, dE)
@@ -378,11 +378,11 @@ def reflected(x,y):
     Parameters
     ----------
 
-    x:float  
-         a vector
+    x:float
+        a vector
 
-   y:float
-	a vector
+    y:float
+        a vector
 
     """
     def reflect(a, multiplier):
@@ -394,12 +394,13 @@ def reflected(x,y):
     
 def coth(x):
     
-   """ Parameters
+    """ Parameters
     ----------
 
-    x:float  
-         a vector
-   """
+    x:float
+        a vector
+
+    """
 
     with warnings.catch_warnings():
         warnings.simplefilter('ignore')
@@ -424,10 +425,10 @@ def gamma0(E, g, beta, dE):
         step size for energy transfer axis
  
     g:float
-         phonon DOS for the given E
+        phonon DOS for the given E
 
     beta:float
-         1/(kBT)
+        1/(kBT)
 
     """
     assert abs(E[0]) < 1e-7 # E[0] must be 0
@@ -492,16 +493,16 @@ def gamma0a(E, g, beta, dE):
 """
 
 def fitparabolic(x,y):
- """Parameters
+    """Parameters
     ----------
 
     x:float
         a vector
 
     y:float
-	a vector
+        a vector
 
-  """
+    """
 
     x2 = x*x
     return (x2*y).sum()/(x2*x2).sum()
@@ -514,10 +515,10 @@ def DWExp(Q, M, E,g, beta, dE):
     ----------
 
     Q:float
-	momentum transfer axis
+        momentum transfer axis
 
     M:float
-	atomic mass
+        atomic mass
 
     E: float
         energy transfer axis
@@ -526,10 +527,10 @@ def DWExp(Q, M, E,g, beta, dE):
         step size for energy transfer axis
  
     g:float
-         phonon DOS for the given E
+        phonon DOS for the given E
 
     beta:float
-         1/(kBT)
+        1/(kBT)
  
     """
     g0 =  gamma0(E,g, beta, dE)

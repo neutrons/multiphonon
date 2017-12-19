@@ -23,25 +23,26 @@ def reduce(nxsfile, qaxis, outfile, use_ei_guess=False, ei_guess=None, eaxis=Non
         path to nxs file
 
     qaxis: float
-	Momentum transfer axis
+        Momentum transfer axis
 
     outfile: str
-	path to save nxs data
+        path to save nxs data
 
     use_ei_guess:float
-	Use of incident energy guessed (meV)
+        Use of incident energy guessed (meV)
 
     ei_guess: float
-	Initial guess of incident energy (meV) 
+        Initial guess of incident energy (meV)
 
     eaxis: float
-	Energy transfer axis
+        Energy transfer axis
 
     tof2E: float
-	Conversion from time of flight axis to energy axis
+        Conversion from time of flight axis to energy axis
 
     ibnorm: float
-	Incident beam normalization factor 
+        Incident beam normalization factor
+
     """
     from mantid.simpleapi import DgsReduction, SofQW3, SaveNexus, Load
     if tof2E == 'guess':
