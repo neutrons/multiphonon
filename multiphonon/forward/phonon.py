@@ -23,8 +23,13 @@ def sqehist(E, g, **kwds):
     
     Parameters
     ----------
-    E,g: numpy arrays of energies and density of states
-          it must be normalized
+   
+    E:float
+	 numpy arrays of energies
+
+    g:float
+	numpy arrays of density of states
+          
 
     """
     Q,E,S = sqe(E,g, **kwds)
@@ -43,13 +48,37 @@ def sqe(
     
     Note: single phonon scattering is not included. only 2-phonons and up
     
-    E,g: input DOS data
-    energy axis is inferred from input DOS data
-    Q axis is defined by Qmax, Qmin, and dQ
-    T: temperature (Kelvin)
-    M: atomic mass 
-    N: maximum number of order for multi-phonon scattering
-    starting_order: 2: start with 2 phonon scattering
+    Parameters
+    ----------
+
+    E:float
+         energy transfer axis
+
+    g:float
+        input density of states
+
+    
+    Qmx:float
+	mximum value for momentum transfer axis
+
+    Qmin:float
+        minimum value for momentum transfer axis
+
+   dQ:float
+	the step size for momentum transfer axis
+   
+   T:float
+	 temperature (Kelvin)
+
+   M:float
+	 atomic mass
+ 
+   N:integer
+	 maximum number of order for multi-phonon scattering
+    
+   starting_order:integer
+	 starting number for phonon scattering
+
     """
     dos_sample = len(E)
     e0 = E[0]
@@ -88,11 +117,34 @@ def sqe(
 
 def iterSQESet(N, Q,dQ, E,dE, M, g, beta):
     """iterate over the set of S(Q,E) for n in [1,N]
-    Q, dQ: Q axis
-    E, dE: E axis
-    M: mass
-    g: phonon DOS for the given E
-    beta: 1/(kBT)
+
+    Parameters
+    ----------
+
+    N:integer
+         number of iterations
+
+    Q:float
+	momentum transfer axis
+
+    dQ:float
+	step size for momentum transfer axis
+ 
+    E: float
+	energy transfer axis
+
+    dE:float
+	step size for energy transfer axis
+ 
+    M:float
+	atomic  mass
+
+    g:float
+	 phonon DOS for the given E
+
+    beta:float
+	 1/(kBT)
+
     """
 
     E2, AnE_set = computeAnESet(N, E,g, beta, dE)
