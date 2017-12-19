@@ -4,15 +4,15 @@ import histogram.hdf as hh, os
 
 
 def plot_dos_iteration(curdir, total_rounds=None):
-    """plot the  DOS for each iteration
+    """
+    plot the  DOS for each iteration
    
     Parameters
     ----------
-
-    curdir: str
+    curdir : str
         path to the current directory
  
-    total_rounds: integer
+    total_rounds : integer
         number of iterations
 
     """
@@ -36,8 +36,7 @@ def plot_residual(curdir):
    
     Parameters
     ----------
-
-    curdir: str
+    curdir : str
         path to the current directory
 
     """

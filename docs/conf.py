@@ -30,6 +30,7 @@ import os
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'numpydoc',
     'sphinx.ext.mathjax',
 ]
 

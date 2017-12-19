@@ -11,6 +11,15 @@ API documentation for multiphonon package
 
 .. autofunction:: multiphonon.getdos.getDOS
 .. autofunction:: multiphonon.backward.sqe2dos.sqe2dos
+.. autofunction:: multiphonon.backward.singlephonon_sqe2dos.sqe2dos
+.. autofunction:: multiphonon.forward.dos2sqe
+.. autofunction:: multiphonon.forward.phonon.sqe
+.. autofunction:: multiphonon.forward.phonon.sqehist
+.. autofunction:: multiphonon.sqe.interp
+.. autofunction:: multiphonon.redutils.reduce
+
+.. automodule:: multiphonon.backward.plotutils
+   :members:
 		
 Indices and tables
 ==================
