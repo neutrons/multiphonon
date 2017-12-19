@@ -112,8 +112,13 @@ class GetEiT(wiz.Step):
         return ipyw.VBox(children=widgets)
     
     def validate(self):
-        self.context.Ei = self.text_Ei.value
-        self.context.T = self.text_T.value
+        Ei = self.text_Ei.value
+        assert Ei>0
+        self.context.Ei = Ei
+        #
+        T = self.text_T.value
+        assert T>0
+        self.context.T = T
         return True
     
     def nextStep(self):
@@ -311,11 +316,11 @@ class GetParameters(wiz.Step):
 def createParameterInputWidgets(context):
     from collections import OrderedDict
     import ipywidgets as widgets
-    w_mt_fraction = widgets.BoundedFloatText(description="mt_fraction", min=0., max=100., value=context.mt_fraction)
+    w_mt_fraction = widgets.BoundedFloatText(description="mt_fraction", min=0., max=1., value=context.mt_fraction)
     w_const_bg_fraction = widgets.BoundedFloatText(description="const_bg_fraction", min=0., max=1., value=context.const_bg_fraction)
-    w_Ecutoff = widgets.BoundedFloatText(description="Max energy of phonons", min=0, max=1000., value=context.Ecutoff)
-    w_ElasticPeakMin = widgets.BoundedFloatText(description="Emin of elastic peak", min=-300., max=0., value=context.ElasticPeakMin)
-    w_ElasticPeakMax = widgets.BoundedFloatText(description="Emax of elastic peak", min=0., max=300., value=context.ElasticPeakMax)
+    w_Ecutoff = widgets.BoundedFloatText(description="Max energy of phonons", min=0, max=context.Ei, value=context.Ecutoff)
+    w_ElasticPeakMin = widgets.BoundedFloatText(description="Emin of elastic peak", min=-context.Ei/2., max=0., value=context.ElasticPeakMin)
+    w_ElasticPeakMax = widgets.BoundedFloatText(description="Emax of elastic peak", min=0., max=context.Ei/2., value=context.ElasticPeakMax)
     w_M = widgets.BoundedFloatText(description="Average atom mass", min=1., max=1000., value=context.M)
     w_C_ms = widgets.BoundedFloatText(description="C_ms", min=0., max=10., value=context.C_ms)
 
