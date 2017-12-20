@@ -22,8 +22,8 @@ def sqe2dos(
     * Compare the new DOS to the previous one and calculate the difference
     * If difference is large, continue the iteration. Otherwise the new DOS is what we want
     
-    Parameters:
-    -----------
+    Parameters
+    ----------
     sqe : histogram
         S(Q, E)
 

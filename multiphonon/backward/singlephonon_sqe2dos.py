@@ -36,11 +36,11 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None, update_weights=N
         weights for DOS update strategies (continuity, area conservation)
 
     The basic procedure is
-    * construct an initial guess of DOS
-    * use this DOS to compute 1-phonon SQE
-    * for both exp and sim SQE, integrate along Q to obtain S(E)
-    * scale the initial guess DOS by the S(E) ratio
-    * optionally we can do this again
+     * construct an initial guess of DOS
+     * use this DOS to compute 1-phonon SQE
+     * for both exp and sim SQE, integrate along Q to obtain S(E)
+     * scale the initial guess DOS by the S(E) ratio
+     * optionally we can do this again
     """
     # create initial guess of dos
     Efull = sqe.E
