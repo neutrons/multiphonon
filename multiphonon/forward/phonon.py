@@ -19,7 +19,21 @@ import warnings
 
 
 def sqehist(E, g, **kwds):
-    "a simple wrapper of method sqe to return a histogram"
+    """a simple wrapper of method sqe to return a histogram
+
+    Please see method sqe for details of all keyword parameters
+    
+    Parameters
+    ----------
+   
+    E:numpy array of floats
+        energies in meV
+
+    g:numpy array of floats
+        density of states at the specified energies
+          
+
+    """
     Q,E,S = sqe(E,g, **kwds)
     import histogram as H
     Qaxis = H.axis('Q', Q, '1./angstrom')
@@ -32,17 +46,41 @@ def sqe(
     T=300, M=50, N=5, starting_order=2, Emax=None,
     ):
     """compute sum of multiphonon SQE from dos
-    S = \sum_{i=2,N} S_i(Q,E)
+
+      S = \sum_{i=2,N} S_i(Q,E)
     
     Note: single phonon scattering is not included. only 2-phonons and up
     
-    E,g: input DOS data
-    energy axis is inferred from input DOS data
-    Q axis is defined by Qmax, Qmin, and dQ
-    T: temperature (Kelvin)
-    M: atomic mass 
-    N: maximum number of order for multi-phonon scattering
-    starting_order: 2: start with 2 phonon scattering
+    Parameters
+    ----------
+
+    E:numpy array of floats
+        energies in meV
+
+    g:numpy array of floats
+        density of states at the given energies
+
+    Qmax:float
+        maximum value for momentum transfer axis in inverse angstrom
+
+    Qmin:float
+        minimum value for momentum transfer axis in inverse angstrom
+
+    dQ:float
+        the step size for momentum transfer axis in inverse angstrom
+   
+    T:float
+        temperature (Kelvin)
+
+    M:float
+        atomic mass
+ 
+    N:integer
+        maximum number of order for multi-phonon scattering
+    
+    starting_order:integer
+        starting number for phonon scattering order
+
     """
     dos_sample = len(E)
     e0 = E[0]
@@ -81,11 +119,34 @@ def sqe(
 
 def iterSQESet(N, Q,dQ, E,dE, M, g, beta):
     """iterate over the set of S(Q,E) for n in [1,N]
-    Q, dQ: Q axis
-    E, dE: E axis
-    M: mass
-    g: phonon DOS for the given E
-    beta: 1/(kBT)
+
+    Parameters
+    ----------
+
+    N:integer
+        number of iterations
+
+    Q:float
+        momentum transfer axis
+
+    dQ:float
+        step size for momentum transfer axis
+ 
+    E: float
+        energy transfer axis
+
+    dE:float
+        step size for energy transfer axis
+ 
+    M:float
+        atomic  mass
+
+    g:float
+        phonon DOS for the given E
+
+    beta:float
+        1/(kBT)
+
     """
 
     E2, AnE_set = computeAnESet(N, E,g, beta, dE)
@@ -102,11 +163,34 @@ def iterSQESet(N, Q,dQ, E,dE, M, g, beta):
 
 def computeSQESet(N, Q,dQ, E,dE, M, g, beta):
     """compute the set of S(Q,E) for n in [1,N]
-    Q, dQ: Q axis
-    E, dE: E axis
-    M: mass
-    g: phonon DOS for the given E
-    beta: 1/(kBT)
+
+    Parameters
+    ----------
+
+    N:integer
+         number of iterations
+
+    Q:float
+        momentum transfer axis
+
+    dQ:float
+        step size for momentum transfer axis
+ 
+    E: float
+        energy transfer axis
+
+    dE:float
+        step size for energy transfer axis
+ 
+    M:float
+        atomic  mass
+
+    g:float
+        phonon DOS for the given E
+
+    beta:float
+        1/(kBT)
+    
     """
     
     E2, AnE_set = computeAnESet(N, E,g, beta, dE)
@@ -124,6 +208,16 @@ def computeSQESet(N, Q,dQ, E,dE, M, g, beta):
 
 def computeSnQSet(N, DW2):
     """ compute the set of Sn(Q) for n in [1,N]
+
+    Parameters
+    ----------
+
+    N:integer
+        number of iterations
+
+    DW2: float
+        Debye Waller factor
+
     """
     SNQ = []
     for i in range(1,N+1):
@@ -135,12 +229,41 @@ def computeSNQ(DW2,N):
     """ Takes the exponent for the Debye Waller factor `DW2` = 2W, and an
     integer N indicating a term in the phonon expansion and returns the 
     intensity of the N-phonon incoherent scattering S_N(Q)
+
+    Parameters
+    ----------
+
+    N:integer
+         a term in the phonon expansion
+
+    DW2: float
+        Debye Waller factor
+
     """
     return DW2**N * np.exp(-DW2) / float(math.factorial(N))
 
 
 def computeAnESet(N, E,g, beta, dE):
     """compute the set of An(E) for n in [1,N]
+
+    Parameters
+    ----------
+
+    N:integer
+        number of iterations
+ 
+    E: float
+        energy transfer axis
+
+    dE:float
+        step size for energy transfer axis
+
+    g:float
+        phonon DOS for the given E
+
+    beta:float
+        1/(kBT)
+
     """
     E, A1E = computeA1E(E,g, beta, dE)
     ANE = np.zeros((N,) + A1E.shape, dtype=A1E.dtype)
@@ -156,6 +279,19 @@ def AnE_from_n_1(A1E, Anm1E, dE):
     """compute A_n(E) from A_{n-1}(E)
 
     A_n(E) = A1 (convolve) A_{n-1}
+
+    Parameters
+    ----------
+
+    A1E:float
+        array of energies
+
+    Anm1E:float
+        array of previous energies
+
+    dE:float
+        step size for energy transfer axis
+
     """
     Y = np.zeros( 4*len(Anm1E),'d' )
     Y[len(A1E):2*len(A1E)] = Anm1E
@@ -174,7 +310,15 @@ def AnE_from_n_1(A1E, Anm1E, dE):
 
 
 def convMatrix(y):
-    """ Returns matrix M, whose rows are filled with shifted copies of vector y"""
+    """ Returns matrix M, whose rows are filled with shifted copies of vector y
+
+    Parameters
+    ----------
+
+    y:float
+        a vector
+
+    """
     M = np.zeros( ( len(y),len(y) ) , 'd' )
     for i in range(len(y)):
         M[i,i:] = y[:len(y)-i]
@@ -186,14 +330,26 @@ def computeA1E(E,g, beta, dE):
     
     A_1(E) = g(E)/(E*gamma_0) / (exp(E/kBT) - 1)
 
-    E,g: numpy arrays of energies and density of states
-         it must be normalized
-
     output: npy array of A1E 
     **note**: if the input energy array for DOS has N elements
               the output has 2N-1 elements, since the input 
               energies are in [0, Emax], while the output energies 
               are in [-Emax, Emax]
+    Parameters
+    ----------
+
+    E: float
+        energy transfer axis
+
+    dE:float
+        step size for energy transfer axis
+ 
+    g:float
+        phonon DOS for the given E
+
+    beta:float
+        1/(kBT)
+
     """
     zero_ind = len(E) - 1
     g0 = gamma0(E,g, beta, dE)
@@ -221,6 +377,16 @@ def reflected(x,y):
 
     The reflected function has the property
     y(-x) = y(x)
+
+    Parameters
+    ----------
+
+    x:float
+        a vector
+
+    y:float
+        a vector
+
     """
     def reflect(a, multiplier):
         t = (multiplier*a).tolist()
@@ -230,6 +396,15 @@ def reflected(x,y):
 
     
 def coth(x):
+    
+    """ Parameters
+    ----------
+
+    x:float
+        a vector
+
+    """
+
     with warnings.catch_warnings():
         warnings.simplefilter('ignore')
         with np.errstate(divide='ignore'):
@@ -243,10 +418,21 @@ def gamma0(E, g, beta, dE):
     """Compute gamma0
     gamma0 = \int coth(E/2kBT) g(E)/E dE
 
-    E,g: numpy arrays of energies and density of states
-         it must be normalized
-    beta: 1/kBT
-    dE:  delta E in E array
+    Parameters
+    ----------
+
+    E: float
+        energy transfer axis
+
+    dE:float
+        step size for energy transfer axis
+ 
+    g:float
+        phonon DOS for the given E
+
+    beta:float
+        1/(kBT)
+
     """
     assert abs(E[0]) < 1e-7 # E[0] must be 0
     dos_integrated = np.sum(g)*dE
@@ -310,12 +496,45 @@ def gamma0a(E, g, beta, dE):
 """
 
 def fitparabolic(x,y):
+    """Parameters
+    ----------
+
+    x:float
+        a vector
+
+    y:float
+        a vector
+
+    """
+
     x2 = x*x
     return (x2*y).sum()/(x2*x2).sum()
 
 
 def DWExp(Q, M, E,g, beta, dE):
-    """compute 2W, the exponent of the Debye Waller factor. 
+    """compute 2W, the exponent of the Debye Waller factor.
+
+    Parameters
+    ----------
+
+    Q:float
+        momentum transfer axis
+
+    M:float
+        atomic mass
+
+    E: float
+        energy transfer axis
+
+    dE:float
+        step size for energy transfer axis
+ 
+    g:float
+        phonon DOS for the given E
+
+    beta:float
+        1/(kBT)
+ 
     """
     g0 =  gamma0(E,g, beta, dE)
     Er = recoilE(Q, M)
@@ -324,6 +543,16 @@ def DWExp(Q, M, E,g, beta, dE):
 
 def recoilE(Q, M):
     """compute recoil energy E_r(Q)
+
+    Parameters
+    ----------
+
+    Q:float
+        momentum transfer axis
+
+    M:float
+        atomic mass
+
     """
     return J2meV * ( h_b*Q/A2m )**2.0 / 2.0 / (M*amu)
 

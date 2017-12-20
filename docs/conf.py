@@ -30,6 +30,7 @@ import os
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'numpydoc',
     'sphinx.ext.mathjax',
 ]
 
@@ -49,8 +50,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'multiphonon'
-copyright = u'2017, Jiao Lin'
-author = u'Jiao Lin'
+copyright = u'2017, ORNL Neutron Data Sciences Group'
+author = u'Jiao Lin and Fahima Islam'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -111,6 +112,7 @@ todo_include_todos = False
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 html_theme = 'alabaster'
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

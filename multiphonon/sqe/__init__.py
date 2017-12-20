@@ -6,6 +6,15 @@
 import histogram as H, numpy as np
 
 def plot(iqe):
+    """Plot I(Q,E) histogram
+
+    Parameters
+    ----------
+
+    iqe: histogram
+        input IQE
+
+    """
     Q = iqe.Q
     try:
         E= iqe.energy
@@ -25,10 +34,17 @@ def plot(iqe):
 
 
 def interp(iqehist, newE):
-    """compute a new IQE histogram using the new energy array
+    """compute a new IQE histogram from the given IQE using the new energy array by interpolation
     
-    * iqehist: input IQE histogram
-    * newE: new energy centers array
+    Parameters
+    ----------
+
+    iqehist: histogram
+        input IQE
+
+    newE:numpy array of floats
+        new energy centers in meV
+
     """
     from scipy import interpolate
     mask = iqehist.I != iqehist.I
@@ -87,6 +103,16 @@ def dynamical_range_mask(sqe, Ei):
     """calculate a mask of dynamical range being measured
     at the given incident energy.
     0 means within dynamical range
+
+    Parameters
+    ----------
+
+    sqe: histogram
+        S(Q,E)
+
+    Ei:float
+        incident energy
+
     """
     Q = sqe.Q
     E = sqe.E

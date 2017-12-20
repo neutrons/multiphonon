@@ -29,6 +29,40 @@ if not mantid_checked:
 
 
 def reduce(nxsfile, qaxis, outfile, use_ei_guess=False, ei_guess=None, eaxis=None, tof2E=True, ibnorm='ByCurrent'):
+    """reduce a NeXus file to a I(Q,E) histogram using Mantid
+
+    This is a wrapper of Mantid algorithms to reduce a NeXus file to IQE histogram.
+
+    Parameters
+    ----------
+
+    nxsfile: str
+        path to nxs file
+
+    qaxis: 3-tuple of floats
+        Momentum transfer axis. (Qmin, dQ, Qmax). unit: inverse angstrom
+
+    outfile: str
+        path to save nxs data
+
+    use_ei_guess: boolean
+        Use incident energy guess
+
+    ei_guess: float
+        Initial guess of incident energy (meV)
+
+    eaxis: 3-tuple of floats
+        Energy transfer axis. (Emin, dE, Emax). unit: meV
+
+    tof2E: boolean
+        Conversion from time of flight axis to energy axis or not.
+        If the NeXus file is in time of flight, tof2E=True
+        If the NeXus file is processed and in energy transfer, tof2E=False
+
+    ibnorm: str
+        Incident beam normalization choice. Allowed values: None, ByCurrent, ToMonitor
+        For more details, see http://docs.mantidproject.org/nightly/algorithms/DgsReduction-v1.html
+    """
     from mantid.simpleapi import DgsReduction, SofQW3, SaveNexus, Load
     if tof2E == 'guess':
         # XXX: this is a simple guess. all raw data files seem to have root "entry"

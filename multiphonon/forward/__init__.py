@@ -5,9 +5,30 @@
 
 import numpy as np
 def dos2sqe(dos, C_ms, sqe, T, M, Ei):
-    """calculate sqe from DOS.
+    """calculate SQE from DOS.
 
-    The computed sqe has similar props as the given (experimental) sqe.
+    The computed SQE has similar props as the given (experimental) SQE.
+
+    Parameters
+    ----------
+
+    dos: histogram
+        Phonon density of states
+
+    C_ms:float
+        MS = C_ms * MP
+
+    sqe:histogram
+        S(Q,E)
+
+    T: float
+        Temperature (Kelvin)
+    
+    M: float
+        Atomic mass
+    
+    Ei: float
+        Incident energy (meV)
     """
     Q, E = sqe.Q, sqe.E
     dQ = Q[1]-Q[0]; Qmin = Q[0]; Qmax=Q[-1] + dQ/2.

@@ -14,6 +14,8 @@ def sqe2dos(
         ):
     """Given a SQE, compute DOS
 
+    This is an interator.
+
     * Start with an initial guess of DOS and a SQE
     * Calculate SQE of multiphonon scattering
     * Calculate SQE of multiple scattering using C_ms and multiphonon scattering SQE
@@ -22,8 +24,8 @@ def sqe2dos(
     * Compare the new DOS to the previous one and calculate the difference
     * If difference is large, continue the iteration. Otherwise the new DOS is what we want
     
-    Parameters:
-    -----------
+    Parameters
+    ----------
     sqe : histogram
         S(Q, E)
 
@@ -51,7 +53,7 @@ def sqe2dos(
     initdos : histogram
         initial guess of DOS
 
-    update_strategy_weights : floats
+    update_strategy_weights : 2-tuple of floats
         Weights for the update strategies (force continuity, area conservation). 
         Useful only if multiple Ei.
 
