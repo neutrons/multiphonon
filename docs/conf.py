@@ -50,8 +50,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'multiphonon'
-copyright = u'2017, Jiao Lin'
-author = u'Jiao Lin'
+copyright = u'2017, ORNL Neutron Data Sciences Group'
+author = u'Jiao Lin and Fahima Islam'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
