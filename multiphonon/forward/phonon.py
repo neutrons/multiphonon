@@ -19,16 +19,18 @@ import warnings
 
 
 def sqehist(E, g, **kwds):
-    """ a simple wrapper of method sqe to return a histogram
+    """a simple wrapper of method sqe to return a histogram
+
+    Please see method sqe for details of all keyword parameters
     
     Parameters
     ----------
    
-    E:float
-        numpy arrays of energies
+    E:numpy array of floats
+        energies in meV
 
-    g:float
-        numpy arrays of density of states
+    g:numpy array of floats
+        density of states at the specified energies
           
 
     """
@@ -44,27 +46,28 @@ def sqe(
     T=300, M=50, N=5, starting_order=2, Emax=None,
     ):
     """compute sum of multiphonon SQE from dos
-    S = \sum_{i=2,N} S_i(Q,E)
+
+      S = \sum_{i=2,N} S_i(Q,E)
     
     Note: single phonon scattering is not included. only 2-phonons and up
     
     Parameters
     ----------
 
-    E:float
-        energy transfer axis
+    E:numpy array of floats
+        energies in meV
 
-    g:float
-        input density of states
+    g:numpy array of floats
+        density of states at the given energies
 
-    Qmx:float
-        mximum value for momentum transfer axis
+    Qmax:float
+        maximum value for momentum transfer axis in inverse angstrom
 
     Qmin:float
-        minimum value for momentum transfer axis
+        minimum value for momentum transfer axis in inverse angstrom
 
     dQ:float
-        the step size for momentum transfer axis
+        the step size for momentum transfer axis in inverse angstrom
    
     T:float
         temperature (Kelvin)
@@ -76,7 +79,7 @@ def sqe(
         maximum number of order for multi-phonon scattering
     
     starting_order:integer
-        starting number for phonon scattering
+        starting number for phonon scattering order
 
     """
     dos_sample = len(E)

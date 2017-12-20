@@ -10,7 +10,14 @@ class EnergyAxisMissingBinCenterAtZero(Exception): pass
 
 def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None, update_weights=None):
     """
-    Given a one-phonon sqe, compute dos
+    Given a single-phonon SQE, compute DOS
+
+    The basic procedure is
+     * construct an initial guess of DOS
+     * use this DOS to compute 1-phonon SQE
+     * for both exp and sim SQE, integrate along Q to obtain S(E)
+     * scale the initial guess DOS by the S(E) ratio
+     * optionally we can do this again
 
     Parameters
     ----------
@@ -23,8 +30,8 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None, update_weights=N
     Ecutoff:float
         Cutoff energy beyond which DOS must be zero
     
-    Elastic_E_cutoff:float
-        Cutoff energy for removing the elastic line
+    Elastic_E_cutoff: 2-tuple of floats
+        Cutoff energy bracket for removing the elastic line (unit: meV)
     
     M:float
         Atomic mass
@@ -32,15 +39,9 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None, update_weights=N
     initdos:histogram
         initial guess of DOS
 
-    update_weights:float
+    update_weights:2-tuple of floats
         weights for DOS update strategies (continuity, area conservation)
 
-    The basic procedure is
-     * construct an initial guess of DOS
-     * use this DOS to compute 1-phonon SQE
-     * for both exp and sim SQE, integrate along Q to obtain S(E)
-     * scale the initial guess DOS by the S(E) ratio
-     * optionally we can do this again
     """
     # create initial guess of dos
     Efull = sqe.E

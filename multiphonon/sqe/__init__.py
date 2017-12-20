@@ -6,7 +6,9 @@
 import histogram as H, numpy as np
 
 def plot(iqe):
-    """ Parameters
+    """Plot I(Q,E) histogram
+
+    Parameters
     ----------
 
     iqe: histogram
@@ -32,7 +34,7 @@ def plot(iqe):
 
 
 def interp(iqehist, newE):
-    """compute a new IQE histogram using the new energy array
+    """compute a new IQE histogram from the given IQE using the new energy array by interpolation
     
     Parameters
     ----------
@@ -40,8 +42,8 @@ def interp(iqehist, newE):
     iqehist: histogram
         input IQE
 
-    newE:float
-        new energy centers array
+    newE:numpy array of floats
+        new energy centers in meV
 
     """
     from scipy import interpolate

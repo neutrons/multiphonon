@@ -10,7 +10,7 @@ def plot_dos_iteration(curdir, total_rounds=None):
     Parameters
     ----------
     curdir : str
-        path to the current directory
+        path to the root of the working directory for SQE->DOS calculation
  
     total_rounds : integer
         number of iterations
@@ -37,7 +37,7 @@ def plot_residual(curdir):
     Parameters
     ----------
     curdir : str
-        path to the current directory
+        path to the root of the working directory for SQE->DOS calculation
 
     """
 
@@ -58,7 +58,8 @@ def plot_intermediate_result_sqe(curdir):
     ----------
 
     curdir: str
-        path to the current directory
+        path to one of the iteration working directory for SQE->DOS calculation,
+        for example, work/round-5
 
     """
 
@@ -95,7 +96,8 @@ def plot_intermediate_result_se(curdir):
     ----------
 
     curdir: str
-        path to the current directory
+        path to one of the iteration working directory for SQE->DOS calculation,
+        for example, work/round-5
 
     """
 

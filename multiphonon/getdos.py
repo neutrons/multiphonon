@@ -12,7 +12,7 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
            C_ms=0.3, Ei=116.446, initdos=None, update_strategy_weights=None,
            workdir='work',
            iqe_nxs="iqe.nxs", iqe_h5="iqe.h5", maxiter=10):
-    """compute DOS from powder spectrum from S(Q,E)
+    """Compute DOS from direct-geometry powder neutron scattering spectrum
     
     By performing multiphonon and multiple-scattering corrections.
     This is an iterator. so call it with an evaluation of the iteration.
