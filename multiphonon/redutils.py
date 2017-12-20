@@ -45,7 +45,7 @@ def reduce(nxsfile, qaxis, outfile, use_ei_guess=False, ei_guess=None, eaxis=Non
         If the NeXus file is processed and in energy transfer, tof2E=False
 
     ibnorm: str
-        Incident beam normalization choice. Allowed values: ‘None’, ‘ByCurrent’, ‘ToMonitor’
+        Incident beam normalization choice. Allowed values: None, ByCurrent, ToMonitor
         For more details, see http://docs.mantidproject.org/nightly/algorithms/DgsReduction-v1.html
     """
     from mantid.simpleapi import DgsReduction, SofQW3, SaveNexus, Load
