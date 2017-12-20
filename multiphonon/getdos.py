@@ -13,9 +13,8 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
            workdir='work',
            iqe_nxs="iqe.nxs", iqe_h5="iqe.h5", maxiter=10):
     """Compute DOS from direct-geometry powder neutron scattering spectrum
-    
-    By performing multiphonon and multiple-scattering corrections.
-    This is an iterator. so call it with an evaluation of the iteration.
+    by performing multiphonon and multiple-scattering corrections.
+    This is an iterator. Please call it with an evaluation of the iteration.
     For example:
 
       >>> output = list(getDOS(...))
