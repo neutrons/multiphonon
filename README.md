@@ -112,7 +112,7 @@ To manually run the minimal test suite, install multiphonon, clone this reposito
 
     $ cd multiphonon/tests && py.test -m "not needs_mantid and not needs_ipywe"
 
-If mantid was installed, you can run all tests by
+If mantid and ipywe were installed, you can run all tests by
 
     $ py.test
 
