@@ -15,10 +15,16 @@ First create a conda environment, activate it, and install multiphonon:
     $ conda config --add channels mcvine
     $ conda install multiphonon
 
-This example shows the core functionality of the multiphonon code,
+The following example shows the core functionality of the multiphonon code,
 converting S(Q,E) histogram to DOS:
 
     $ python getdos-Al.py
+
+A similar example below does basically the same conversion, but starting
+from the S(Q,E) histogram represented by numpy arrays of Q axis, E axis, intensity
+matrix, and squared errorbar matrix:
+
+    $ python getdos-Al-from-nparrs.py
 
 
 ## Run jupyter notebook examples
