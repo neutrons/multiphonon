@@ -21,11 +21,11 @@ This code converts a S(Q,E) INS spectrum to DOS.
 * The full I(Q,E) dynamic range measured is utilized, leading to better statistics
 * Can be used with data measured at multiple incident energies to progressivley obtain better density of states
 * Intermediate results are saved for further investigation
-* Handle inputs in nxs and nxspe files for sample and empty can measurements
+* Handle inputs in nxs and nxspe files for sample and empty can measurements (requires Mantid)
 
 ## Installation
 
-Installation is done with conda. Please see https://sns-chops.github.io/multiphonon/installation.html for details.
+Installation is handled with conda. Please see https://sns-chops.github.io/multiphonon/installation.html for details.
 
 ## Usage
 
@@ -59,7 +59,7 @@ The core algorithm is an iterative procedure:
 For more details of the basic principles of SQE->DOS conversion, please refer to Appendix of [1] and Section 6.5 "Calculation of Multiphonon Scattering" of [2].
 
 ## API doc
-See http://sns-chops.github.io/multiphonon/
+See http://sns-chops.github.io/multiphonon/api.html
 
 ## Run tests
 Tests are run automatically at [travis CI](https://travis-ci.org/sns-chops/multiphonon/builds). 

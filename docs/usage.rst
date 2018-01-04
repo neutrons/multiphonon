@@ -22,3 +22,14 @@ GetDOS using local installation
 
 For any user, GetDOS can be performed with a local installation of multiphonon.
 Examples and instructions can be found `here <https://github.com/sns-chops/multiphonon/tree/master/examples>`_
+
+
+
+Multiple-Ei and Stitching
+-------------------------
+
+About the last warning in the test: it is expected since we are still experimenting on this new feature for "stitching"
+together phonon DOSes measured at different neutron incident energies. Right now researchers more or less do the stitching
+manually and somewhat arbitrarily, and this software provides two routines for stitching.
+The warning is to alert the users that two methods of stitching were used but they disagree
+somewhat in the calculation of scaling factor for stitching. The disagreement is actually acceptable in this case.
