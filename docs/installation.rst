@@ -43,11 +43,20 @@ Finally, some example jupyter notebooks need `ipywe <https://github.com/scikit-b
 
 Notes on Mantid conda installation
 """"""""""""""""""""""""""""""""""
-`Mantid <http://mantidproject.org>`_ is a sophisticated software for neutron data reduction and analysis.
+`Mantid <http://mantidproject.org>`_ is a large, sophisticated software for neutron data reduction and analysis.
 Its flagship application is its GUI `mantidplot <https://www.mantidproject.org/MantidPlot:_General_Concepts_and_Terms>`_.
 The multiphonon package does not require mantidplot but depends on the algorithms in mantid-framework for reducing DGS data.
 At this time, support of conda installation of mantid-framework is less universal than the multiphonon package itself.
 No substantial tests have been done on mantid-framework running on headless systems.
+
+
+System requirements
+-------------------
+
+If mantid is used to reduce data from nexus files, the `mantid system requirements <https://www.mantidproject.org/System_Requirements>`_
+should be observed. Actually, 8GB memory is recommended.
+
+If mantid is not used, system requirements may be relaxed.
 
 
 Why not PyPI installation
