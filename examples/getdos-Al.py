@@ -8,6 +8,9 @@ import histogram.hdf as hh, os, numpy as np
 headless = 'DISPLAY' not in os.environ
 if not headless:
     from matplotlib import pyplot as plt
+# change dir
+here = os.path.dirname(__file__) or os.curdir
+os.chdir(here)
 # load data
 iqehist = hh.load("data/Al-iqe.h5") 
 # interpolate data

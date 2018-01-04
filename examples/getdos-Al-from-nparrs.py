@@ -11,6 +11,9 @@ import histogram.hdf as hh, histogram as H, os, numpy as np
 headless = 'DISPLAY' not in os.environ
 if not headless:
     from matplotlib import pyplot as plt
+# change dir
+here = os.path.dirname(__file__) or os.curdir
+os.chdir(here)
 # load data
 Q = np.load("data/Al-iqe-Q.npy") 
 E = np.load("data/Al-iqe-E.npy") 
