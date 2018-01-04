@@ -43,6 +43,8 @@ install:
 
 script:
    - travis_wait 60 py.test --cov=multiphonon tests
+   - python examples/getdos-Al.py
+   - python examples/getdos-Al-from-nparrs.py
 # the following were run standalone but now all included in the cmd above.
 #   - travis_wait 40 python tests/getdos_TestCase.py
 #   - travis_wait 20 python tests/getdos_TestCase2.py
