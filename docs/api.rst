@@ -45,6 +45,7 @@ Simulate S(Q,E) spectrum from phonon DOS using incoherent approximation
 helper functions
 ----------------
 .. autofunction:: multiphonon.sqe.interp
+.. autofunction:: multiphonon.getdos.reduce2iqe
 .. autofunction:: multiphonon.redutils.reduce
 .. automodule:: multiphonon.backward.plotutils
    :members:
