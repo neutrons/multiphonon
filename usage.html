@@ -1,0 +1,318 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Usage &mdash; multiphonon 0.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="multiphonon 0.1.1 documentation" href="index.html"/>
+        <link rel="next" title="API" href="api.html"/>
+        <link rel="prev" title="Installation" href="installation.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> multiphonon
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getdos-at-sns-analysis-cluster-using-jupyter">GetDOS at SNS analysis cluster using jupyter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getdos-using-local-installation">GetDOS using local installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#general-principle-of-operation">General principle of operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#working-with-datasets-from-multiple-incident-energies">Working with datasets from multiple incident energies</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">multiphonon</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Usage</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/usage.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="usage">
+<span id="id1"></span><h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="getdos-at-sns-analysis-cluster-using-jupyter">
+<h2>GetDOS at SNS analysis cluster using jupyter<a class="headerlink" href="#getdos-at-sns-analysis-cluster-using-jupyter" title="Permalink to this headline">¶</a></h2>
+<p>For SNS users, GetDOS can be performed at SNS analysis cluster through the jupyter.sns.gov website.</p>
+<ul class="simple">
+<li>First log into SNS analysis cluster using thinlinc. The instructions for that can be found at <a class="reference external" href="https://analysis.sns.gov/">https://analysis.sns.gov/</a></li>
+<li>Inside the thinlinc session of analysis.sns.gov, open a browser window and connect to <a class="reference external" href="https://jupyter.sns.gov">https://jupyter.sns.gov</a>, and login with your XCAMS/UCAMS account credentials</li>
+<li>Follow the tutorial videos below:<ul>
+<li><a class="reference external" href="https://www.youtube.com/embed/5XOX8RdHBnQ?start=0&amp;end=36&amp;version=3">For the first time users, a setup is necessary</a></li>
+<li><a class="reference external" href="https://www.youtube.com/embed/uTEEyifpG-k">Run GetDOS2</a> (this works for SNS data only)</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="getdos-using-local-installation">
+<h2>GetDOS using local installation<a class="headerlink" href="#getdos-using-local-installation" title="Permalink to this headline">¶</a></h2>
+<p>For any user, GetDOS can be performed with a local installation of multiphonon.
+Examples and instructions can be found <a class="reference external" href="https://github.com/sns-chops/multiphonon/tree/master/examples">here</a></p>
+</div>
+<div class="section" id="general-principle-of-operation">
+<h2>General principle of operation<a class="headerlink" href="#general-principle-of-operation" title="Permalink to this headline">¶</a></h2>
+<p>The main functionality of this package is to convert S(Q,E) spectrum</p>
+<a class="reference internal image-reference" href="_images/V-sqe.png"><img alt="_images/V-sqe.png" src="_images/V-sqe.png" style="width: 400px;" /></a>
+<p>to a phonon DOS spectrum</p>
+<a class="reference internal image-reference" href="_images/V-dos.png"><img alt="_images/V-dos.png" src="_images/V-dos.png" style="width: 400px;" /></a>
+<p>The best way to learn how to perform such a conversion is to follow one of the notebooks
+or scripts in <a class="reference external" href="https://github.com/sns-chops/multiphonon/tree/master/examples">examples</a></p>
+<p>The processing is an iterative procedure, and in this plot you can see the DOS
+is getting better in each iteration:</p>
+<a class="reference internal image-reference" href="_images/V-DOS-iters.png"><img alt="_images/V-DOS-iters.png" src="_images/V-DOS-iters.png" style="width: 400px;" /></a>
+</div>
+<div class="section" id="working-with-datasets-from-multiple-incident-energies">
+<h2>Working with datasets from multiple incident energies<a class="headerlink" href="#working-with-datasets-from-multiple-incident-energies" title="Permalink to this headline">¶</a></h2>
+<p>This is an advanced topic.</p>
+<p>Direct geometry spectrometers are known for their peculiar resolution variation:
+the resolution is the best when the energy transfer is close to the incident energy
+(the neutron final energy is near zero), and then it gets worse (broader) and worse
+as the energy transfer gets smaller.
+As a result, for a material with a wide range of phonon energies, the resolution of DGS instrument
+at lower energies is unsatisfactory.
+One way to alleviate this problem is to measure the phonon spectrum using
+multiple incident energies.</p>
+<p>This is best explained with an example.
+For a system with phonon energies up to 250meV, we
+could measure the spectrum at two incident energies at ARCS:
+300meV, and 130meV.</p>
+<p>Here is a plot of the density of states obtained from the <span class="math">\(E_i=300\)</span> meV dataset:</p>
+<a class="reference internal image-reference" href="_images/graphite-DOS-Ei_300.png"><img alt="_images/graphite-DOS-Ei_300.png" src="_images/graphite-DOS-Ei_300.png" style="width: 400px;" /></a>
+<p>This data covers the full phonon DOS spectrum, but the resolution at lower energies are not optimal.</p>
+<p>Another dataset was meassured at <span class="math">\(E_i=130\)</span> meV. This is the measured S(Q,E):</p>
+<a class="reference internal image-reference" href="_images/graphite-SQE-Ei_130.png"><img alt="_images/graphite-SQE-Ei_130.png" src="_images/graphite-SQE-Ei_130.png" style="width: 400px;" /></a>
+<p>The DOS measured in this dataset cannot exceeds 130meV, but is of better energy resolution:</p>
+<a class="reference internal image-reference" href="_images/graphite-DOS-Ei_130.png"><img alt="_images/graphite-DOS-Ei_130.png" src="_images/graphite-DOS-Ei_130.png" style="width: 400px;" /></a>
+<p>The two DOSes should be “stiched” together to obtain one DOS curve.
+This is done by updating the low <span class="math">\(E\)</span> portion of the DOS from the higher <span class="math">\(E_i\)</span> measurement
+with the partial DOS obtained from the lower <span class="math">\(E_i\)</span> measurement.</p>
+<p>Two algorithms are available to calculate the scale factor between the two DOSes.
+One algorithm updates the lower <span class="math">\(E\)</span> portion of the DOS by keeping the area of the updated portion intact
+(area rule),
+the other algorithm updates the lower <span class="math">\(E\)</span> portion of the DOS
+by keeping the DOS value at the stiching point the same as the original DOS (continuity rule).
+Ideally these two algorithms should give the same scaling factors, but they always disagree
+somewhat.
+A good rule of thumb is to choose the stitching point (Ecutoff) at a relatively flat portion of the DOS
+curve.</p>
+<p>When the two algorithms disagree in calculating the scaling factor, you may see a warning message like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="ne">UserWarning</span><span class="p">:</span> <span class="n">Scaling</span> <span class="n">factor</span> <span class="n">to</span> <span class="n">combine</span> <span class="n">DOSes</span> <span class="n">calculated</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">stable</span><span class="p">:</span> <span class="mf">1.19869218495</span> <span class="p">(</span><span class="n">using</span> <span class="n">continuous</span> <span class="n">criteria</span><span class="p">)</span> <span class="n">vs</span> <span class="mf">1.02762712281</span> <span class="p">(</span><span class="n">using</span> <span class="n">area</span> <span class="n">criteria</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Sometimes the disagreement is acceptable, other times you may want to experiment with different stitching
+points to get better results.</p>
+<p>For this particular example, the “stitched” DOS would look like this:</p>
+<a class="reference internal image-reference" href="_images/graphite-DOS-Ei_130_and_300.png"><img alt="_images/graphite-DOS-Ei_130_and_300.png" src="_images/graphite-DOS-Ei_130_and_300.png" style="width: 400px;" /></a>
+<p>It is obvious that the low <span class="math">\(E\)</span> portion of the DOS curve is better resolved now.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="installation.html" class="btn btn-neutral" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, ORNL Neutron Data Sciences Group.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

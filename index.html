@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API documentation for multiphonon package &mdash; multiphonon 0.1.1 documentation</title>
+  <title>Documentation for multiphonon package &mdash; multiphonon 0.1.1 documentation</title>
   
 
   
@@ -35,7 +35,8 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="multiphonon 0.1.1 documentation" href="#"/> 
+    <link rel="top" title="multiphonon 0.1.1 documentation" href="#"/>
+        <link rel="next" title="Installation" href="installation.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -88,18 +89,13 @@
               
             
             
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">API documentation for multiphonon package</a><ul>
-<li><a class="reference internal" href="#convenient-functions">Convenient functions</a></li>
-<li><a class="reference internal" href="#backward-transformation">backward transformation</a></li>
-<li><a class="reference internal" href="#forward-transformation">forward transformation</a></li>
-<li><a class="reference internal" href="#helper-functions">helper functions</a></li>
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 </ul>
-</li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
-</ul>
-</div>
+
             
           
         </div>
@@ -142,7 +138,7 @@
     
       <li><a href="#">Docs</a> &raquo;</li>
         
-      <li>API documentation for multiphonon package</li>
+      <li>Documentation for multiphonon package</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -161,513 +157,33 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="api-documentation-for-multiphonon-package">
-<h1>API documentation for multiphonon package<a class="headerlink" href="#api-documentation-for-multiphonon-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="documentation-for-multiphonon-package">
+<h1>Documentation for multiphonon package<a class="headerlink" href="#documentation-for-multiphonon-package" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
-</div>
-<p>The multiphonon package provides tools to convert powder spectrum
-meausred at direct-geometry inelastic neutron spectrometers to phonon density of states (DOS).</p>
-<p>Most users will only need functions in  <a class="reference internal" href="#convenient-functions">Convenient functions</a>, which reduces raw data in the form of NeXus files to I(Q,E) using Mantid,
-and then obtain phonon DOS.</p>
-<p>Some users may obtain I(Q,E) spectrum through other routes, and only need
-methods to convert I(Q,E) to phonon DOS. These methods are
-in the <a class="reference internal" href="#backward-transformation">backward transformation</a> section.</p>
-<p>Sometimes it may be useful to “simulate” the neutron powder spectrum from a phonon DOS,
-probably obtained from ab initio calculation or other modeling techniques.
-These methods are in <a class="reference internal" href="#forward-transformation">forward transformation</a>.</p>
-<p>Some helper functions users may found useful are in <a class="reference internal" href="#helper-functions">helper functions</a>.</p>
-<div class="section" id="convenient-functions">
-<h2>Convenient functions<a class="headerlink" href="#convenient-functions" title="Permalink to this headline">¶</a></h2>
-<p>Calculate DOS from NeXus files</p>
-<dl class="function">
-<dt id="multiphonon.getdos.getDOS">
-<code class="descclassname">multiphonon.getdos.</code><code class="descname">getDOS</code><span class="sig-paren">(</span><em>sample_nxs</em>, <em>mt_nxs=None</em>, <em>mt_fraction=0.9</em>, <em>const_bg_fraction=0.0</em>, <em>Emin=-100</em>, <em>Emax=100</em>, <em>dE=1.0</em>, <em>Qmin=0</em>, <em>Qmax=15.0</em>, <em>dQ=0.1</em>, <em>T=300</em>, <em>Ecutoff=50.0</em>, <em>elastic_E_cutoff=(-20.0</em>, <em>7)</em>, <em>M=50.94</em>, <em>C_ms=0.3</em>, <em>Ei=116.446</em>, <em>initdos=None</em>, <em>update_strategy_weights=None</em>, <em>workdir='work'</em>, <em>iqe_nxs='iqe.nxs'</em>, <em>iqe_h5='iqe.h5'</em>, <em>maxiter=10</em><span class="sig-paren">)</span><a class="headerlink" href="#multiphonon.getdos.getDOS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute DOS from direct-geometry powder neutron scattering spectrum
-by performing multiphonon and multiple-scattering corrections.
-This is an iterator. Please call it with an evaluation of the iteration.
-For example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">output</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">getDOS</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sample_nxs</strong> : str</p>
-<blockquote>
-<div><p>Sample Nexus file</p>
-</div></blockquote>
-<p><strong>mt_nxs</strong> : str</p>
-<blockquote>
-<div><p>Empty can Nexus file</p>
-</div></blockquote>
-<p><strong>mt_fraction</strong> : float</p>
-<blockquote>
-<div><p>0&lt;=mt_fraction&lt;=1. Amount of empty can data to be subtracted from sample data</p>
-</div></blockquote>
-<p><strong>const_bg_fraction</strong> : float</p>
-<blockquote>
-<div><p>Constant background fraction</p>
-</div></blockquote>
-<p><strong>Emin, Emax, dE</strong> : floats</p>
-<blockquote>
-<div><p>Energy transfer axis setting</p>
-</div></blockquote>
-<p><strong>Qmin, Qmax, dQ</strong> : floats</p>
-<blockquote>
-<div><p>Momentum transfer axis setting</p>
-</div></blockquote>
-<p><strong>T</strong> : float</p>
-<blockquote>
-<div><p>Temperature (Kelvin)</p>
-</div></blockquote>
-<p><strong>Ecutoff</strong> : float</p>
-<blockquote>
-<div><p>Maximum phonon energy</p>
-</div></blockquote>
-<p><strong>elastic_E_cutoff: 2-tuple of floats</strong></p>
-<blockquote>
-<div><p>cutoff for elastic peak (meV)</p>
-</div></blockquote>
-<p><strong>M</strong> : float</p>
-<blockquote>
-<div><p>Average atomic mass (u)</p>
-</div></blockquote>
-<p><strong>C_ms: float</strong></p>
-<blockquote>
-<div><p>MS = C_ms * MP</p>
-</div></blockquote>
-<p><strong>Ei</strong> : float</p>
-<blockquote>
-<div><p>Incident energy (meV)</p>
-</div></blockquote>
-<p><strong>initdos</strong> : histogram</p>
-<blockquote>
-<div><p>initial guess of DOS</p>
-</div></blockquote>
-<p><strong>update_strategy_weights</strong> : floats</p>
-<blockquote>
-<div><p>Weights for the update strategies (force continuity, area conservation). 
-Useful only if multiple Ei.</p>
-</div></blockquote>
-<p><strong>work</strong> : str</p>
-<blockquote>
-<div><p>Work directory</p>
-</div></blockquote>
-<p><strong>maxiter: int</strong></p>
-<blockquote class="last">
-<div><p>Max iteration</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
-<div class="section" id="backward-transformation">
-<h2>backward transformation<a class="headerlink" href="#backward-transformation" title="Permalink to this headline">¶</a></h2>
-<p>S(Q,E) -&gt; DOS</p>
-<p>This is the core functionality of this package.</p>
-<dl class="function">
-<dt id="multiphonon.backward.sqe2dos.sqe2dos">
-<code class="descclassname">multiphonon.backward.sqe2dos.</code><code class="descname">sqe2dos</code><span class="sig-paren">(</span><em>sqe</em>, <em>T</em>, <em>Ecutoff</em>, <em>elastic_E_cutoff</em>, <em>M</em>, <em>C_ms=None</em>, <em>Ei=None</em>, <em>workdir='work'</em>, <em>MAX_ITERATION=20</em>, <em>TOLERATION=0.0001</em>, <em>initdos=None</em>, <em>update_strategy_weights=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiphonon.backward.sqe2dos.sqe2dos" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a SQE, compute DOS</p>
-<p>This is an interator.</p>
-<ul class="simple">
-<li>Start with an initial guess of DOS and a SQE</li>
-<li>Calculate SQE of multiphonon scattering</li>
-<li>Calculate SQE of multiple scattering using C_ms and multiphonon scattering SQE</li>
-<li>Subtract MS and MP SQE from the experimental SQE to obtain single-phonon SQE</li>
-<li>Compute a new DOS from the single-phonon SQE</li>
-<li>Compare the new DOS to the previous one and calculate the difference</li>
-<li>If difference is large, continue the iteration. Otherwise the new DOS is what we want</li>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#minimal-installation">Minimal installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#full-installation">Full installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#system-requirements">System requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#why-not-pypi-installation">Why not PyPI installation</a></li>
 </ul>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sqe</strong> : histogram</p>
-<blockquote>
-<div><p>S(Q, E)</p>
-</div></blockquote>
-<p><strong>T</strong> : float</p>
-<blockquote>
-<div><p>Temperature (Kelvin)</p>
-</div></blockquote>
-<p><strong>Ecutoff</strong> : float</p>
-<blockquote>
-<div><p>Maximum phonon energy</p>
-</div></blockquote>
-<p><strong>elastic_E_cutoff: 2-tuple of floats</strong></p>
-<blockquote>
-<div><p>cutoff for elastic peak (meV)</p>
-</div></blockquote>
-<p><strong>M</strong> : float</p>
-<blockquote>
-<div><p>Average atomic mass (u)</p>
-</div></blockquote>
-<p><strong>C_ms: float</strong></p>
-<blockquote>
-<div><p>MS = C_ms * MP</p>
-</div></blockquote>
-<p><strong>Ei</strong> : float</p>
-<blockquote>
-<div><p>Incident energy (meV)</p>
-</div></blockquote>
-<p><strong>workdir</strong> : str</p>
-<blockquote>
-<div><p>Work directory</p>
-</div></blockquote>
-<p><strong>initdos</strong> : histogram</p>
-<blockquote>
-<div><p>initial guess of DOS</p>
-</div></blockquote>
-<p><strong>update_strategy_weights</strong> : 2-tuple of floats</p>
-<blockquote>
-<div><p>Weights for the update strategies (force continuity, area conservation). 
-Useful only if multiple Ei.</p>
-</div></blockquote>
-<p><strong>MAX_ITERATION: int</strong></p>
-<blockquote>
-<div><p>Max iteration</p>
-</div></blockquote>
-<p><strong>TOLERATION: float</strong></p>
-<blockquote class="last">
-<div><p>Toleration for convergence test</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="multiphonon.backward.singlephonon_sqe2dos.sqe2dos">
-<code class="descclassname">multiphonon.backward.singlephonon_sqe2dos.</code><code class="descname">sqe2dos</code><span class="sig-paren">(</span><em>sqe</em>, <em>T</em>, <em>Ecutoff</em>, <em>elastic_E_cutoff</em>, <em>M</em>, <em>initdos=None</em>, <em>update_weights=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiphonon.backward.singlephonon_sqe2dos.sqe2dos" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a single-phonon SQE, compute DOS</p>
-<dl class="docutils">
-<dt>The basic procedure is</dt>
-<dd><ul class="first last simple">
-<li>construct an initial guess of DOS</li>
-<li>use this DOS to compute 1-phonon SQE</li>
-<li>for both exp and sim SQE, integrate along Q to obtain S(E)</li>
-<li>scale the initial guess DOS by the S(E) ratio</li>
-<li>optionally we can do this again</li>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#getdos-at-sns-analysis-cluster-using-jupyter">GetDOS at SNS analysis cluster using jupyter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#getdos-using-local-installation">GetDOS using local installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#general-principle-of-operation">General principle of operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#working-with-datasets-from-multiple-incident-energies">Working with datasets from multiple incident energies</a></li>
 </ul>
-</dd>
-</dl>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sqe:histogram</strong></p>
-<blockquote>
-<div><p>S(Q,E)</p>
-</div></blockquote>
-<p><strong>T:float</strong></p>
-<blockquote>
-<div><p>Temperature (kelvin)</p>
-</div></blockquote>
-<p><strong>Ecutoff:float</strong></p>
-<blockquote>
-<div><p>Cutoff energy beyond which DOS must be zero</p>
-</div></blockquote>
-<p><strong>Elastic_E_cutoff: 2-tuple of floats</strong></p>
-<blockquote>
-<div><p>Cutoff energy bracket for removing the elastic line (unit: meV)</p>
-</div></blockquote>
-<p><strong>M:float</strong></p>
-<blockquote>
-<div><p>Atomic mass</p>
-</div></blockquote>
-<p><strong>initdos:histogram</strong></p>
-<blockquote>
-<div><p>initial guess of DOS</p>
-</div></blockquote>
-<p><strong>update_weights:2-tuple of floats</strong></p>
-<blockquote class="last">
-<div><p>weights for DOS update strategies (continuity, area conservation)</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
-<div class="section" id="forward-transformation">
-<h2>forward transformation<a class="headerlink" href="#forward-transformation" title="Permalink to this headline">¶</a></h2>
-<p>DOS -&gt; S(Q,E)</p>
-<p>Simulate S(Q,E) spectrum from phonon DOS using incoherent approximation</p>
-<dl class="function">
-<dt id="multiphonon.forward.dos2sqe">
-<code class="descclassname">multiphonon.forward.</code><code class="descname">dos2sqe</code><span class="sig-paren">(</span><em>dos</em>, <em>C_ms</em>, <em>sqe</em>, <em>T</em>, <em>M</em>, <em>Ei</em><span class="sig-paren">)</span><a class="headerlink" href="#multiphonon.forward.dos2sqe" title="Permalink to this definition">¶</a></dt>
-<dd><p>calculate SQE from DOS.</p>
-<p>The computed SQE has similar props as the given (experimental) SQE.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>dos: histogram</strong></p>
-<blockquote>
-<div><p>Phonon density of states</p>
-</div></blockquote>
-<p><strong>C_ms:float</strong></p>
-<blockquote>
-<div><p>MS = C_ms * MP</p>
-</div></blockquote>
-<p><strong>sqe:histogram</strong></p>
-<blockquote>
-<div><p>S(Q,E)</p>
-</div></blockquote>
-<p><strong>T: float</strong></p>
-<blockquote>
-<div><p>Temperature (Kelvin)</p>
-</div></blockquote>
-<p><strong>M: float</strong></p>
-<blockquote>
-<div><p>Atomic mass</p>
-</div></blockquote>
-<p><strong>Ei: float</strong></p>
-<blockquote class="last">
-<div><p>Incident energy (meV)</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="multiphonon.forward.phonon.sqe">
-<code class="descclassname">multiphonon.forward.phonon.</code><code class="descname">sqe</code><span class="sig-paren">(</span><em>E</em>, <em>g</em>, <em>Qmax=None</em>, <em>Qmin=0</em>, <em>dQ=None</em>, <em>T=300</em>, <em>M=50</em>, <em>N=5</em>, <em>starting_order=2</em>, <em>Emax=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiphonon.forward.phonon.sqe" title="Permalink to this definition">¶</a></dt>
-<dd><p>compute sum of multiphonon SQE from dos</p>
-<blockquote>
-<div>S = sum_{i=2,N} S_i(Q,E)</div></blockquote>
-<p>Note: single phonon scattering is not included. only 2-phonons and up</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>E:numpy array of floats</strong></p>
-<blockquote>
-<div><p>energies in meV</p>
-</div></blockquote>
-<p><strong>g:numpy array of floats</strong></p>
-<blockquote>
-<div><p>density of states at the given energies</p>
-</div></blockquote>
-<p><strong>Qmax:float</strong></p>
-<blockquote>
-<div><p>maximum value for momentum transfer axis in inverse angstrom</p>
-</div></blockquote>
-<p><strong>Qmin:float</strong></p>
-<blockquote>
-<div><p>minimum value for momentum transfer axis in inverse angstrom</p>
-</div></blockquote>
-<p><strong>dQ:float</strong></p>
-<blockquote>
-<div><p>the step size for momentum transfer axis in inverse angstrom</p>
-</div></blockquote>
-<p><strong>T:float</strong></p>
-<blockquote>
-<div><p>temperature (Kelvin)</p>
-</div></blockquote>
-<p><strong>M:float</strong></p>
-<blockquote>
-<div><p>atomic mass</p>
-</div></blockquote>
-<p><strong>N:integer</strong></p>
-<blockquote>
-<div><p>maximum number of order for multi-phonon scattering</p>
-</div></blockquote>
-<p><strong>starting_order:integer</strong></p>
-<blockquote class="last">
-<div><p>starting number for phonon scattering order</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="multiphonon.forward.phonon.sqehist">
-<code class="descclassname">multiphonon.forward.phonon.</code><code class="descname">sqehist</code><span class="sig-paren">(</span><em>E</em>, <em>g</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="headerlink" href="#multiphonon.forward.phonon.sqehist" title="Permalink to this definition">¶</a></dt>
-<dd><p>a simple wrapper of method sqe to return a histogram</p>
-<p>Please see method sqe for details of all keyword parameters</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>E:numpy array of floats</strong></p>
-<blockquote>
-<div><p>energies in meV</p>
-</div></blockquote>
-<p><strong>g:numpy array of floats</strong></p>
-<blockquote class="last">
-<div><p>density of states at the specified energies</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
-<div class="section" id="helper-functions">
-<h2>helper functions<a class="headerlink" href="#helper-functions" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="multiphonon.sqe.interp">
-<code class="descclassname">multiphonon.sqe.</code><code class="descname">interp</code><span class="sig-paren">(</span><em>iqehist</em>, <em>newE</em><span class="sig-paren">)</span><a class="headerlink" href="#multiphonon.sqe.interp" title="Permalink to this definition">¶</a></dt>
-<dd><p>compute a new IQE histogram from the given IQE using the new energy array by interpolation</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>iqehist: histogram</strong></p>
-<blockquote>
-<div><p>input IQE</p>
-</div></blockquote>
-<p><strong>newE:numpy array of floats</strong></p>
-<blockquote class="last">
-<div><p>new energy centers in meV</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="multiphonon.redutils.reduce">
-<code class="descclassname">multiphonon.redutils.</code><code class="descname">reduce</code><span class="sig-paren">(</span><em>nxsfile</em>, <em>qaxis</em>, <em>outfile</em>, <em>use_ei_guess=False</em>, <em>ei_guess=None</em>, <em>eaxis=None</em>, <em>tof2E=True</em>, <em>ibnorm='ByCurrent'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiphonon.redutils.reduce" title="Permalink to this definition">¶</a></dt>
-<dd><p>reduce a NeXus file to a I(Q,E) histogram using Mantid</p>
-<p>This is a wrapper of Mantid algorithms to reduce a NeXus file to IQE histogram.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>nxsfile: str</strong></p>
-<blockquote>
-<div><p>path to nxs file</p>
-</div></blockquote>
-<p><strong>qaxis: 3-tuple of floats</strong></p>
-<blockquote>
-<div><p>Momentum transfer axis. (Qmin, dQ, Qmax). unit: inverse angstrom</p>
-</div></blockquote>
-<p><strong>outfile: str</strong></p>
-<blockquote>
-<div><p>path to save nxs data</p>
-</div></blockquote>
-<p><strong>use_ei_guess: boolean</strong></p>
-<blockquote>
-<div><p>Use incident energy guess</p>
-</div></blockquote>
-<p><strong>ei_guess: float</strong></p>
-<blockquote>
-<div><p>Initial guess of incident energy (meV)</p>
-</div></blockquote>
-<p><strong>eaxis: 3-tuple of floats</strong></p>
-<blockquote>
-<div><p>Energy transfer axis. (Emin, dE, Emax). unit: meV</p>
-</div></blockquote>
-<p><strong>tof2E: boolean</strong></p>
-<blockquote>
-<div><p>Conversion from time of flight axis to energy axis or not.
-If the NeXus file is in time of flight, tof2E=True
-If the NeXus file is processed and in energy transfer, tof2E=False</p>
-</div></blockquote>
-<p><strong>ibnorm: str</strong></p>
-<blockquote class="last">
-<div><p>Incident beam normalization choice. Allowed values: None, ByCurrent, ToMonitor
-For more details, see <a class="reference external" href="http://docs.mantidproject.org/nightly/algorithms/DgsReduction-v1.html">http://docs.mantidproject.org/nightly/algorithms/DgsReduction-v1.html</a></p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<span class="target" id="module-multiphonon.backward.plotutils"></span><dl class="function">
-<dt id="multiphonon.backward.plotutils.plot_dos_iteration">
-<code class="descclassname">multiphonon.backward.plotutils.</code><code class="descname">plot_dos_iteration</code><span class="sig-paren">(</span><em>curdir</em>, <em>total_rounds=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiphonon.backward.plotutils.plot_dos_iteration" title="Permalink to this definition">¶</a></dt>
-<dd><p>plot the  DOS for each iteration</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>curdir</strong> : str</p>
-<blockquote>
-<div><p>path to the root of the working directory for SQE-&gt;DOS calculation</p>
-</div></blockquote>
-<p><strong>total_rounds</strong> : integer</p>
-<blockquote class="last">
-<div><p>number of iterations</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="multiphonon.backward.plotutils.plot_intermediate_result_se">
-<code class="descclassname">multiphonon.backward.plotutils.</code><code class="descname">plot_intermediate_result_se</code><span class="sig-paren">(</span><em>curdir</em><span class="sig-paren">)</span><a class="headerlink" href="#multiphonon.backward.plotutils.plot_intermediate_result_se" title="Permalink to this definition">¶</a></dt>
-<dd><p>plot the  intermediate S(E)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>curdir: str</strong></p>
-<blockquote class="last">
-<div><p>path to one of the iteration working directory for SQE-&gt;DOS calculation,
-for example, work/round-5</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="multiphonon.backward.plotutils.plot_intermediate_result_sqe">
-<code class="descclassname">multiphonon.backward.plotutils.</code><code class="descname">plot_intermediate_result_sqe</code><span class="sig-paren">(</span><em>curdir</em><span class="sig-paren">)</span><a class="headerlink" href="#multiphonon.backward.plotutils.plot_intermediate_result_sqe" title="Permalink to this definition">¶</a></dt>
-<dd><p>plot the  intermediate S(Q,E)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>curdir: str</strong></p>
-<blockquote class="last">
-<div><p>path to one of the iteration working directory for SQE-&gt;DOS calculation,
-for example, work/round-5</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="multiphonon.backward.plotutils.plot_residual">
-<code class="descclassname">multiphonon.backward.plotutils.</code><code class="descname">plot_residual</code><span class="sig-paren">(</span><em>curdir</em><span class="sig-paren">)</span><a class="headerlink" href="#multiphonon.backward.plotutils.plot_residual" title="Permalink to this definition">¶</a></dt>
-<dd><p>plot the  residual DOS</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>curdir</strong> : str</p>
-<blockquote class="last">
-<div><p>path to the root of the working directory for SQE-&gt;DOS calculation</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#convenient-functions">Convenient functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#backward-transformation">backward transformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#forward-transformation">forward transformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#helper-functions">helper functions</a></li>
+</ul>
+</li>
+</ul>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
@@ -686,6 +202,13 @@ for example, work/round-5</p>
            </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
   
 
   <hr/>
