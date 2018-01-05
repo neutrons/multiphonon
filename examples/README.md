@@ -15,6 +15,9 @@ First create a conda environment, activate it, and install multiphonon:
     $ conda config --add channels mcvine
     $ conda install multiphonon
 
+The following examples do not contain the preprocessing step to reduce raw experimental
+data to I(Q,E) spectrum and do not require Mantid.
+
 The following example shows the core functionality of the multiphonon code,
 converting S(Q,E) histogram to DOS:
 
