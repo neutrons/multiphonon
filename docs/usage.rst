@@ -57,7 +57,7 @@ the resolution is the best when the energy transfer is close to the incident ene
 (the neutron final energy is near zero), and then it gets worse (broader) and worse
 as the energy transfer gets smaller.
 As a result, for a material with a wide range of phonon energies, the resolution of DGS instrument
-at lower energy enegies is not satisfactory.
+at lower energies is unsatisfactory.
 One way to alleviate this problem is to measure the phonon spectrum using
 multiple incident energies.
 

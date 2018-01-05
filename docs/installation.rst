@@ -20,7 +20,7 @@ Full installation
 -----------------
   
 The full installation requires `mantid <http://mantidproject.org>`_-framework, which can be installed using conda
-on a recent, **standard**, 64bit, linux (ubuntu/fedora/centos) **desktop** distribution.
+on a recent, 64bit, linux (ubuntu/fedora/centos) **standard desktop** distribution.
 
 The multiphonon package converts a I(Q,E) spectrum to DOS.
 Experimental data obtained from direct-geometry inelastic neutron spectrometers first need to
