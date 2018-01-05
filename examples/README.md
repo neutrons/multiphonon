@@ -18,7 +18,7 @@ First create a conda environment, activate it, and install multiphonon:
 The following examples do not contain the preprocessing step to reduce raw experimental
 data to I(Q,E) spectrum and do not require Mantid.
 
-The following example shows the core functionality of the multiphonon code,
+The first example shows the core functionality of the multiphonon code,
 converting S(Q,E) histogram to DOS:
 
     $ python getdos-Al.py
@@ -46,9 +46,9 @@ And then open an example notebook and follow instructions
 
 **Note:** For an example notebook, look for a pdf with same name. It should contain expected outputs and plots.
 
-For users who are not familar with python and more comfortable with GUI, please start with
-[the vanadium example with UI widgets](getdos2-V_Ei120meV.ipynb).
-
-For users who are comfortable with python and jupyter notebook, please start with
-[the vanadium example without UI widgts][getdos2-V_Ei120meV-noUI.ipynb).
+Notebooks:
+* For users who are not familar with python and more comfortable with GUI, please start with
+  [the vanadium example with UI widgets](getdos2-V_Ei120meV.ipynb).
+* For users who are comfortable with python and jupyter notebook, please start with
+  [the vanadium example without UI widgts](getdos2-V_Ei120meV-noUI.ipynb).
 
