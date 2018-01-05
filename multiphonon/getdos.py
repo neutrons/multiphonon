@@ -111,6 +111,10 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
 def reduce2iqe(sample_nxs, Emin,Emax,dE, Qmin,Qmax,dQ, mt_nxs=None, iqe_nxs='iqe.nxs', iqe_h5='iqe.h5', workdir='work'):
     """Reduce sample and (optionally) empty can nxs files and generate I(Q,E) histograms
 
+    This is an iterator of processing messages. Please call in this form:
+
+        >>> for msg in reduce2iqe(...): print msg
+
     Parameters
     ----------
     sample_nxs : str
