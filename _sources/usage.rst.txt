@@ -84,7 +84,7 @@ The DOS measured in this dataset cannot exceeds 130meV, but is of better energy 
    :width: 400px
 
 The two DOSes should be "stiched" together to obtain one DOS curve.
-This is done by updating the low :math:`E` portion of the DOS from the higher :math:`E_i` measurement
+This is done by replacing the low :math:`E` portion of the DOS from the higher :math:`E_i` measurement
 with the partial DOS obtained from the lower :math:`E_i` measurement.
 
 Two algorithms are available to calculate the scale factor between the two DOSes.
