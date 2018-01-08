@@ -14,7 +14,7 @@ def sqe2dos(
         ):
     """Given a SQE, compute DOS
 
-    This is an interator.
+    This is an iterator.
 
     * Start with an initial guess of DOS and a SQE
     * Calculate SQE of multiphonon scattering
