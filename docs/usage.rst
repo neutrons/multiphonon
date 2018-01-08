@@ -110,3 +110,5 @@ For this particular example, the "stitched" DOS would look like this:
    :width: 400px
 
 It is obvious that the low :math:`E` portion of the DOS curve is better resolved now.
+
+The procedure here is documented in `the graphite example script <https://github.com/sns-chops/multiphonon/blob/master/examples/getdos2-graphite_Ei130meV-noUI.py>`_.
