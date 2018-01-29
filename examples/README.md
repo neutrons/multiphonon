@@ -1,5 +1,7 @@
 # Examples
 
+**NOTE:** For some headless systems, some examples below may not work as explained in [Notes on Mantid conda installation](http://sns-chops.github.io/multiphonon/installation.html#notes-on-mantid-conda-installation)
+
 Obtain examples
 
     $ git clone https://github.com/sns-chops/multiphonon
