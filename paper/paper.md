@@ -7,7 +7,7 @@ tags:
   - phonon density of states
   - density of states
 authors:
-  - name: Jiao Y. Y. Lin
+  - name: "Jiao Y. Y. Lin^[Corresponding author: linjiao@ornl.gov]"
     orcid: 0000-0001-9233-0100
     affiliation: 1
   - name: Fahima Islam
@@ -15,10 +15,12 @@ authors:
     affiliation: 1
   - name: Max Kresh
     orcid: 0000-0002-6990-8979
+    affiliation: 2
 affiliations:
   - name: Oak Ridge National Laboratory
     index: 1
-
+  - name: "mkresch@gmail.com"
+    index: 2
 date: September 26, 2017
 bibliography: paper.bib
 ---
@@ -34,7 +36,7 @@ inelastic neutron scattering (see, for example [@FultzINSbook])
 spectrum from a powder sample.
 Inelastic neutron spectroscopy (INS) is a probe of excitations in solids of
 vibrational or magnetic origins.
-In INS, neutrons can lose(gain) energy 
+In INS, neutrons can lose(gain) energy
 to(from) the solid in the form of quantized lattice vibrations -- phonons.
 Measuring phonon density of states is usually the first step
 in determining the phonon properties of a material experimentally.
@@ -45,7 +47,7 @@ where
 low thermal conductivity and high electirical conductivity are desired.
 Study of phonon entropy also made important contributions to
 the research of thermal dynamics and phase stability of materials
-[@FULTZ2010, bogdanoff2002phonon, swan2006vibrational].
+[@FULTZ2010, @bogdanoff2002phonon, @swan2006vibrational].
 
 The algorithm implemented in this package is a self-consistent,
 iterative procedure that finishes when
@@ -80,8 +82,7 @@ UT-Battelle LLC, for DOE. Part of this research is supported by the U.S.
 Department of Energy, Office of Science, Office of Basic Energy
 Sciences, User Facilities under contract number DE-AC05-00OR22725.
 
-We thank Douglas Abernathy, Jennifer Niedziela, Iyad Al-Qasir, 
+We thank Douglas Abernathy, Jennifer Niedziela, Iyad Al-Qasir,
 Dipanshu Bansal, and Chen Li for stimulating discussions.
 
 # References
-paper.bib
