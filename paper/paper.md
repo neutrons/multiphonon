@@ -47,7 +47,7 @@ where
 low thermal conductivity and high electirical conductivity are desired.
 Study of phonon entropy also made important contributions to
 the research of thermal dynamics and phase stability of materials
-[@FULTZ2010, bogdanoff2002phonon, swan2006vibrational].
+[@FULTZ2010, @bogdanoff2002phonon, @swan2006vibrational].
 
 The algorithm implemented in this package is a self-consistent,
 iterative procedure that finishes when
