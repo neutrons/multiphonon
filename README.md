@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/sns-chops/multiphonon.svg?branch=master)](https://travis-ci.org/sns-chops/multiphonon) 
 [![Coverage Status](https://coveralls.io/repos/github/sns-chops/multiphonon/badge.svg?branch=master)](https://coveralls.io/github/sns-chops/multiphonon?branch=master)
+[![DOI](http://joss.theoj.org/papers/10.21105/joss.00440/status.svg)](https://doi.org/10.21105/joss.00440)
 
 # multiphonon
 This is a rewrite of multiphonon (getDOS) code that was originally authored by 
