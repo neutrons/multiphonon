@@ -63,7 +63,7 @@ def reduce(nxsfile, qaxis, outfile, use_ei_guess=False, ei_guess=None, eaxis=Non
         Incident beam normalization choice. Allowed values: None, ByCurrent, ToMonitor
         For more details, see http://docs.mantidproject.org/nightly/algorithms/DgsReduction-v1.html
     """
-    from mantid.simpleapi import DgsReduction, SofQW3, SaveNexus, Load
+    from mantid.simpleapi import DgsReduction, SaveNexus, Load
     from mantid import mtd
     import mantid.simpleapi as msa
     if tof2E == 'guess':
@@ -100,8 +100,8 @@ def reduce(nxsfile, qaxis, outfile, use_ei_guess=False, ei_guess=None, eaxis=Non
         emax = Edim.getMaximum()
         de = Edim.getX(1) - Edim.getX(0)
         eaxis = emin, de, emax
-    qmin, dq, qmax = qaxis; nq = int((qmax-qmin-dq/2.)/dq)
-    emin, de, emax = eaxis; ne = int((emax-emin-de/2.)/de)
+    qmin, dq, qmax = qaxis; nq = int((qmax-qmin+dq/2.)/dq)
+    emin, de, emax = eaxis; ne = int((emax-emin+de/2.)/de)
     #
     md = msa.ConvertToMD(
         InputWorkspace=reduced,

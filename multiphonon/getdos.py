@@ -190,7 +190,7 @@ def _normalize_axis_setting(min, max, delta):
     # try to deal with numerical error
     nsteps = round( 1.*(max-min)/delta )
     if abs(max - (min+nsteps*delta)) < 1e-5:
-        max = max + delta/2.
+        max = max + delta/1.e4
     return min, max, delta
 
 
