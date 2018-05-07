@@ -71,8 +71,8 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None, update_weights=N
     # - experiment
     # -- only need the positive part
     expsqe = sqe.copy()
-    expsqe_Epositive = expsqe[(), (-dE / 2, None)].I
-    expsqeE2_Epositive = expsqe[(), (-dE / 2, None)].E2
+    expsqe_Epositive = expsqe[(), (dE / 10, None)].I
+    expsqeE2_Epositive = expsqe[(), (dE / 10, None)].E2
     mask = expsqe_Epositive != expsqe_Epositive
     expsqe_Epositive[mask] = 0
     expsqeE2_Epositive[mask] = 0

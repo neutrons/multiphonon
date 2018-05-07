@@ -11,7 +11,7 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
            elastic_E_cutoff=(-20., 7), M=50.94,
            C_ms=0.3, Ei=116.446, initdos=None, update_strategy_weights=None,
            workdir='work',
-           iqe_nxs="iqe.nxs", iqe_h5="iqe.h5", maxiter=10):
+           iqe_h5="iqe.h5", maxiter=10):
     """Compute DOS from direct-geometry powder neutron scattering spectrum
     by performing multiphonon and multiple-scattering corrections.
     This is an iterator. Please call it with an evaluation of the iteration.
@@ -71,7 +71,7 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
         Max iteration
 
     """
-    for msg in reduce2iqe(sample_nxs, Emin,Emax,dE, Qmin,Qmax,dQ, mt_nxs, iqe_nxs, iqe_h5, workdir):
+    for msg in reduce2iqe(sample_nxs, Emin,Emax,dE, Qmin,Qmax,dQ, mt_nxs, iqe_h5, workdir):
         yield msg
     iqe_h5, mtiqe_h5, Qaxis, Eaxis = msg
     iqehist = hh.load(iqe_h5)
@@ -108,7 +108,7 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
     return
 
 
-def reduce2iqe(sample_nxs, Emin,Emax,dE, Qmin,Qmax,dQ, mt_nxs=None, iqe_nxs='iqe.nxs', iqe_h5='iqe.h5', workdir='work'):
+def reduce2iqe(sample_nxs, Emin,Emax,dE, Qmin,Qmax,dQ, mt_nxs=None, iqe_h5='iqe.h5', workdir='work'):
     """Reduce sample and (optionally) empty can nxs files and generate I(Q,E) histograms
 
     This is an iterator of processing messages. Please call in this form:
@@ -141,9 +141,6 @@ def reduce2iqe(sample_nxs, Emin,Emax,dE, Qmin,Qmax,dQ, mt_nxs=None, iqe_nxs='iqe
     mt_nxs : str
         Empty can Nexus file
 
-    iqe_nxs : str
-        nexus filename of reduced I(Q,E). temporary file.
-
     iqe_h5: str
         output histogram filename of reduced I(Q,E)
 
@@ -153,8 +150,6 @@ def reduce2iqe(sample_nxs, Emin,Emax,dE, Qmin,Qmax,dQ, mt_nxs=None, iqe_nxs='iqe
     # prepare paths
     if not os.path.exists(workdir):
         os.makedirs(workdir)
-    if not os.path.isabs(iqe_nxs):
-        iqe_nxs = os.path.abspath(os.path.join(workdir, iqe_nxs))
     if not os.path.isabs(iqe_h5):
         iqe_h5 = os.path.abspath(os.path.join(workdir, iqe_h5))
     # reduce
@@ -162,14 +157,13 @@ def reduce2iqe(sample_nxs, Emin,Emax,dE, Qmin,Qmax,dQ, mt_nxs=None, iqe_nxs='iqe
     Eaxis = _checkEaxis(*Eaxis)
     Qaxis = _normalize_axis_setting(Qmin, Qmax, dQ)
     yield "Converting sample data to powder I(Q,E)..."
-    raw2iqe(sample_nxs, iqe_nxs, iqe_h5, Eaxis, Qaxis, type='sample')
+    raw2iqe(sample_nxs, iqe_h5, Eaxis, Qaxis, type='sample')
     if mt_nxs is not None:
         _tomtpath = lambda p: os.path.join(
             os.path.dirname(p), 'mt-'+os.path.basename(p))
-        mtiqe_nxs = _tomtpath(iqe_nxs)
         mtiqe_h5 = _tomtpath(iqe_h5)
         yield "Converting MT data to powder I(Q,E)..."
-        raw2iqe(mt_nxs, mtiqe_nxs, mtiqe_h5, Eaxis, Qaxis, type='MT')
+        raw2iqe(mt_nxs, mtiqe_h5, Eaxis, Qaxis, type='MT')
     else:
         mtiqe_h5=None
     yield "Results: sample IQE, MT IQE, Qaxis, Eaxis"
@@ -196,7 +190,7 @@ def _normalize_axis_setting(min, max, delta):
     # try to deal with numerical error
     nsteps = round( 1.*(max-min)/delta )
     if abs(max - (min+nsteps*delta)) < 1e-5:
-        max = max + delta/2.
+        max = max + delta/1.e4
     return min, max, delta
 
 
@@ -205,12 +199,12 @@ def _md5(s):
     return hashlib.md5(s).hexdigest()
 
 
-def raw2iqe(eventnxs, iqe_nxs, iqe_h5, Eaxis, Qaxis, type):
-    # if iqe_nxs exists and the parameters do not match, we need to remove the old result
-    parameters_fn = os.path.join(os.path.dirname(iqe_nxs), 'raw2iqe-%s.params' % type)
+def raw2iqe(eventnxs, iqe_h5, Eaxis, Qaxis, type):
+    # if iqe_h5 exists and the parameters do not match, we need to remove the old result
+    parameters_fn = os.path.join(os.path.dirname(iqe_h5), 'raw2iqe-%s.params' % type)
     parameters_text = 'nxs=%s\nEaxis=%s\nQxis=%s\n' % (eventnxs, Eaxis, Qaxis)
     remove_cache = False
-    if os.path.exists(iqe_nxs):
+    if os.path.exists(iqe_h5):
         if os.path.exists(parameters_fn):
             saved = open(parameters_fn).read()
             if saved != parameters_text:
@@ -218,29 +212,26 @@ def raw2iqe(eventnxs, iqe_nxs, iqe_h5, Eaxis, Qaxis, type):
         else:
             remove_cache = True
     if remove_cache:
-        os.remove(iqe_nxs); os.remove(iqe_h5)
+        os.remove(iqe_h5)
     # 
-    from .redutils import reduce, extract_iqe
+    from .redutils import reduce
     Emin, Emax, dE = Eaxis
     Emin-=dE/2; Emax-=dE/2 # mantid algo use bin boundaries
     Qmin, Qmax, dQ = Qaxis
     Qmin-=dQ/2; Qmax-=dQ/2
     # reduce
-    if not os.path.exists(iqe_nxs):
+    if not os.path.exists(iqe_h5):
         qaxis = Qmin, dQ, Qmax
         eaxis = Emin, dE, Emax
         if isinstance(eventnxs, unicode):
             eventnxs = eventnxs.encode()
-        if isinstance(iqe_nxs, unicode):
-            iqe_nxs = iqe_nxs.encode()
-        reduce(eventnxs, qaxis, iqe_nxs, eaxis=eaxis, tof2E='guess', ibnorm='ByCurrent')
+        if isinstance(iqe_h5, unicode):
+            iqe_h5 = iqe_h5.encode()
+        reduce(eventnxs, qaxis, iqe_h5, eaxis=eaxis, tof2E='guess', ibnorm='ByCurrent')
     else:
         import warnings
-        msg = "Reusing old reduction result from %s" % iqe_nxs
+        msg = "Reusing old reduction result from %s" % iqe_h5
         warnings.warn(msg)
-    # to histogram
-    if not os.path.exists(iqe_h5):
-        extract_iqe(iqe_nxs, iqe_h5)
     # fix energy axis if necessary
     _fixEaxis(iqe_h5, Eaxis)
     # save parameters

@@ -67,7 +67,7 @@ class TestCase(unittest.TestCase):
                 continue
             import histogram.hdf as hh
             iqe = hh.load(os.path.join(work, 'iqe.h5'))
-            self.assert_(iqe.energy[0]==0.)
+            self.assert_(iqe.E[0]==0.)
         return
         
     pass  # end of TestCase

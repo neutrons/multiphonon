@@ -1,10 +1,10 @@
 mt_fraction: 0.99
 const_bg_fraction: 0.0
-Eaxis: !!python/tuple [-75.0, 75.5, 1.0]
+Eaxis: !!python/tuple [-75.0, 75., 1.0]
 Emin: -75.0
 Emax: 75.0
 dE: 1.0
-Qaxis: !!python/tuple [0.0, 13.05, 0.1]
+Qaxis: !!python/tuple [0.0, 13., 0.1]
 Qmin: 0.0
 Qmax: 13.0
 dQ: 0.1
