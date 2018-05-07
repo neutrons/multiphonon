@@ -64,6 +64,8 @@ def reduce(nxsfile, qaxis, outfile, use_ei_guess=False, ei_guess=None, eaxis=Non
         For more details, see http://docs.mantidproject.org/nightly/algorithms/DgsReduction-v1.html
     """
     from mantid.simpleapi import DgsReduction, SofQW3, SaveNexus, Load
+    from mantid import mtd
+    import mantid.simpleapi as msa
     if tof2E == 'guess':
         # XXX: this is a simple guess. all raw data files seem to have root "entry"
         cmd = 'h5ls %s' % nxsfile
@@ -87,41 +89,51 @@ def reduce(nxsfile, qaxis, outfile, use_ei_guess=False, ei_guess=None, eaxis=Non
                 EnergyTransferRange=eaxis,
                 IncidentBeamNormalisation=ibnorm,
                 )
+        reduced = mtd['reduced']
     else: 
         reduced = Load(nxsfile)
-    SofQW3(
-        InputWorkspace='reduced',
-        OutputWorkspace='iqw',
-        QAxisBinning=qaxis,
-        EMode='Direct',
+        
+    # get eaxis info from mtd workspace, if necessary
+    if eaxis is None:
+        Edim = reduced.getXDimension()
+        emin = Edim.getMinimum()
+        emax = Edim.getMaximum()
+        de = Edim.getX(1) - Edim.getX(0)
+        eaxis = emin, de, emax
+    qmin, dq, qmax = qaxis; nq = int((qmax-qmin-dq/2.)/dq)
+    emin, de, emax = eaxis; ne = int((emax-emin-de/2.)/de)
+    #
+    md = msa.ConvertToMD(
+        InputWorkspace=reduced,
+        QDimensions='|Q|',
+        dEAnalysisMode='Direct',
+        MinValues="%s,%s" % (qmin, emin),
+        MaxValues="%s,%s" % (qmax, emax),
         )
-    SaveNexus(
-        InputWorkspace='iqw',
-        Filename = outfile,
-        Title = 'iqw',
+    binned = msa.BinMD(
+        InputWorkspace=md,
+        AxisAligned=1,
+        AlignedDim0="|Q|,%s,%s,%s" % (qmin, qmax, nq),
+        AlignedDim1="DeltaE,%s,%s,%s" % (emin, emax, ne),
         )
-    return
+    # create histogram
+    import histogram as H, histogram.hdf as hh
+    data=binned.getSignalArray().copy()
+    err2=binned.getErrorSquaredArray().copy()
+    nev=binned.getNumEventsArray()
+    data/=nev
+    err2/=(nev*nev)
+    import numpy as np
+    qaxis = H.axis('Q', boundaries=np.arange(qmin, qmax+dq/2., dq), unit='1./angstrom')
+    eaxis = H.axis('E', boundaries=np.arange(emin, emax+de/2., de), unit='meV')
+    hist = H.histogram('IQE', (qaxis, eaxis), data=data, errors=err2)
+    if outfile.endswith('.nxs'):
+        import warnings
+        warnings.warn("reduce function no longer writes iqe.nxs nexus file. it only writes iqe.h5 histogram file")
+        outfile = outfile[:-4] + '.h5'
+    hh.dump(hist, outfile)
+    return hist
 
 
-def extract_iqe(mantid_nxs, histogram):
-    "extract iqe from a mantid-saved h5 file and save to a histogram"
-    import h5py, numpy as np
-    inpath, outpath = mantid_nxs, histogram
-    f = h5py.File(inpath)
-    w = f['mantid_workspace_1']['workspace']
-    e = np.array(w['axis1'])
-    de = e[1] - e[0]
-    ee = (e+de/2.)[:-1]
-    q = np.array(w['axis2'])
-    dq = q[1] - q[0]
-    qq = (q+dq/2.)[:-1]
-    I = np.array(np.array(w['values']))
-    # I[I!=I] = 0
-    E2 = np.array(np.array(w['errors'])**2)
-    import histogram as H
-    iqe = H.histogram('iqe', [('Q',qq,  'angstrom**-1'), ('energy', ee, 'meV')], data=I, errors = E2)
-    import histogram.hdf as hh
-    hh.dump(iqe, outpath)
-    return
 
 
