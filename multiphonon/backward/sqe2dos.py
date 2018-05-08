@@ -146,7 +146,7 @@ def sqe2dos(
     # add to the error bar
     final_dos = dos.copy()
     final_dos_subset = final_dos[(residual_pos_se.E[0], min(Ecutoff, residual_pos_se.E[-1]))]
-    final_dos_subset.E2 += (final_dos_subset.I * rel_err_from_residual)**2
+    final_dos_subset.E2 += (final_dos_subset.I * rel_err_from_residual[:final_dos_subset.size()])**2
     hh.dump(final_dos, os.path.join(workdir, "final-dos.h5"))
     #
     create_script(
