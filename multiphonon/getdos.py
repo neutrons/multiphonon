@@ -80,6 +80,10 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
         iqehist.I -= ave*const_bg_fraction
     if mt_nxs is not None:
         iqehist -= hh.load(mtiqe_h5) * (mt_fraction, 0)
+        I = iqehist.I
+        if (I<0).sum() > I.size * 0.005:
+            import warnings
+            warnings.warn("After MT subtraction, some intensities are negative. Please check your MT data and mt_fraction value")
     # to DOS
     # interpolate data
     from .sqe import interp
