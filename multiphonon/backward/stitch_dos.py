@@ -62,11 +62,13 @@ def compute_scalefactor_using_area_criteria(original_dos_hist, Emin, Emax, g):
     return expected_sum / sum_now
 
 
-def compute_scalefactor_using_continuous_criteria(original_dos_hist, Emin, Emax, g):
-    "update the lower E portion of the dos by keeping the DOS value at maximum E the same as the original DOS"
-    v_at_Emax = original_dos_hist[Emax][0]
-    v_now_at_Emax = g[-1]
-    return v_at_Emax / v_now_at_Emax
+def compute_scalefactor_using_continuous_criteria(original_dos_hist, Emin, Emax, g, Npoints=3):
+    """update the lower E portion of the dos by keeping the DOS value at maximum E the same as the original DOS
+    the values are taken as averages of `Npoints` points to the left and right.
+    """
+    from_right = original_dos_hist[(Emax, None)].I[:Npoints].mean()
+    from_left = g[-Npoints:].mean()
+    return from_right / from_left
 
 
 class DOSStitcher(DOSStitcherBase):
@@ -77,7 +79,7 @@ class DOSStitcher(DOSStitcherBase):
 
     def match(self, original_dos_hist, Emin, Emax, g):
         # if need rescale, calculate the factor using some strategies and take weighted average
-        scale1 = compute_scalefactor_using_continuous_criteria(original_dos_hist, Emin, Emax, g)
+        scale1 = compute_scalefactor_using_continuous_criteria(original_dos_hist, Emin, Emax, g, Npoints=1)
         scale2 = compute_scalefactor_using_area_criteria(original_dos_hist, Emin, Emax, g)
         if not np.isfinite(scale1):
             # this can happen if the original dos has value zero
