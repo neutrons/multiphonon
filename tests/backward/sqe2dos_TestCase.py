@@ -113,6 +113,25 @@ class TestCase(unittest.TestCase):
         return
         
         
+    def test2c2(self):
+        iqehist = hh.load(os.path.join(datadir, "DJX-iqe-Ei_20.h5"))
+        # iqehist -= hh.load(os.path.join(datadir, "DJX-mtiqe-Ei_20.h5"))*(0.1, 0)
+        initdos = hh.load(os.path.join(datadir, "DJX-dos-Ei_80.h5"))
+        iterdos = sqe2dos.sqe2dos(
+            iqehist, T=300, Ecutoff=17.1, 
+            elastic_E_cutoff=(-3., 2), M=79.452,
+            C_ms=0.02, Ei=20., workdir='work-DJX',
+            initdos=initdos
+        )
+        for i, dos in enumerate(iterdos):
+            # print dos
+            # plot
+            if interactive:
+                # print '*' * 70
+                pylab.errorbar(dos.E, dos.I, dos.E2**.5, label='%d' % i)
+        return
+        
+        
     pass  # end of TestCase
 
 

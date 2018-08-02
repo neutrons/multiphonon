@@ -130,76 +130,9 @@ def update_dos(original_dos_hist, Emin, Emax, g, gerr, weights=None):
         weights for DOS update strategies (continuity, area conservation)
 
     """
-
-    assert original_dos_hist.E[-1] >= Emax
-    dE = original_dos_hist.E[1] - original_dos_hist.E[0]
-    if Emax + dE > original_dos_hist.E[-1]:
-        rescale = False
-    else:
-        g_beyond_range = original_dos_hist[(Emax + dE, None)].I
-        assert np.all(g_beyond_range >= 0)
-        rescale = g_beyond_range.sum() > 0
-    # if need rescale, calculate the factor using some strategies and take weighted average
-    if rescale:
-        import warnings
-        scale1 = compute_scalefactor_using_continuous_criteria(original_dos_hist, Emin, Emax, g)
-        scale2 = compute_scalefactor_using_area_criteria(original_dos_hist, Emin, Emax, g)
-        if np.isinf(scale1) or np.isnan(scale1):
-            # this can happen if the original dos has value zero
-            warnings.warn(
-                "fail to use the continuous criteria to determine the scale factor for combining DOSes"
-            )
-            scale = scale2
-        else:
-            if abs(scale1 - scale2) / scale1 > 0.05:
-                warnings.warn(
-                    "Scaling factor to combine DOSes calculated is not stable: %s (using continuous criteria) vs %s (using area criteria)\n"
-                    "You may want to consider adjusting the parameters such as E range (Emax more specifically)" % (
-                    scale1, scale2)
-                )
-            if weights is None:
-                weights = [.5, .5]
-            scale = np.dot([scale1, scale2], weights)
-        assert scale == scale and not np.isinf(scale), "scale is a bad number: %s" % scale
-        g *= scale
-        # compute error bar
-        gerr *= scale
-    # compute new DOS
-    newdos = original_dos_hist.copy()
-    # by updating only the front portion
-    lowEportion = newdos[(Emin, Emax)]
-    lowEportion.I[:] = g
-    lowEportion.E2[:] = gerr ** 2
-    # now renormalize
-    return normalize_dos(newdos)
-
-
-def normalize_dos(dos_hist):
-    """ Parameters
-        ----------
-        dos_hist:histogram
-            phonon density of states
-
-    """
-    dE = dos_hist.E[1] - dos_hist.E[0]
-    norm = dos_hist.I.sum() * dE
-    dos_hist.I /= norm
-    dos_hist.E2 /= norm * norm
-    return dos_hist
-
-
-def compute_scalefactor_using_area_criteria(original_dos_hist, Emin, Emax, g):
-    "update the lower E portion of the dos by keeping the area of the updated portion intact"
-    expected_sum = original_dos_hist[(Emin, Emax)].I.sum()
-    sum_now = g.sum()
-    return expected_sum / sum_now
-
-
-def compute_scalefactor_using_continuous_criteria(original_dos_hist, Emin, Emax, g):
-    "update the lower E portion of the dos by keeping the DOS value at maximum E the same as the original DOS"
-    v_at_Emax = original_dos_hist[Emax][0]
-    v_now_at_Emax = g[-1]
-    return v_at_Emax / v_now_at_Emax
+    from .stitch_dos import DOSStitcher
+    stitch = DOSStitcher(weights)
+    return stitch(original_dos_hist, Emin, Emax, g, gerr)
 
 
 def guess_init_dos(E, cutoff):
