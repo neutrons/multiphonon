@@ -1,6 +1,7 @@
 
 import os, numpy as np, warnings
 
+
 class DOSStitcherBase:
     
     def __call__(self, original_dos_hist, Emin, Emax, g, gerr):
@@ -79,7 +80,7 @@ class DOSStitcher(DOSStitcherBase):
 
     def match(self, original_dos_hist, Emin, Emax, g):
         # if need rescale, calculate the factor using some strategies and take weighted average
-        scale1 = compute_scalefactor_using_continuous_criteria(original_dos_hist, Emin, Emax, g, Npoints=1)
+        scale1 = compute_scalefactor_using_continuous_criteria(original_dos_hist, Emin, Emax, g, Npoints=3)
         scale2 = compute_scalefactor_using_area_criteria(original_dos_hist, Emin, Emax, g)
         if not np.isfinite(scale1):
             # this can happen if the original dos has value zero
