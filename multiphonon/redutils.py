@@ -17,8 +17,8 @@ mantid_checked = False
 def _checkMantid():
     print "* Checking Mantid ..."
     import subprocess as sp, shlex
-    sp.call(shlex.split("python -c 'import mantid'"), stdout=sp.PIPE, stderr=sp.PIPE) # sometimes mantid import for the first time may fail
-    if sp.call(shlex.split("python -c 'import mantid'")):
+    sp.call(shlex.split("python -c 'import matplotlib, mantid'"), stdout=sp.PIPE, stderr=sp.PIPE) # sometimes mantid import for the first time may fail
+    if sp.call(shlex.split("python -c 'import matplotlib, mantid'")):
         raise RuntimeError("Please install mantid")
     global mantid_checked
     mantid_checked = True
