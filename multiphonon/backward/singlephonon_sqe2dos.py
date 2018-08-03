@@ -100,19 +100,21 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None, update_weights=N
     # keep positive
     dos_in_range.I[dos_in_range.I < 0] = 0
     # DOS range to update should be smaller than SQE E range, so we need to
-    dos_to_update = dos_in_range[(Eplus[0], min(Eplus[-1], Ecutoff))]
+    Emin = Eplus[0]; Emax = min(Eplus[-1], Ecutoff)
+    dos_to_update = dos_in_range[(Emin, min(Eplus[-1], Emax*2))]
     # update
-    return update_dos(initdos, dos_to_update.E[0], dos_to_update.E[-1],
-                      g=dos_to_update.I, gerr=dos_to_update.I * dos_relative_error[:dos_to_update.I.size],
-                      weights=update_weights)
+    return update_dos(initdos, dos_to_update, Emin, Emax, weights=update_weights)
 
 
-def update_dos(original_dos_hist, Emin, Emax, g, gerr, weights=None):
+def update_dos(original_dos_hist, new_dos_hist, Emin, Emax, weights=None):
     # only if the spectrum is nontrivial beyond Emax, we need rescale
     """ Parameters
     ----------
     original_dos_hist:histogram
         original phonon density of states
+
+    new_dos_hist:histogram
+        new phonon density of states
 
     Emin:float
         minimum value for energy transfer axis
@@ -120,19 +122,13 @@ def update_dos(original_dos_hist, Emin, Emax, g, gerr, weights=None):
     Emax:float 
         maximum value for energy transfer axis
     
-    g:float 
-        updated phonon density of states
-    
-    gerr:float 
-        error for phonon density of states
-    
     weights:float 
         weights for DOS update strategies (continuity, area conservation)
 
     """
     from .stitch_dos import DOSStitcher
     stitch = DOSStitcher(weights)
-    return stitch(original_dos_hist, Emin, Emax, g, gerr)
+    return stitch(original_dos_hist, new_dos_hist, Emin, Emax)
 
 
 def guess_init_dos(E, cutoff):
