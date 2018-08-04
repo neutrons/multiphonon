@@ -76,7 +76,7 @@ class TestCase(unittest.TestCase):
         iqehist = hh.load(os.path.join(datadir, "graphite-Ei_130-iqe.h5"))
         initdos = hh.load(os.path.join(datadir, "graphite-Ei_300-dos.h5"))
         newdos = sqe2dos.singlephonon_sqe2dos(
-            iqehist, T=300, Ecutoff=125., elastic_E_cutoff=(-30., 15), M=12., initdos=initdos)
+            iqehist, T=300, Ecutoff=100., elastic_E_cutoff=(-30., 15), M=12., initdos=initdos)
         # plot
         if interactive:
             pylab.plot(initdos.E, initdos.I)
@@ -90,7 +90,7 @@ class TestCase(unittest.TestCase):
         iqehist = hh.load(os.path.join(datadir, "graphite-Ei_130-iqe.h5"))
         initdos = hh.load(os.path.join(datadir, "graphite-Ei_300-dos.h5"))
         newdos = sqe2dos.singlephonon_sqe2dos(
-            iqehist, T=300, Ecutoff=125., elastic_E_cutoff=(-30., 15), M=12., initdos=initdos, update_weights=[0., 1.])
+            iqehist, T=300, Ecutoff=110., elastic_E_cutoff=(-30., 15), M=12., initdos=initdos, update_weights=[0., 1.])
         path = os.path.join(here, 'expected_results', 'test1c1-dos.h5')
         # hh.dump(newdos, path)
         expected = hh.load(path)
@@ -109,7 +109,7 @@ class TestCase(unittest.TestCase):
         iqehist = hh.load(os.path.join(datadir, "graphite-Ei_130-iqe.h5"))
         initdos = hh.load(os.path.join(datadir, "graphite-Ei_300-dos.h5"))
         newdos = sqe2dos.singlephonon_sqe2dos(
-            iqehist, T=300, Ecutoff=125., elastic_E_cutoff=(-30., 15), M=12., initdos=initdos, update_weights=[1., 0.])
+            iqehist, T=300, Ecutoff=110., elastic_E_cutoff=(-30., 15), M=12., initdos=initdos, update_weights=[1., 0.])
         path = os.path.join(here, 'expected_results', 'test1c2-dos.h5')
         # hh.dump(newdos, path)
         expected = hh.load(path)
