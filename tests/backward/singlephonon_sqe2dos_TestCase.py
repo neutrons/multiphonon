@@ -53,6 +53,7 @@ class TestCase(unittest.TestCase):
         path = os.path.join(here, 'expected_results', 'test1b-dos.h5')
         expected = hh.load(path)
         self.assert_(np.allclose(DOS.I, expected.I))
+        self.assert_(np.allclose(DOS.E2, expected.E2))
         # plot
         if interactive:
             H.plot(DOS)
@@ -96,10 +97,13 @@ class TestCase(unittest.TestCase):
         expected = hh.load(path)
         self.assert_(np.allclose(newdos.I, expected.I))
         self.assert_(np.allclose(newdos.E, expected.E))
+        self.assert_(np.allclose(newdos.E2, expected.E2))
         # plot
         if interactive:
-            pylab.plot(initdos.E, initdos.I)
-            pylab.plot(newdos.E, newdos.I)
+            pylab.errorbar(initdos.E, initdos.I, initdos.E2**.5, label='init')
+            pylab.errorbar(newdos.E, newdos.I, newdos.E2**.5, label='new')
+            # pylab.errorbar(expected.E, expected.I, expected.E2**.5, label='expected')
+            pylab.legend()
             pylab.show()
         return
         
@@ -115,10 +119,13 @@ class TestCase(unittest.TestCase):
         expected = hh.load(path)
         self.assert_(np.allclose(newdos.I, expected.I))
         self.assert_(np.allclose(newdos.E, expected.E))
+        # self.assert_(np.allclose(newdos.E2, expected.E2))
         # plot
         if interactive:
-            pylab.plot(initdos.E, initdos.I)
-            pylab.plot(newdos.E, newdos.I)
+            pylab.errorbar(initdos.E, initdos.I, initdos.E2**.5, label='init')
+            pylab.errorbar(newdos.E, newdos.I, newdos.E2**.5, label='new')
+            # pylab.errorbar(expected.E, expected.I, expected.E2**.5, label='expected')
+            pylab.legend()
             pylab.show()
         return
         

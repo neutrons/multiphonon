@@ -29,9 +29,9 @@ class TestCase(unittest.TestCase):
     def test1(self):
         "multiphonon.getdos"
         list(getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs")))
-        self.assert_(np.allclose(
-            hh.load('work/final-dos.h5').I,
-            hh.load(os.path.join(here, 'expected_results', 'getdos-test1-final-dos.h5')).I
+        self.assert_(close_hist(
+            hh.load('work/final-dos.h5'),
+            hh.load(os.path.join(here, 'expected_results', 'getdos-test1-final-dos.h5'))
         ))
         return
     
@@ -43,22 +43,26 @@ class TestCase(unittest.TestCase):
             mt_fraction = 0.01,
             workdir='work-MT'
         ))
-        self.assert_(np.allclose(
-            hh.load('work-MT/final-dos.h5').I,
-            hh.load(os.path.join(here, 'expected_results', 'getdos-test2-final-dos.h5')).I
+        self.assert_(close_hist(
+            hh.load('work-MT/final-dos.h5'),
+            hh.load(os.path.join(here, 'expected_results', 'getdos-test2-final-dos.h5'))
         ))
         return
         
     def test3(self):
         "multiphonon.getdos: low T"
         list(getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs"), T=1.5, workdir='work-lowT'))
-        self.assert_(np.allclose(
-            hh.load('work-lowT/final-dos.h5').I,
-            hh.load(os.path.join(here, 'expected_results', 'getdos-test3-final-dos.h5')).I
+        self.assert_(close_hist(
+            hh.load('work-lowT/final-dos.h5'),
+            hh.load(os.path.join(here, 'expected_results', 'getdos-test3-final-dos.h5'))
         ))
         return
         
     pass  # end of TestCase
+
+
+def close_hist(h1, h2):
+    return np.allclose(h1.I, h2.I) and np.allclose(h1.E2, h2.E2)
 
 
 if __name__ == "__main__":

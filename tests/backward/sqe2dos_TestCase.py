@@ -41,8 +41,15 @@ class TestCase(unittest.TestCase):
             for w in ws:
                 assert 'Scaling factor' not in str(w)
 
-        self.assert_(np.allclose(dos.I, hh.load(os.path.join(here, 'expected_results', 'sqe2dos-test2a-final-dos.h5')).I))
+        path = os.path.join(here, 'expected_results', 'sqe2dos-test2a-final-dos.h5')
+        # hh.dump(dos, path)
+        expected = hh.load(path)
+        self.assert_(np.allclose(dos.I, expected.I))
+        self.assert_(np.allclose(dos.E2, expected.E2))
         if interactive:
+            pylab.figure()
+            pylab.errorbar(dos.E, dos.I+dos.I.max()/5., dos.E2**.5, label='new')
+            pylab.errorbar(expected.E, expected.I, expected.E2**.5, label='expected')
             pylab.legend()
             pylab.show()
         return
@@ -82,8 +89,15 @@ class TestCase(unittest.TestCase):
             if interactive:
                 # print '*' * 70
                 pylab.plot(dos.E, dos.I, label='%d' % i)
-        self.assert_(np.allclose(dos.I, hh.load(os.path.join(here, 'expected_results', 'sqe2dos-test2b-final-dos.h5')).I))
+        path = os.path.join(here, 'expected_results', 'sqe2dos-test2b-final-dos.h5')
+        # hh.dump(dos, path)
+        expected = hh.load(path)
+        self.assert_(np.allclose(dos.I, expected.I))
+        self.assert_(np.allclose(dos.E2, expected.E2))
         if interactive:
+            pylab.figure()
+            pylab.errorbar(dos.E, dos.I + dos.I.max()/5, dos.E2**.5, label='new')
+            pylab.errorbar(expected.E, expected.I, expected.E2**.5, label='expected')
             pylab.legend()
             pylab.show()
         return
@@ -104,10 +118,15 @@ class TestCase(unittest.TestCase):
             if interactive:
                 # print '*' * 70
                 pylab.errorbar(dos.E, dos.I, dos.E2**.5, label='%d' % i)
-        self.assert_(np.allclose(dos.I, hh.load(os.path.join(here, 'expected_results', 'sqe2dos-test2c-final-dos.h5')).I))
+        path = os.path.join(here, 'expected_results', 'sqe2dos-test2c-final-dos.h5')
+        # hh.dump(dos, path)
+        expected = hh.load(path)
+        self.assert_(np.allclose(dos.I, expected.I))
+        # self.assert_(np.allclose(dos.E2, expected.E2))
         if interactive:
-            dos = hh.load('work-graphite/final-dos.h5')
-            pylab.errorbar(dos.E, dos.I, dos.E2**.5, label='final')
+            pylab.figure()
+            pylab.errorbar(dos.E, dos.I + dos.I.max()/5, dos.E2**.5, label='new')
+            pylab.errorbar(expected.E, expected.I, expected.E2**.5, label='expected')
             pylab.legend()
             pylab.show()
         return
