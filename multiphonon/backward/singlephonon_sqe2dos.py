@@ -99,6 +99,7 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None, update_weights=N
     dos_in_range.I[:n_small_E] = Eplus[:n_small_E] ** 2 * dos_in_range.I[n_small_E] / Eplus[n_small_E] ** 2
     # keep positive
     dos_in_range.I[dos_in_range.I < 0] = 0
+    dos_in_range.E2[:] = (dos_in_range.I * dos_relative_error)**2
     # DOS range to update should be smaller than SQE E range, so we need to
     Emin = Eplus[0]; Emax = min(Eplus[-1], Ecutoff)
     dos_to_update = dos_in_range[(Emin, min(Eplus[-1], Emax*2))]
