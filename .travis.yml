@@ -28,14 +28,14 @@ before_install:
 
 install:
   - export GIT_FULL_HASH=`git rev-parse HEAD`
+  - export PYTHON_VERSION=2.7
   - conda config --set always_yes true
   - conda update conda
   - conda config --add channels conda-forge
-  - conda create -n testenv pip pytest pytest-cov python=$TRAVIS_PYTHON_VERSION
-  - conda install -n testenv numpy scipy matplotlib
-  - conda install -n testenv -c mcvine histogram
-  - conda install -n testenv -c neutrons ipywe
-  - conda install -n testenv -c mantid mantid-framework=4
+  - conda config --add channels mcvine
+  - conda config --add channels neutrons
+  - conda config --add channels mantid
+  - conda create -n testenv pip pytest pytest-cov python=PYTHON_VERSION numpy scipy matplotlib histogram ipywe mantid-framework=4
   - source activate testenv
   - python setup.py install
   - pip install coveralls
