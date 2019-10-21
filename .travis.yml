@@ -35,7 +35,7 @@ install:
   - conda install -n testenv numpy scipy matplotlib
   - conda install -n testenv -c mcvine histogram
   - conda install -n testenv -c neutrons ipywe
-  - conda install -n testenv -c mantid mantid-framework
+  - conda install -n testenv -c mantid mantid-framework=4
   - source activate testenv
   - python setup.py install
   - pip install coveralls
