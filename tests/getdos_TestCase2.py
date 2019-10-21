@@ -10,6 +10,9 @@ interactive = False
 import os
 datadir = os.path.join(os.path.dirname(__file__), "data")
 
+import imp
+dataurls = imp.load_source('dataurls', os.path.join(datadir, 'dataurls.py'))
+
 from multiphonon.getdos import getDOS
 
 import unittest
@@ -18,8 +21,8 @@ class TestCase(unittest.TestCase):
     def setUp(self):
         dest = os.path.join(datadir, 'ARCS_V_annulus.nxs')
         if os.path.exists(dest): return
-        url = "https://www.dropbox.com/s/tbh4jcwiags410d/ARCS_V_annulus.nxs?dl=1"
-        cmd = 'wget %r -O %r' % (url, dest)
+        url = dataurls.ARCS_V_annulus
+        cmd = 'wget --quiet %r -O %r' % (url, dest)
         if os.system(cmd):
             raise RuntimeError("%s failed" % cmd)
         return

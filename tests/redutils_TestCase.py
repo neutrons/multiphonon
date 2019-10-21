@@ -11,6 +11,9 @@ import os
 here = os.path.dirname(__file__)
 datadir = os.path.join(here, "data")
 
+import imp
+dataurls = imp.load_source('dataurls', os.path.join(datadir, 'dataurls.py'))
+
 import numpy as np, histogram.hdf as hh
 from multiphonon.getdos import getDOS
 
@@ -20,8 +23,8 @@ class TestCase(unittest.TestCase):
     def setUp(self):
         dest = os.path.join(datadir, 'ARCS_V_annulus.nxs')
         if os.path.exists(dest): return
-        url = "https://www.dropbox.com/s/tbh4jcwiags410d/ARCS_V_annulus.nxs?dl=1"
-        cmd = 'wget %r -O %r' % (url, dest)
+        url = dataurls.ARCS_V_annulus
+        cmd = 'wget --quiet %r -O %r' % (url, dest)
         if os.system(cmd):
             raise RuntimeError("%s failed" % cmd)
         return
