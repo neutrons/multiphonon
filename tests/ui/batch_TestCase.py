@@ -11,6 +11,9 @@ import os
 here = os.path.abspath(os.path.dirname(__file__))
 datadir = os.path.join(here, '..', "data")
 
+import imp
+dataurls = imp.load_source('dataurls', os.path.join(datadir, 'dataurls.py'))
+
 import numpy as np, histogram.hdf as hh
 from multiphonon.ui import batch 
 
@@ -20,7 +23,7 @@ class TestCase(unittest.TestCase):
     def setUp(self):
         dest = os.path.join(datadir, 'ARCS_V_annulus.nxs')
         if not os.path.exists(dest):
-            url = "https://www.dropbox.com/s/tbh4jcwiags410d/ARCS_V_annulus.nxs?dl=1"
+            url = dataurls.ARCS_V_annulus
             cmd = 'wget %r -O %r' % (url, dest)
             exec_cmd(cmd)
         # create temp dir
