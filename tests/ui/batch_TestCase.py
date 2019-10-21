@@ -24,7 +24,7 @@ class TestCase(unittest.TestCase):
         dest = os.path.join(datadir, 'ARCS_V_annulus.nxs')
         if not os.path.exists(dest):
             url = dataurls.ARCS_V_annulus
-            cmd = 'wget %r -O %r' % (url, dest)
+            cmd = 'wget --quiet %r -O %r' % (url, dest)
             exec_cmd(cmd)
         # create temp dir
         self.tmpdir = tmpdir = os.path.abspath('tmp.batch')

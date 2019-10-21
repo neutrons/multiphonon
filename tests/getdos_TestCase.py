@@ -24,7 +24,7 @@ class TestCase(unittest.TestCase):
         dest = os.path.join(datadir, 'ARCS_V_annulus.nxs')
         if os.path.exists(dest): return
         url = dataurls.ARCS_V_annulus
-        cmd = 'wget %r -O %r' % (url, dest)
+        cmd = 'wget --quiet %r -O %r' % (url, dest)
         if os.system(cmd):
             raise RuntimeError("%s failed" % cmd)
         return
