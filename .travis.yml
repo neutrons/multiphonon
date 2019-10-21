@@ -35,7 +35,7 @@ install:
   - conda config --add channels mcvine
   - conda config --add channels neutrons
   - conda config --add channels mantid
-  - conda create -n testenv pip pytest pytest-cov python=PYTHON_VERSION numpy scipy matplotlib histogram ipywe mantid-framework=4
+  - conda create -n testenv pip pytest pytest-cov python=$PYTHON_VERSION numpy scipy matplotlib histogram ipywe mantid-framework=4
   - source activate testenv
   - python setup.py install
   - pip install coveralls
