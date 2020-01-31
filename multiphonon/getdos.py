@@ -7,7 +7,7 @@ np.seterr(divide='ignore', invalid='ignore')
 
 def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
            Emin=-100, Emax=100, dE=1.,
-           Qmin=0, Qmax=15., dQ=0.1, T=300, Ecutoff=50., 
+           Qmin=0, Qmax=15., dQ=0.1, T=300, Ecutoff=50.,
            elastic_E_cutoff=(-20., 7), M=50.94,
            C_ms=0.3, Ei=116.446, initdos=None, update_strategy_weights=None,
            workdir='work',
@@ -61,7 +61,7 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
         initial guess of DOS
 
     update_strategy_weights : floats
-        Weights for the update strategies (force continuity, area conservation). 
+        Weights for the update strategies (force continuity, area conservation).
         Useful only if multiple Ei.
 
     work : str
@@ -97,7 +97,7 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
     # create processing engine
     from .backward import sqe2dos
     iterdos = sqe2dos.sqe2dos(
-        newiqe, T=T, Ecutoff=Ecutoff, 
+        newiqe, T=T, Ecutoff=Ecutoff,
         elastic_E_cutoff=elastic_E_cutoff, M=M,
         C_ms=C_ms, Ei=Ei,
         initdos=initdos, update_strategy_weights=update_strategy_weights,
@@ -188,7 +188,7 @@ def _checkEaxis(Emin, Emax, dE):
         "Energy axis modified from %s to %s \n" % (saved, new)
         )
     return new
-    
+
 
 def _normalize_axis_setting(min, max, delta):
     # try to deal with numerical error
@@ -204,6 +204,22 @@ def _md5(s):
 
 
 def raw2iqe(eventnxs, iqe_h5, Eaxis, Qaxis, type):
+    """
+    Read and reduce a raw nxs file.  If the reduced file already exists it will
+    read the existing file rather than recreate it.
+
+    Parameters
+    ----------
+    eventnxs : str
+
+    iqe_h5 : str
+
+    Eaxis : tpl
+
+    Qaxis : tpl
+
+    type : str
+    """
     # if iqe_h5 exists and the parameters do not match, we need to remove the old result
     parameters_fn = os.path.join(os.path.dirname(iqe_h5), 'raw2iqe-%s.params' % type)
     parameters_text = 'nxs=%s\nEaxis=%s\nQxis=%s\n' % (eventnxs, Eaxis, Qaxis)
@@ -217,7 +233,7 @@ def raw2iqe(eventnxs, iqe_h5, Eaxis, Qaxis, type):
             remove_cache = True
     if remove_cache:
         os.remove(iqe_h5)
-    # 
+    #
     from .redutils import reduce
     Emin, Emax, dE = Eaxis
     Emin-=dE/2; Emax-=dE/2 # mantid algo use bin boundaries
@@ -247,7 +263,7 @@ def raw2iqe(eventnxs, iqe_h5, Eaxis, Qaxis, type):
 def _fixEaxis(iqe_h5_path, Eaxis):
     """when iqe is obtained from a nxs or nxspe file where
     tof axis is already converted to E, the reduced data may
-    not have the Eaxis as desired. this method fix it by 
+    not have the Eaxis as desired. this method fix it by
     interpolation
     """
     h = hh.load(iqe_h5_path)
