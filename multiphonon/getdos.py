@@ -77,7 +77,7 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
         Max iteration
 
     """
-    for msg in reduce2iqe(sample_nxs, Emin,Emax,dE, Qmin,Qmax,dQ, mt_nxs, iqe_h5, workdir):
+    for msg in reduce2iqe(sample_nxs, Emin, Emax, dE, Qmin, Qmax, dQ, mt_nxs, iqe_h5, workdir):
         yield msg
     iqe_h5, mtiqe_h5, Qaxis, Eaxis = msg
     iqehist = hh.load(iqe_h5)
@@ -111,14 +111,14 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
         MAX_ITERATION=maxiter)
     doslist = []
     yield "Iterative computation of DOS..."
-    for i,dos in enumerate(iterdos):
+    for i, dos in enumerate(iterdos):
         yield "Finished round #%s" % (i+1,)
         continue
     yield "Done"
     return
 
 
-def reduce2iqe(sample_nxs, Emin,Emax,dE, Qmin,Qmax,dQ, mt_nxs=None, iqe_h5='iqe.h5', workdir='work'):
+def reduce2iqe(sample_nxs, Emin, Emax, dE, Qmin, Qmax, dQ, mt_nxs=None, iqe_h5='iqe.h5', workdir='work'):
     """Reduce sample and (optionally) empty can nxs files and generate I(Q,E) histograms
 
     Inorder to monitor messages, this function returns an iterator.
