@@ -218,12 +218,17 @@ def raw2iqe(eventnxs, iqe_h5, Eaxis, Qaxis, type):
     Parameters
     ----------
     eventnxs : str
+    The raw data file
 
     iqe_h5 : str
-
+    The filename to create from the raw
+    If this file already exits with the correct parameters,  it is simply read.
+    
     Eaxis : tpl
+    A tuple containing  Emin, Emax, Edelta
 
     Qaxis : tpl
+    A tuple containing  Qmin, Qmax, Qdelta
 
     type : str
     """
