@@ -14,7 +14,8 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
            iqe_h5="iqe.h5", maxiter=10):
     """Compute DOS from direct-geometry powder neutron scattering spectrum
     by performing multiphonon and multiple-scattering corrections.
-    This is an iterator. Please call it with an evaluation of the iteration.
+    Inorder to monitor messages, this function returns an iterator.
+    Please call it with an evaluation of an iteration.
     For example:
 
       >>> output = list(getDOS(...))
@@ -67,6 +68,11 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
     work : str
         Work directory
 
+    iqe_h5 : str
+        A name of the file to hold the reduced data.  If this file already
+        exits, in the work directory, with the correct parameters the it is
+        loaded rather than re reduced.
+
     maxiter: int
         Max iteration
 
@@ -115,7 +121,8 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
 def reduce2iqe(sample_nxs, Emin,Emax,dE, Qmin,Qmax,dQ, mt_nxs=None, iqe_h5='iqe.h5', workdir='work'):
     """Reduce sample and (optionally) empty can nxs files and generate I(Q,E) histograms
 
-    This is an iterator of processing messages. Please call in this form:
+    Inorder to monitor messages, this function returns an iterator.
+    Please call it using this form:
 
         >>> for msg in reduce2iqe(...): print msg
 
