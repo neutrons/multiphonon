@@ -223,7 +223,7 @@ def raw2iqe(eventnxs, iqe_h5, Eaxis, Qaxis, type):
     iqe_h5 : str
     The filename to create from the raw
     If this file already exits with the correct parameters,  it is simply read.
-    
+
     Eaxis : tpl
     A tuple containing  Emin, Emax, Edelta
 
@@ -275,7 +275,7 @@ def raw2iqe(eventnxs, iqe_h5, Eaxis, Qaxis, type):
 def _fixEaxis(iqe_h5_path, Eaxis):
     """when iqe is obtained from a nxs or nxspe file where
     tof axis is already converted to E, the reduced data may
-    not have the Eaxis as desired. this method fix it by
+    not have the Eaxis as desired. this method fixes it by
     interpolation
     """
     h = hh.load(iqe_h5_path)
