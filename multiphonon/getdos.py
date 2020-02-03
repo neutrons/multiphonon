@@ -199,7 +199,7 @@ def _checkEaxis(Emin, Emax, dE):
 
 def _normalize_axis_setting(min, max, delta):
     # try to deal with numerical error
-    nsteps = round( 1.*(max-min)/delta )
+    nsteps = round(1.*(max-min)/delta)
     if abs(max - (min+nsteps*delta)) < 1e-5:
         max = max + delta/1.e4
     return min, max, delta
@@ -269,7 +269,6 @@ def raw2iqe(eventnxs, iqe_h5, Eaxis, Qaxis, type):
     # save parameters
     open(parameters_fn, 'wt').write(parameters_text)
     return
-
 
 
 def _fixEaxis(iqe_h5_path, Eaxis):
