@@ -119,7 +119,8 @@ def getDOS(sample_nxs, mt_nxs=None, mt_fraction=0.9, const_bg_fraction=0.,
 
 
 def reduce2iqe(sample_nxs, Emin, Emax, dE, Qmin, Qmax, dQ, mt_nxs=None, iqe_h5='iqe.h5', workdir='work'):
-    """Reduce sample and (optionally) empty can nxs files and generate I(Q,E) histograms
+    """Reduce sample and (optionally) empty can nxs files and generate I(Q,E)
+    histograms.
 
     Inorder to monitor messages, this function returns an iterator.
     Please call it using this form:
@@ -211,9 +212,8 @@ def _md5(s):
 
 
 def raw2iqe(eventnxs, iqe_h5, Eaxis, Qaxis, type):
-    """
-    Read and reduce a raw nxs file.  If the reduced file already exists it will
-    read the existing file rather than recreate it.
+    """Read and reduce a raw nxs file.  If the reduced file already exists it
+    will read the existing file rather than recreate it.
 
     Parameters
     ----------
@@ -232,7 +232,8 @@ def raw2iqe(eventnxs, iqe_h5, Eaxis, Qaxis, type):
 
     type : str
     """
-    # if iqe_h5 exists and the parameters do not match, we need to remove the old result
+    # if iqe_h5 exists and the parameters do not match,
+    # we need to remove the old result
     parameters_fn = os.path.join(os.path.dirname(iqe_h5), 'raw2iqe-%s.params' % type)
     parameters_text = 'nxs=%s\nEaxis=%s\nQxis=%s\n' % (eventnxs, Eaxis, Qaxis)
     remove_cache = False
