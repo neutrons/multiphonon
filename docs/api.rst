@@ -1,8 +1,8 @@
 API
 ===
 
-The multiphonon package provides tools to convert powder spectrum
-meausred at direct-geometry inelastic neutron spectrometers to phonon density of states (DOS).
+The multiphonon package provides tools to convert powder spectra
+measured at direct-geometry inelastic neutron spectrometers to phonon density of states (DOS).
 
 Most users will only need functions in  `Convenient functions`_, which reduces raw data in the form of NeXus files to I(Q,E) using Mantid,
 and then obtain phonon DOS. 
