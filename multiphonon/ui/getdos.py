@@ -122,7 +122,7 @@ class GetEiT(wiz.Step):
         return True
     
     def nextStep(self):
-        print "Done."
+        print("Done.")
 
 def round2(a, digits = 1):
     d = 10**(np.floor(np.log10(a)) - digits+1)
@@ -201,9 +201,9 @@ class GetQAxis(wiz.Step):
             mt_nxs=context.mt_nxs,
             workdir=context.workdir,
         )
-        for msg in r2i:print msg
+        for msg in r2i:print(msg)
         context.iqe_h5, context.mtiqe_h5, context.Qaxis, context.Eaxis = msg
-        print "Done."
+        print("Done.")
 
 
 # Wizard: GetDOS 

@@ -84,7 +84,7 @@ def notebookUI(samplenxs, mtnxs, initdos=None, options=None, load_options_path=N
                   open(os.path.join(workdir, 'getdos-opts.yaml'), 'wt'))
         maxiter = 10
         close = lambda w: w.close()
-        map(close, w_all)
+        list(map(close, w_all))
         from ..getdos import getDOS
         log_progress(getDOS(samplenxs, mt_nxs=mtnxs, maxiter=maxiter, **kargs), every=1, size=maxiter+2)
         return
@@ -139,7 +139,7 @@ def log_progress(sequence, every=None, size=None):
                     label.value = 'Running: {index} / ?: {msg}...'.format(index=index, msg=msg)
                 else:
                     progress.value = index
-                    label.value = u'Running: {index} / {size}: {msg}...'.format(
+                    label.value = 'Running: {index} / {size}: {msg}...'.format(
                         index=index,
                         size=size,
                         msg=msg

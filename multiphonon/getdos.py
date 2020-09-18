@@ -1,5 +1,5 @@
 import histogram.hdf as hh, numpy as np
-import os
+import os, sys
 
 # hide the warnings on divide by zero etc
 np.seterr(divide='ignore', invalid='ignore')
@@ -256,9 +256,9 @@ def raw2iqe(eventnxs, iqe_h5, Eaxis, Qaxis, type):
     if not os.path.exists(iqe_h5):
         qaxis = Qmin, dQ, Qmax
         eaxis = Emin, dE, Emax
-        if isinstance(eventnxs, unicode):
+        if sys.version_info < (3,0) and isinstance(eventnxs, unicode):
             eventnxs = eventnxs.encode()
-        if isinstance(iqe_h5, unicode):
+        if sys.version_info < (3,0) and isinstance(iqe_h5, unicode):
             iqe_h5 = iqe_h5.encode()
         reduce(eventnxs, qaxis, iqe_h5, eaxis=eaxis, tof2E='guess', ibnorm='ByCurrent')
     else:

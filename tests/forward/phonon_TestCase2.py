@@ -25,7 +25,7 @@ class TestCase(unittest.TestCase):
         T = 300
         beta = 1./(T*kelvin2mev)
         dwexp = DWExp(Q, M, E,g, beta, dE)
-        print dwexp
+        print(dwexp)
         return
         
         

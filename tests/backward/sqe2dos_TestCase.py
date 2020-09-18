@@ -44,8 +44,8 @@ class TestCase(unittest.TestCase):
         path = os.path.join(here, 'expected_results', 'sqe2dos-test2a-final-dos.h5')
         # hh.dump(dos, path)
         expected = hh.load(path)
-        self.assert_(np.allclose(dos.I, expected.I))
-        self.assert_(np.allclose(dos.E2, expected.E2))
+        self.assertTrue(np.allclose(dos.I, expected.I))
+        self.assertTrue(np.allclose(dos.E2, expected.E2))
         if interactive:
             pylab.figure()
             pylab.errorbar(dos.E, dos.I+dos.I.max()/5., dos.E2**.5, label='new')
@@ -92,8 +92,8 @@ class TestCase(unittest.TestCase):
         path = os.path.join(here, 'expected_results', 'sqe2dos-test2b-final-dos.h5')
         # hh.dump(dos, path)
         expected = hh.load(path)
-        self.assert_(np.allclose(dos.I, expected.I))
-        self.assert_(np.allclose(dos.E2, expected.E2))
+        self.assertTrue(np.allclose(dos.I, expected.I))
+        self.assertTrue(np.allclose(dos.E2, expected.E2))
         if interactive:
             pylab.figure()
             pylab.errorbar(dos.E, dos.I + dos.I.max()/5, dos.E2**.5, label='new')
@@ -121,7 +121,7 @@ class TestCase(unittest.TestCase):
         path = os.path.join(here, 'expected_results', 'sqe2dos-test2c-final-dos.h5')
         # hh.dump(dos, path)
         expected = hh.load(path)
-        self.assert_(np.allclose(dos.I, expected.I))
+        self.assertTrue(np.allclose(dos.I, expected.I))
         # self.assert_(np.allclose(dos.E2, expected.E2))
         if interactive:
             pylab.figure()

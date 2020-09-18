@@ -29,7 +29,7 @@ def process(sample_nxs_list, mt_nxs_list, parameter_yaml):
             os.makedirs(workdir)
         log = open(os.path.join(workdir, 'log.getdos'), 'wt')
         kargs['workdir'] = workdir
-        print "* Processing %s, %s" % (sample_nxs, mt_nxs)
+        print("* Processing %s, %s" % (sample_nxs, mt_nxs))
         for msg in getDOS(**kargs):
             log.write('%s\n' % (msg,))
         continue

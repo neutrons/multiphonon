@@ -49,7 +49,7 @@ class TestCase(unittest.TestCase):
             warnings.simplefilter('always')
             list(getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs"), workdir=work))
             for w in ws:
-                self.assert_('Reusing old reduction' not in str(w))
+                self.assertTrue('Reusing old reduction' not in str(w))
                 continue
         # get dos again, this time we should see a warning
         with warnings.catch_warnings(record=True) as ws:
@@ -60,17 +60,17 @@ class TestCase(unittest.TestCase):
                 warned = warned or ('Reusing old reduction' in str(w))
                 if warned: break
                 continue
-            self.assert_(warned)
+            self.assertTrue(warned)
         # get dos using different settings. should not see warning
         with warnings.catch_warnings(record=True) as ws:
             warnings.simplefilter('always')
             list(getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs"), Emin=0, workdir=work))
             for w in ws:
-                self.assert_('Reusing old reduction' not in str(w))
+                self.assertTrue('Reusing old reduction' not in str(w))
                 continue
             import histogram.hdf as hh
             iqe = hh.load(os.path.join(work, 'iqe.h5'))
-            self.assert_(iqe.E[0]==0.)
+            self.assertTrue(iqe.E[0]==0.)
         return
         
     pass  # end of TestCase

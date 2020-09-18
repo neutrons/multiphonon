@@ -32,7 +32,7 @@ class TestCase(unittest.TestCase):
     def test1(self):
         "multiphonon.getdos"
         list(getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs")))
-        self.assert_(close_hist(
+        self.assertTrue(close_hist(
             hh.load('work/final-dos.h5'),
             hh.load(os.path.join(here, 'expected_results', 'getdos-test1-final-dos.h5'))
         ))
@@ -46,7 +46,7 @@ class TestCase(unittest.TestCase):
             mt_fraction = 0.01,
             workdir='work-MT'
         ))
-        self.assert_(close_hist(
+        self.assertTrue(close_hist(
             hh.load('work-MT/final-dos.h5'),
             hh.load(os.path.join(here, 'expected_results', 'getdos-test2-final-dos.h5'))
         ))
@@ -55,7 +55,7 @@ class TestCase(unittest.TestCase):
     def test3(self):
         "multiphonon.getdos: low T"
         list(getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs"), T=1.5, workdir='work-lowT'))
-        self.assert_(close_hist(
+        self.assertTrue(close_hist(
             hh.load('work-lowT/final-dos.h5'),
             hh.load(os.path.join(here, 'expected_results', 'getdos-test3-final-dos.h5'))
         ))

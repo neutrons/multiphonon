@@ -88,7 +88,7 @@ class TestCase(unittest.TestCase):
 
 
     def _check(self, a1, a2):
-        self.assert_(np.allclose(a1, a2))
+        self.assertTrue(np.allclose(a1, a2))
         
     pass  # end of TestCase
 

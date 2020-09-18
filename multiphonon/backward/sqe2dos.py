@@ -293,7 +293,7 @@ def normalizeExpSQE_inelonly(sqe, dos, M, beta, elastic_E_cutoff):
 """
 
 # 
-from singlephonon_sqe2dos import sqe2dos as singlephonon_sqe2dos
+from .singlephonon_sqe2dos import sqe2dos as singlephonon_sqe2dos
 from ._sqe2dos_script_templates import \
     plot_intermediate_result_sqe_code,plot_intermediate_result_se_code, \
     plot_dos_iteration_code, plot_residual_code
