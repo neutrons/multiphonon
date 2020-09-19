@@ -17,7 +17,6 @@ from dos import loadDOS
 
 class TestCase(unittest.TestCase):
 
-
     def test1a(self):
         S = hh.load(os.path.join(datadir, "V-iqe-dE_0.2.h5"))
         DOS = sqe2dos.singlephonon_sqe2dos(
@@ -30,14 +29,13 @@ class TestCase(unittest.TestCase):
             pylab.plot(E, g)
             pylab.show()
         return
-        
+
     pass  # end of TestCase
 
 
 if __name__ == "__main__":
-    global interactive
     interactive = True
     import pylab
     unittest.main()
-    
-# End of file 
+
+# End of file
