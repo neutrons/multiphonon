@@ -302,7 +302,7 @@ def AnE_from_n_1(A1E, Anm1E, dE):
     res = np.inner(M,Y)
     del M
     res *= dE
-    start = len(A1E)/2+1
+    start = len(A1E)//2+1
     t = res[start:start + len(A1E)]
     # XXX: normalize?
     t/= t.sum() * dE
