@@ -214,7 +214,8 @@ def isclose(dos1, dos2, TOLERATION):
 
 
 def create_script(fn, content):
-    open(fn, 'wt').write(content)
+    with open(fn, 'wt') as stream:
+        stream.write(content)
     import stat
     st = os.stat(fn)
     os.chmod(fn, st.st_mode | stat.S_IEXEC)

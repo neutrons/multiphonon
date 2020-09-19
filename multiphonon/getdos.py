@@ -239,7 +239,8 @@ def raw2iqe(eventnxs, iqe_h5, Eaxis, Qaxis, type):
     remove_cache = False
     if os.path.exists(iqe_h5):
         if os.path.exists(parameters_fn):
-            saved = open(parameters_fn).read()
+            with open(parameters_fn) as stream:
+                saved = stream.read()
             if saved != parameters_text:
                 remove_cache = True
         else:
@@ -268,7 +269,8 @@ def raw2iqe(eventnxs, iqe_h5, Eaxis, Qaxis, type):
     # fix energy axis if necessary
     _fixEaxis(iqe_h5, Eaxis)
     # save parameters
-    open(parameters_fn, 'wt').write(parameters_text)
+    with open(parameters_fn, 'wt') as stream:
+        stream.write(parameters_text)
     return
 
 

@@ -286,7 +286,8 @@ class GetParameters(wiz.Step):
         workdir = context.workdir
         if not os.path.exists(workdir): os.makedirs(workdir)
         # save kargs sent to getDOS. just for the record
-        yaml.dump(kargs, open(os.path.join(workdir, 'getdos-kargs.yaml'), 'wt'))
+        with open(os.path.join(workdir, 'getdos-kargs.yaml'), 'wt') as stream:
+            yaml.dump(kargs, stream)
         from ..getdos import getDOS
         from .getdos0 import log_progress
         log_progress(getDOS(**kargs), every=1, size=context.maxiter+2)

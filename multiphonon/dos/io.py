@@ -10,7 +10,8 @@ def fromascii(datapath, x_unit=None):
     "read dos from an ascii data file"
     import warnings, numpy as np
     # read data 
-    lines = open(datapath)
+    with open(datapath) as stream:
+        lines = stream.readlines()
     data = []; comments = []
     for line in lines:
         line = line.strip()

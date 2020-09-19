@@ -7,7 +7,8 @@ def notebookUI(samplenxs, mtnxs, initdos=None, options=None, load_options_path=N
                 options, load_options_path)
         )
     if load_options_path:
-        options = yaml.load(open(load_options_path))
+        with open(load_options_path) as stream:
+            options = yaml.load(stream)
     if options is None:
         options = default_options
     #
@@ -80,8 +81,8 @@ def notebookUI(samplenxs, mtnxs, initdos=None, options=None, load_options_path=N
         options = dict(kargs)
         options['ElasticPeakMin']=w_ElasticPeakMin.value
         options['ElasticPeakMax']=w_ElasticPeakMax.value
-        yaml.dump(options, 
-                  open(os.path.join(workdir, 'getdos-opts.yaml'), 'wt'))
+        with open(os.path.join(workdir, 'getdos-opts.yaml'), 'wt') as stream:
+            yaml.dump(options, stream)
         maxiter = 10
         close = lambda w: w.close()
         list(map(close, w_all))
