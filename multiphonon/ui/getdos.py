@@ -201,6 +201,8 @@ class GetQAxis(wiz.Step):
             mt_nxs=context.mt_nxs,
             workdir=context.workdir,
         )
+        # reduce2iqe yields messages to report progress
+        # the last item it yeids contains information we want to keep in the context
         for msg in r2i:print(msg)
         context.iqe_h5, context.mtiqe_h5, context.Qaxis, context.Eaxis = msg
         print("Done.")
