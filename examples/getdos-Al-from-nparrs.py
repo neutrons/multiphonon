@@ -43,7 +43,7 @@ iterdos = sqe2dos.sqe2dos(
     C_ms=0.2, Ei=80., workdir=workdir)
 # process and plot
 for i, dos in enumerate(iterdos): 
-    print "* Iteration", i
+    print("* Iteration", i)
     if not headless:
         plt.plot(dos.E, dos.I, label='%d' % i)
     continue
@@ -52,4 +52,4 @@ if not headless:
     plt.legend()
     plt.show()
 
-print "Intermediate and final results are stored in directory %r" % workdir
+print("Intermediate and final results are stored in directory %r" % workdir)

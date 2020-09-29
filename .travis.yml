@@ -5,6 +5,7 @@ language: python
 
 python:
   - 2.7
+  - 3.6
 
 branches:
   only:
@@ -30,21 +31,20 @@ before_install:
 
 install:
   - export GIT_FULL_HASH=`git rev-parse HEAD`
-  - export PYTHON_VERSION=2.7
   - conda config --set always_yes true
   - conda update conda
   - conda config --add channels conda-forge
   - conda config --add channels mcvine
   - conda config --add channels neutrons
   - conda config --add channels mantid
-  - conda create -n testenv pip pytest pytest-cov python=$PYTHON_VERSION numpy scipy matplotlib histogram ipywe mantid-framework=4
+  - conda create -n testenv pip pytest pytest-cov python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib histogram ipywe mantid-framework=4
   - source activate testenv
   - python setup.py install
   - pip install coveralls
 #  - pip install codecov
 
 script:
-   - travis_wait 60 py.test --cov=multiphonon tests
+   - py.test -s --cov=multiphonon tests
    - python examples/getdos-Al.py
    - python examples/getdos-Al-from-nparrs.py
 # the following were run standalone but now all included in the cmd above.

@@ -22,7 +22,7 @@ class TestCase(unittest.TestCase):
         # expand E a bit
         E = numpy.arange(E[0], 500, dE)
         g = numpy.concatenate((g, numpy.zeros(len(E)-len(g))))
-        
+
         g/=g.sum()*dE
         from multiphonon.forward.phonon import computeAnESet
         kelvin2mev = 0.0862
@@ -35,8 +35,7 @@ class TestCase(unittest.TestCase):
                 continue
             pylab.show()
         return
-        
-        
+
     def test2(self):
         "multiphonon.forward.phonon.sqe: UN N dos"
         E, g= readdos()
@@ -50,7 +49,7 @@ class TestCase(unittest.TestCase):
         if interactive:
             plot(iqe)
         return
-        
+
     pass  # end of TestCase
 
 
@@ -64,7 +63,6 @@ def readdos():
 
 
 if __name__ == "__main__":
-    global interactive
     interactive = True
     unittest.main()
     

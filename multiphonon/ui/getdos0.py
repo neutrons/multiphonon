@@ -7,7 +7,8 @@ def notebookUI(samplenxs, mtnxs, initdos=None, options=None, load_options_path=N
                 options, load_options_path)
         )
     if load_options_path:
-        options = yaml.load(open(load_options_path))
+        with open(load_options_path) as stream:
+            options = yaml.load(stream)
     if options is None:
         options = default_options
     #
@@ -80,11 +81,11 @@ def notebookUI(samplenxs, mtnxs, initdos=None, options=None, load_options_path=N
         options = dict(kargs)
         options['ElasticPeakMin']=w_ElasticPeakMin.value
         options['ElasticPeakMax']=w_ElasticPeakMax.value
-        yaml.dump(options, 
-                  open(os.path.join(workdir, 'getdos-opts.yaml'), 'wt'))
+        with open(os.path.join(workdir, 'getdos-opts.yaml'), 'wt') as stream:
+            yaml.dump(options, stream)
         maxiter = 10
         close = lambda w: w.close()
-        map(close, w_all)
+        list(map(close, w_all))
         from ..getdos import getDOS
         log_progress(getDOS(samplenxs, mt_nxs=mtnxs, maxiter=maxiter, **kargs), every=1, size=maxiter+2)
         return
@@ -139,7 +140,7 @@ def log_progress(sequence, every=None, size=None):
                     label.value = 'Running: {index} / ?: {msg}...'.format(index=index, msg=msg)
                 else:
                     progress.value = index
-                    label.value = u'Running: {index} / {size}: {msg}...'.format(
+                    label.value = 'Running: {index} / {size}: {msg}...'.format(
                         index=index,
                         size=size,
                         msg=msg

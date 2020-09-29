@@ -32,7 +32,7 @@ class TestCase(unittest.TestCase):
         # compare to the original dos data
         E1, g1 = loadDOS()
         ginterp = np.interp(E1, E, g)
-        self.assert_(np.allclose(g1, ginterp))
+        self.assertTrue(np.allclose(g1, ginterp))
         # plot
         if interactive:
             import pylab
@@ -41,8 +41,7 @@ class TestCase(unittest.TestCase):
             pylab.legend()
             pylab.show()
         return
-        
-        
+
     def test1b(self):
         "singlephonon_sqe2dos: exp vanadium SQE -> DOS"
         iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
@@ -52,14 +51,13 @@ class TestCase(unittest.TestCase):
             newiqe, T=300, Ecutoff=65., elastic_E_cutoff=(-20., 6.7), M=50.94)
         path = os.path.join(here, 'expected_results', 'test1b-dos.h5')
         expected = hh.load(path)
-        self.assert_(np.allclose(DOS.I, expected.I))
-        self.assert_(np.allclose(DOS.E2, expected.E2))
+        self.assertTrue(np.allclose(DOS.I, expected.I))
+        self.assertTrue(np.allclose(DOS.E2, expected.E2))
         # plot
         if interactive:
             H.plot(DOS)
         return
-        
-        
+
     def test1b2(self):
         "singlephonon_sqe2dos: check energy axis"
         iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
@@ -70,8 +68,7 @@ class TestCase(unittest.TestCase):
             DOS = sqe2dos.singlephonon_sqe2dos(
                 newiqe, T=300, Ecutoff=65., elastic_E_cutoff=(-20., 6.7), M=50.94)
         return
-        
-        
+
     def test1c(self):
         "singlephonon_sqe2dos: partial update"
         iqehist = hh.load(os.path.join(datadir, "graphite-Ei_130-iqe.h5"))
@@ -84,8 +81,7 @@ class TestCase(unittest.TestCase):
             pylab.plot(newdos.E, newdos.I)
             pylab.show()
         return
-        
-        
+
     def test1c1(self):
         "singlephonon_sqe2dos: partial update -- keep area"
         iqehist = hh.load(os.path.join(datadir, "graphite-Ei_130-iqe.h5"))
@@ -95,9 +91,9 @@ class TestCase(unittest.TestCase):
         path = os.path.join(here, 'expected_results', 'test1c1-dos.h5')
         # hh.dump(newdos, path)
         expected = hh.load(path)
-        self.assert_(np.allclose(newdos.I, expected.I))
-        self.assert_(np.allclose(newdos.E, expected.E))
-        self.assert_(np.allclose(newdos.E2, expected.E2))
+        self.assertTrue(np.allclose(newdos.I, expected.I))
+        self.assertTrue(np.allclose(newdos.E, expected.E))
+        self.assertTrue(np.allclose(newdos.E2, expected.E2))
         # plot
         if interactive:
             pylab.errorbar(initdos.E, initdos.I, initdos.E2**.5, label='init')
@@ -106,8 +102,7 @@ class TestCase(unittest.TestCase):
             pylab.legend()
             pylab.show()
         return
-        
-        
+
     def test1c2(self):
         "singlephonon_sqe2dos: partial update -- force continuous"
         iqehist = hh.load(os.path.join(datadir, "graphite-Ei_130-iqe.h5"))
@@ -117,8 +112,8 @@ class TestCase(unittest.TestCase):
         path = os.path.join(here, 'expected_results', 'test1c2-dos.h5')
         # hh.dump(newdos, path)
         expected = hh.load(path)
-        self.assert_(np.allclose(newdos.I, expected.I))
-        self.assert_(np.allclose(newdos.E, expected.E))
+        self.assertTrue(np.allclose(newdos.I, expected.I))
+        self.assertTrue(np.allclose(newdos.E, expected.E))
         # self.assert_(np.allclose(newdos.E2, expected.E2))
         # plot
         if interactive:
@@ -128,8 +123,7 @@ class TestCase(unittest.TestCase):
             pylab.legend()
             pylab.show()
         return
-        
-        
+
     def test1d(self):
         "singlephonon_sqe2dos: partial update -- warnings"
         iqehist = hh.load(os.path.join(datadir, "graphite-Ei_30-iqe.h5"))
@@ -142,20 +136,18 @@ class TestCase(unittest.TestCase):
             for w in ws:
                 has_scaling_factor_warning = has_scaling_factor_warning or ('Scaling factor' in str(w))
                 continue
-            self.assert_(has_scaling_factor_warning)
+            self.assertTrue(has_scaling_factor_warning)
         # plot
         if interactive:
             pylab.plot(initdos.E, initdos.I)
             pylab.plot(newdos.E, newdos.I)
             pylab.show()
         return
-        
-        
+
     pass  # end of TestCase
 
 
 if __name__ == "__main__":
-    global interactive
     interactive = True
     import pylab
     unittest.main()

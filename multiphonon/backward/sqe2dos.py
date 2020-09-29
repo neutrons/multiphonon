@@ -214,7 +214,8 @@ def isclose(dos1, dos2, TOLERATION):
 
 
 def create_script(fn, content):
-    open(fn, 'wt').write(content)
+    with open(fn, 'wt') as stream:
+        stream.write(content)
     import stat
     st = os.stat(fn)
     os.chmod(fn, st.st_mode | stat.S_IEXEC)
@@ -293,7 +294,7 @@ def normalizeExpSQE_inelonly(sqe, dos, M, beta, elastic_E_cutoff):
 """
 
 # 
-from singlephonon_sqe2dos import sqe2dos as singlephonon_sqe2dos
+from .singlephonon_sqe2dos import sqe2dos as singlephonon_sqe2dos
 from ._sqe2dos_script_templates import \
     plot_intermediate_result_sqe_code,plot_intermediate_result_se_code, \
     plot_dos_iteration_code, plot_residual_code

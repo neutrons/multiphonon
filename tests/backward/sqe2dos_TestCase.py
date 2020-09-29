@@ -27,7 +27,7 @@ class TestCase(unittest.TestCase):
         iterdos = sqe2dos.sqe2dos(
             newiqe, T=300, Ecutoff=55., elastic_E_cutoff=(-12., 6.7), M=50.94,
             C_ms=.2, Ei=120., workdir='work-V')
-        
+
         with warnings.catch_warnings(record=True) as ws:
             warnings.simplefilter('always')
             for i, dos in enumerate(iterdos):
@@ -44,8 +44,8 @@ class TestCase(unittest.TestCase):
         path = os.path.join(here, 'expected_results', 'sqe2dos-test2a-final-dos.h5')
         # hh.dump(dos, path)
         expected = hh.load(path)
-        self.assert_(np.allclose(dos.I, expected.I))
-        self.assert_(np.allclose(dos.E2, expected.E2))
+        self.assertTrue(np.allclose(dos.I, expected.I))
+        self.assertTrue(np.allclose(dos.E2, expected.E2))
         if interactive:
             pylab.figure()
             pylab.errorbar(dos.E, dos.I+dos.I.max()/5., dos.E2**.5, label='new')
@@ -53,8 +53,7 @@ class TestCase(unittest.TestCase):
             pylab.legend()
             pylab.show()
         return
-        
-        
+
     def test2a2(self):
         "sqe2dos: check energy axis"
         iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
@@ -72,8 +71,7 @@ class TestCase(unittest.TestCase):
                     # print '*' * 70
                     pylab.plot(dos.E, dos.I, label='%d' % i)
         return
-        
-        
+
     def test2b(self):
         iqehist = hh.load(os.path.join(datadir, "Al-iqe.h5"))
         from multiphonon.sqe import interp
@@ -92,8 +90,8 @@ class TestCase(unittest.TestCase):
         path = os.path.join(here, 'expected_results', 'sqe2dos-test2b-final-dos.h5')
         # hh.dump(dos, path)
         expected = hh.load(path)
-        self.assert_(np.allclose(dos.I, expected.I))
-        self.assert_(np.allclose(dos.E2, expected.E2))
+        self.assertTrue(np.allclose(dos.I, expected.I))
+        self.assertTrue(np.allclose(dos.E2, expected.E2))
         if interactive:
             pylab.figure()
             pylab.errorbar(dos.E, dos.I + dos.I.max()/5, dos.E2**.5, label='new')
@@ -101,8 +99,7 @@ class TestCase(unittest.TestCase):
             pylab.legend()
             pylab.show()
         return
-        
-        
+
     def test2c(self):
         iqehist = hh.load(os.path.join(datadir, "graphite-Ei_130-iqe.h5"))
         initdos = hh.load(os.path.join(datadir, "graphite-Ei_300-dos.h5"))
@@ -121,7 +118,7 @@ class TestCase(unittest.TestCase):
         path = os.path.join(here, 'expected_results', 'sqe2dos-test2c-final-dos.h5')
         # hh.dump(dos, path)
         expected = hh.load(path)
-        self.assert_(np.allclose(dos.I, expected.I))
+        self.assertTrue(np.allclose(dos.I, expected.I))
         # self.assert_(np.allclose(dos.E2, expected.E2))
         if interactive:
             pylab.figure()
@@ -130,8 +127,7 @@ class TestCase(unittest.TestCase):
             pylab.legend()
             pylab.show()
         return
-        
-        
+
     def test2c2(self):
         iqehist = hh.load(os.path.join(datadir, "DJX-iqe-Ei_20.h5"))
         # iqehist -= hh.load(os.path.join(datadir, "DJX-mtiqe-Ei_20.h5"))*(0.1, 0)
@@ -149,15 +145,13 @@ class TestCase(unittest.TestCase):
                 # print '*' * 70
                 pylab.errorbar(dos.E, dos.I, dos.E2**.5, label='%d' % i)
         return
-        
-        
+
     pass  # end of TestCase
 
 
 if __name__ == "__main__":
-    global interactive
     interactive = True
     import pylab
     unittest.main()
-    
+
 # End of file 

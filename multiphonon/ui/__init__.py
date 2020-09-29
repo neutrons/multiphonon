@@ -26,10 +26,12 @@ class Context:
     # yaml IO. requirement: all properties are simple as strs, ints, floats
     def to_yaml(self, path):
         d = self.to_dict()
-        yaml.dump(d, open(path, 'wt'))
+        with open(path, 'wt') as stream:
+            yaml.dump(d, stream)
         return
     def from_yaml(self, path):
-        d = yaml.load(open(path))
+        with open(path) as stream:
+            d = yaml.load(stream)
         for k, v in d.items():
             setattr(self, k,v)
             continue

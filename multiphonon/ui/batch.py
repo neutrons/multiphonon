@@ -27,11 +27,11 @@ def process(sample_nxs_list, mt_nxs_list, parameter_yaml):
         workdir = 'work-%s,%s' % (os.path.basename(sample_nxs), os.path.basename(mt_nxs) if mt_nxs else mt_nxs)
         if not os.path.exists(workdir):
             os.makedirs(workdir)
-        log = open(os.path.join(workdir, 'log.getdos'), 'wt')
-        kargs['workdir'] = workdir
-        print "* Processing %s, %s" % (sample_nxs, mt_nxs)
-        for msg in getDOS(**kargs):
-            log.write('%s\n' % (msg,))
+        with open(os.path.join(workdir, 'log.getdos'), 'wt') as log:
+            kargs['workdir'] = workdir
+            print("* Processing %s, %s" % (sample_nxs, mt_nxs))
+            for msg in getDOS(**kargs):
+                log.write('%s\n' % (msg,))
         continue
 
 # End of file 

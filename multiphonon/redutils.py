@@ -1,3 +1,5 @@
+import os, sys
+
 def _createDefaultMantidUserConfig(facility='SNS'):
     # create default Mantid user configuration for DEMO purpose.
     import os
@@ -15,14 +17,14 @@ _createDefaultMantidUserConfig()
 
 mantid_checked = False
 def _checkMantid():
-    print "* Checking Mantid ..."
+    print("* Checking Mantid ...")
     import subprocess as sp, shlex
     sp.call(shlex.split("python -c 'import matplotlib, mantid'"), stdout=sp.PIPE, stderr=sp.PIPE) # sometimes mantid import for the first time may fail
     if sp.call(shlex.split("python -c 'import matplotlib, mantid'")):
         raise RuntimeError("Please install mantid")
     global mantid_checked
     mantid_checked = True
-    print "  - Done."
+    print("  - Done.")
     return
 if not mantid_checked:
     _checkMantid()
@@ -71,6 +73,8 @@ def reduce(nxsfile, qaxis, outfile, use_ei_guess=False, ei_guess=None, eaxis=Non
         cmd = 'h5ls %s' % nxsfile
         import subprocess as sp, shlex
         o = sp.check_output(shlex.split(cmd)).strip().split()[0]
+        if sys.version_info >= (3,0) and isinstance(o, bytes):
+            o = o.decode()
         tof2E = o == 'entry'
     if tof2E:
         if use_ei_guess:
@@ -90,9 +94,8 @@ def reduce(nxsfile, qaxis, outfile, use_ei_guess=False, ei_guess=None, eaxis=Non
                 IncidentBeamNormalisation=ibnorm,
                 )
         reduced = mtd['reduced']
-    else: 
+    else:
         reduced = Load(nxsfile)
-        
     # get eaxis info from mtd workspace, if necessary
     if eaxis is None:
         Edim = reduced.getXDimension()

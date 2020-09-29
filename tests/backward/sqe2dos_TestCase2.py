@@ -17,7 +17,6 @@ from dos import loadDOS
 
 class TestCase(unittest.TestCase):
 
-
     def test2a(self):
         "sqe2dos: V exp"
         iqehist = hh.load(os.path.join(datadir, 'XYZ2-iqe-Ei_20.h5'))
@@ -34,14 +33,13 @@ class TestCase(unittest.TestCase):
             pylab.legend()
             pylab.show()
         return
-        
+
     pass  # end of TestCase
 
 
 if __name__ == "__main__":
-    global interactive
     interactive = True
     import pylab
     unittest.main()
-    
+
 # End of file 

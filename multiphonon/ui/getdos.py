@@ -122,7 +122,7 @@ class GetEiT(wiz.Step):
         return True
     
     def nextStep(self):
-        print "Done."
+        print("Done.")
 
 def round2(a, digits = 1):
     d = 10**(np.floor(np.log10(a)) - digits+1)
@@ -201,9 +201,11 @@ class GetQAxis(wiz.Step):
             mt_nxs=context.mt_nxs,
             workdir=context.workdir,
         )
-        for msg in r2i:print msg
+        # reduce2iqe yields messages to report progress
+        # the last item it yeids contains information we want to keep in the context
+        for msg in r2i:print(msg)
         context.iqe_h5, context.mtiqe_h5, context.Qaxis, context.Eaxis = msg
-        print "Done."
+        print("Done.")
 
 
 # Wizard: GetDOS 
@@ -286,7 +288,8 @@ class GetParameters(wiz.Step):
         workdir = context.workdir
         if not os.path.exists(workdir): os.makedirs(workdir)
         # save kargs sent to getDOS. just for the record
-        yaml.dump(kargs, open(os.path.join(workdir, 'getdos-kargs.yaml'), 'wt'))
+        with open(os.path.join(workdir, 'getdos-kargs.yaml'), 'wt') as stream:
+            yaml.dump(kargs, stream)
         from ..getdos import getDOS
         from .getdos0 import log_progress
         log_progress(getDOS(**kargs), every=1, size=context.maxiter+2)
