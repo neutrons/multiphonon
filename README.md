@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/sns-chops/multiphonon.svg?branch=master)](https://travis-ci.org/sns-chops/multiphonon) 
+[![Build Status](https://github.com/sns-chops/multiphonon/workflows/CI/badge.svg)](https://github.com/sns-chops/multiphonon/actions?query=workflow%3ACI)
 [![Coverage Status](https://coveralls.io/repos/github/sns-chops/multiphonon/badge.svg?branch=master)](https://coveralls.io/github/sns-chops/multiphonon?branch=master)
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.00440/status.svg)](https://doi.org/10.21105/joss.00440)
 
