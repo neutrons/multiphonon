@@ -5,7 +5,7 @@
 
 import histogram as H, numpy as np
 
-def plot(iqe):
+def plot(iqe, ax=None):
     """Plot I(Q,E) histogram
 
     Parameters
@@ -13,6 +13,8 @@ def plot(iqe):
 
     iqe: histogram
         input IQE
+    optional arguments:
+        ax = axes handle to plot to
 
     """
     Q = iqe.Q
@@ -24,13 +26,16 @@ def plot(iqe):
     Qg, Eg = np.mgrid[Q[0]:Q[-1]+1e-5:Q[1]-Q[0], E[0]:E[-1]+1e-5:E[1]-E[0]]
     import numpy.ma as ma
     Zm = ma.array(iqe.I, mask=np.isnan(iqe.I))
-    from matplotlib import pyplot as plt
-    plt.pcolormesh(Qg, Eg, Zm)
-    plt.clim(0, np.nanmax(iqe.I))
-    plt.xlim(np.min(Q), np.max(Q))
-    plt.ylim(np.min(E), np.max(E))
-    plt.colorbar()
-    return
+    if ax is None:
+        from matplotlib import pyplot as plt
+        f, ax = plt.subplots()
+    imh = ax.pcolormesh(Qg, Eg, Zm, shading = 'auto')
+    imh.set_clim(0, np.nanmax(iqe.I))
+    ax.set_xlim(np.min(Q), np.max(Q))
+    ax.set_ylim(np.min(E), np.max(E))
+    f = ax.get_figure()
+    f.colorbar(imh)
+    return imh
 
 
 def interp(iqehist, newE):

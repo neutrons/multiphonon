@@ -26,6 +26,19 @@ class TestCase(unittest.TestCase):
             from matplotlib import pyplot as plt
             plt.show()
         return
+
+    def test2(self):
+        "multiphonon.sqe.plot with existing axis"
+        import matplotlib
+        from matplotlib import pyplot as plt
+        if not interactive:
+            matplotlib.use('Agg')
+        sqe = hh.load(os.path.join(datadir, "V-iqe.h5"))
+        f, ax = plt.subplots()
+        plot(sqe,ax=ax)
+        if interactive:
+            f.show()
+        return
         
         
     pass  # end of TestCase
