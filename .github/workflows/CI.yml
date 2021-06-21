@@ -1,0 +1,70 @@
+name: CI
+
+env: {"CI_NAME": "github-actions"}
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  schedule:
+    - cron: "37 9 * * *"
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-latest"]
+        python-version: ["3.6"]
+    steps:
+      - name: install glut
+        run: sudo apt-get update && sudo apt-get install -y procps freeglut3-dev libglu1-mesa unzip
+        
+      - name: Check out source code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Branch name
+        run: echo running on branch ${GITHUB_REF##*/}
+
+      # setup conda
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: 3.8
+      - name: Conda info
+        shell: bash -l {0}
+        run: conda info
+      - name: Conda env list
+        shell: pwsh
+        run: conda env list
+      - name: conda add channels
+        run: |
+          conda config --add channels conda-forge
+          conda config --add channels mcvine
+          conda config --add channels neutrons
+          conda config --add channels mantid
+      
+      - name: checks
+        shell: pwsh
+        run: |
+          conda env list
+          pwd
+          ls
+      # build and test (have to use pwsh!)
+      - name: build / test
+        shell: pwsh
+        run: |
+          echo $PYTHON_VERSION
+          conda install pip pytest pytest-cov python=$PYTHON_VERSION numpy scipy matplotlib histogram ipywe mantid-framework=4
+          python setup.py install
+          pip install coveralls
+          py.test -s --cov=multiphonon tests
+          python examples/getdos-Al.py
+          python examples/getdos-Al-from-nparrs.py
+        env:
+          ANACONDA_UPLOAD_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+          PYTHON_VERSION: ${{ matrix.python-version }}
