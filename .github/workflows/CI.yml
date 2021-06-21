@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ["ubuntu-latest"]
-        python-version: ["3.6"]
+        python-version: ["3.7"]
     steps:
       - name: install glut
         run: sudo apt-get update && sudo apt-get install -y procps freeglut3-dev libglu1-mesa unzip
@@ -45,8 +45,8 @@ jobs:
         run: |
           conda config --add channels conda-forge
           conda config --add channels mcvine
-          conda config --add channels neutrons
           conda config --add channels mantid
+          conda config --add channels mantid/label/nightly
       
       - name: checks
         shell: pwsh
@@ -59,7 +59,7 @@ jobs:
         shell: pwsh
         run: |
           echo $PYTHON_VERSION
-          conda install pip pytest pytest-cov python=$PYTHON_VERSION numpy scipy matplotlib histogram ipywe mantid-framework=4
+          conda install pip pytest pytest-cov python=$PYTHON_VERSION numpy scipy matplotlib histogram ipywe mantid-framework=5
           python setup.py install
           pip install coveralls
           py.test -s --cov=multiphonon tests
