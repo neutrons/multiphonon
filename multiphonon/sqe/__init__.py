@@ -5,7 +5,7 @@
 
 import histogram as H, numpy as np
 
-def plot(iqe, ax=None):
+def plot(iqe, ax=None,colorbar=True):
     """Plot I(Q,E) histogram
 
     Parameters
@@ -15,6 +15,7 @@ def plot(iqe, ax=None):
         input IQE
     optional arguments:
         ax = axes handle to plot to
+        colorbar = Bool True to add a colorbar
 
     """
     Q = iqe.Q
@@ -33,8 +34,9 @@ def plot(iqe, ax=None):
     imh.set_clim(0, np.nanmax(iqe.I))
     ax.set_xlim(np.min(Q), np.max(Q))
     ax.set_ylim(np.min(E), np.max(E))
-    f = ax.get_figure()
-    f.colorbar(imh)
+    if colorbar:
+       f = ax.get_figure()
+       f.colorbar(imh, ax = ax)
     return imh
 
 
