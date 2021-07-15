@@ -4,14 +4,15 @@
 
 
 import histogram as H, numpy as np
-def _conv_unit(un):
-     unstr = str(un)
-     conv = {'1e+10*m**-1':'$\AA ^{-1}$','1.60218e-22*m**2*kg*s**-2':'meV'}
-     try:
-         out = conv[unstr]
-     except KeyError:
-         out = unstr
-     return(out)
+def _conv_unit_label(un):
+    "helper function for plotting"
+    unstr = str(un)
+    conv = {'1e+10*m**-1':'$\AA ^{-1}$','1.60218e-22*m**2*kg*s**-2':'meV'}
+    try:
+        out = conv[unstr]
+    except KeyError:
+        out = unstr
+    return(out)
 
 def plot(iqe, ax=None,colorbar=True):
     """Plot I(Q,E) histogram
@@ -41,7 +42,10 @@ def plot(iqe, ax=None,colorbar=True):
     imh = ax.pcolormesh(Qg, Eg, Zm, shading = 'auto')
     imh.set_clim(0, np.nanmax(iqe.I))
     ax.set_xlim(np.min(Q), np.max(Q))
-    axlabels = {idx : '{}({})'.format(iqe.axes()[idx].name(),_conv_unit(iqe.axes()[idx].unit())) for idx in range(2)}
+    axlabels = {
+         idx : '{}({})'.format(iqe.axes()[idx].name(), _conv_unit_label(iqe.axes()[idx].unit()))
+         for idx in range(2)
+    }
     ax.set_xlabel(axlabels[0])
     ax.set_ylabel(axlabels[1])
     ax.set_xlim(np.min(Q), np.max(Q))
