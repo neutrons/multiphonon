@@ -10,6 +10,7 @@ datadir = os.path.join(os.path.dirname(__file__), "../data")
 import unittest
 import numpy as np, histogram.hdf as hh
 from multiphonon.sqe import plot
+from multiphonon.sqe import _conv_unit_label
 
 
 class TestCase(unittest.TestCase):
@@ -39,6 +40,13 @@ class TestCase(unittest.TestCase):
         if interactive:
             f.show()
         return
+
+    def test3(self):
+        "multiphonon.sqe._conv_unit_label with unknown axes label"
+        
+        jk =_conv_unit_label('test')
+        assert jk == 'test'
+        
         
         
     pass  # end of TestCase
