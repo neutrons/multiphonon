@@ -31,7 +31,7 @@ class Context:
         return
     def from_yaml(self, path):
         with open(path) as stream:
-            d = yaml.load(stream)
+            d = yaml.load(stream,Loader=yaml.FullLoader)
         for k, v in d.items():
             setattr(self, k,v)
             continue
