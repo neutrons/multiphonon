@@ -16,6 +16,14 @@ from multiphonon.ui import batch
 import unittest
 class TestCase(unittest.TestCase):
 
+    def test_contextload(self):
+        from multiphonon.ui import Context
+        cntxt =  Context()
+        cntxt.to_yaml('context.yaml')
+        cntxt2 = Context()
+        cntxt2.from_yaml('context.yaml')
+        return
+        
     def test1(self):
         "multiphonon.ui.getdos"
         from multiphonon.ui import getdos
