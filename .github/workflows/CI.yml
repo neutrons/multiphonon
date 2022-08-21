@@ -45,8 +45,6 @@ jobs:
         run: |
           conda config --add channels conda-forge
           conda config --add channels mcvine
-          conda config --add channels mantid
-          conda config --add channels mantid/label/nightly
       
       - name: checks
         shell: pwsh
