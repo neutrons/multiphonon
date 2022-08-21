@@ -39,22 +39,16 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
-          python-version: 3.8
+          python-version: ${{ matrix.python-version }}
+          channels: mcvine,conda-forge
       - name: Conda info
         shell: bash -l {0}
         run: conda info
-      - name: Conda env list
-        shell: pwsh
-        run: conda env list
-      - name: conda add channels
-        run: |
-          conda config --add channels conda-forge
-          conda config --add channels mcvine
-      
       - name: checks
         shell: pwsh
         run: |
           conda env list
+          conda config --show
           pwd
           ls
       # build and test (have to use pwsh!)
@@ -62,8 +56,8 @@ jobs:
         shell: pwsh
         run: |
           wget --no-check-certificate "https://mcvine.ornl.gov/multiphonon/ARCS_V_annulus.nxs" -O tests/data/ARCS_V_annulus.nxs
-          echo $PYTHON_VERSION
-          conda install pip pytest pytest-cov python=$PYTHON_VERSION numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION matplotlib histogram=$HISTOGRAM_VERSION ipywe=$IPYWE_VERSION mantid-framework=$MANTID_VERSION
+          echo numpy=$NUMPY_VERSION
+          conda install pip pytest pytest-cov numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION matplotlib histogram=$HISTOGRAM_VERSION ipywe=$IPYWE_VERSION mantid-framework=$MANTID_VERSION
           python setup.py install
           pip install coveralls
           py.test -s --cov=multiphonon tests
@@ -71,7 +65,6 @@ jobs:
           python examples/getdos-Al-from-nparrs.py
         env:
           ANACONDA_UPLOAD_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
-          PYTHON_VERSION: ${{ matrix.python-version }}
           NUMPY_VERSION: ${{ matrix.numpy-version }}
           SCIPY_VERSION: ${{ matrix.scipy-version }}
           HISTOGRAM_VERSION: ${{ matrix.histogram-version }}
