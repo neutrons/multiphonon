@@ -18,7 +18,7 @@ jobs:
       fail-fast: true
       matrix:
         os: ["ubuntu-latest"]
-        python-version: ["3.7"]
+        python-version: ["3.9"]
     steps:
       - name: install glut
         run: sudo apt-get update && sudo apt-get install -y procps freeglut3-dev libglu1-mesa unzip
@@ -60,7 +60,7 @@ jobs:
         run: |
           wget --no-check-certificate "https://mcvine.ornl.gov/multiphonon/ARCS_V_annulus.nxs" -O tests/data/ARCS_V_annulus.nxs
           echo $PYTHON_VERSION
-          conda install pip pytest pytest-cov python=$PYTHON_VERSION numpy scipy matplotlib histogram ipywe mantid-framework=5
+          conda install pip pytest pytest-cov python=$PYTHON_VERSION numpy scipy matplotlib histogram ipywe mantid-framework
           python setup.py install
           pip install coveralls
           py.test -s --cov=multiphonon tests
