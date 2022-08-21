@@ -1,1 +1,1 @@
-conda build --python 3.7 --numpy 1.20 .
+conda build --python 3.9 --numpy 1.20 .

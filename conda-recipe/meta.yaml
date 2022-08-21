@@ -1,9 +1,9 @@
 package:
   name: multiphonon
-  version: "0.1.4"
+  version: "0.1.5"
 
 source:
-  git_rev: v0.1.4
+  git_rev: v0.1.5
   git_url: https://github.com/sns-chops/multiphonon.git
 
 requirements:
@@ -33,6 +33,6 @@ test:
     - multiphonon
 
 about:
-  home: 
+  home:
   license:
   license_file:
