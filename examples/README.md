@@ -4,7 +4,7 @@
 
 Obtain examples
 
-    $ git clone https://github.com/sns-chops/multiphonon
+    $ git clone https://github.com/neutrons/multiphonon
     $ cd multiphonon/examples
 
 ## Run python script examples

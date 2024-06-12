@@ -1,5 +1,9 @@
-[![Build Status](https://github.com/sns-chops/multiphonon/workflows/CI/badge.svg)](https://github.com/sns-chops/multiphonon/actions?query=workflow%3ACI)
-[![Coverage Status](https://coveralls.io/repos/github/sns-chops/multiphonon/badge.svg?branch=master)](https://coveralls.io/github/sns-chops/multiphonon?branch=master)
+
+#TODO
+[Build Status]
+#TODO
+[Coverage Status]
+
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.00440/status.svg)](https://doi.org/10.21105/joss.00440)
 
 # multiphonon
@@ -26,11 +30,11 @@ This code converts a S(Q,E) INS spectrum to DOS.
 
 ## Installation
 
-Installation is handled with conda. Please see https://sns-chops.github.io/multiphonon/installation.html for details.
+Installation is handled with conda. Please see ./multiphonon/installation.html for details.
 
 ## Usage
 
-Please see https://sns-chops.github.io/multiphonon/usage.html for details.
+Please see ./multiphonon/usage.html for details.
 
 ## Community guidelines
 
@@ -40,11 +44,11 @@ Please clone the repository, make changes and make a pull request.
 
 **How to report issues**
 
-Please use [the github issues](https://github.com/sns-chops/multiphonon/issues) to report issues or bug reports.
+Please use [the github issues](https://github.com/neutrons/multiphonon/issues) to report issues or bug reports.
 
 **Support**
 
-Please either use [the github issues](https://github.com/sns-chops/multiphonon/issues) to ask for support, or contact the authors directly using email.
+Please either use [the github issues](https://github.com/neutrons/multiphonon/issues) to ask for support, or contact the authors directly using email.
 
 
 ## Algorithm
@@ -63,7 +67,8 @@ For more details of the basic principles of SQE->DOS conversion, please refer to
 See http://sns-chops.github.io/multiphonon/api.html
 
 ## Run tests
-Tests are run automatically at [travis CI](https://travis-ci.org/sns-chops/multiphonon/builds). 
+Tests are run automatically at [travis CI] (TODO)
+
 
 To manually run the minimal test suite, install multiphonon, clone this repository, and run
 
