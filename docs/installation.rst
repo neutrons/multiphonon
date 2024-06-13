@@ -13,7 +13,7 @@ on a recent 64bit linux (ubuntu/fedora/centos) distribution::
       $ conda config --add channels mcvine
       $ conda install multiphonon
 
-Information on dependencies of this code can be found at `the conda recipe <https://github.com/sns-chops/multiphonon/tree/master/conda-recipe/meta.yaml>`_.
+Information on dependencies of this code can be found at `the conda recipe <../conda-recipe/meta.yaml>`_.
 
       
 Full installation

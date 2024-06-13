@@ -24,7 +24,7 @@ setup(
     description = "Multiphonon scattering and multiple scattering correction for powder data",
     license = 'BSD',
     keywords = "neutron, inelastic neutron scattering, powder, phonon",
-    url = "https://github.com/sns-chops/multiphonon",
+    url = "https://github.com/neutrons/multiphonon",
     # download_url = '',
 )
 

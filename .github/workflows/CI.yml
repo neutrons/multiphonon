@@ -3,14 +3,15 @@ name: CI
 env: {"CI_NAME": "github-actions"}
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
-  schedule:
-    - cron: "37 9 * * *"
+  workflow_dispatch:    
+  #push:
+  #  branches:
+  #    - master
+  #pull_request:
+  #  branches:
+  #    - master
+  #schedule:
+  #  - cron: "37 9 * * *"
 jobs:
   build-and-test:
     runs-on: ${{ matrix.os }}
