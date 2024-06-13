@@ -21,7 +21,7 @@ GetDOS using local installation
 -------------------------------
 
 For any user, GetDOS can be performed with a local installation of multiphonon.
-Examples and instructions can be found `here <https://github.com/neutrons/multiphonon/tree/next/examples>`_
+Examples and instructions can be found `here <examples>`_
 
 
 General principle of operation
@@ -38,7 +38,7 @@ to a phonon DOS spectrum
    :width: 400px
 
 The best way to learn how to perform such a conversion is to follow one of the notebooks
-or scripts in `examples <https://github.com/neutrons/multiphonon/tree/next/examples>`_
+or scripts in `examples <examples>`_
 	   
 The processing is an iterative procedure, and in this plot you can see the DOS
 is getting better in each iteration:
@@ -111,4 +111,4 @@ For this particular example, the "stitched" DOS would look like this:
 
 It is obvious that the low :math:`E` portion of the DOS curve is better resolved now.
 
-The procedure here is documented in `the graphite example script <https://github.com/neutrons/multiphonon/blob/next/examples/getdos2-graphite_Ei130meV-noUI.py>`_.
+The procedure here is documented in `the graphite example script <examples/getdos2-graphite_Ei130meV-noUI.py>`_.
