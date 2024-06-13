@@ -1,8 +1,8 @@
 
-#TODO
-[Build Status]
-#TODO
-[Coverage Status]
+<!---
+[Build Status] TODO
+[Coverage Status] TODO
+-->
 
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.00440/status.svg)](https://doi.org/10.21105/joss.00440)
 
@@ -30,11 +30,11 @@ This code converts a S(Q,E) INS spectrum to DOS.
 
 ## Installation
 
-Installation is handled with conda. Please see [Installation](https://sns-chops.github.io/multiphonon/installation.html) for details.
+Installation is handled with conda. Please see [Installation instructions](https://sns-chops.github.io/multiphonon/installation.html) for details.
 
 ## Usage
 
-Please see [Usage](https://sns-chops.github.io/multiphonon/usage.html) for details.
+Please see [usage](https://sns-chops.github.io/multiphonon/usage.html) for details.
 
 ## Community guidelines
 
@@ -67,7 +67,7 @@ For more details of the basic principles of SQE->DOS conversion, please refer to
 See http://sns-chops.github.io/multiphonon/api.html
 
 ## Run tests
-Tests are run automatically at [travis CI] (TODO)
+Tests are run automatically at [CI](https://github.com/neutrons/multiphonon/actions)
 
 
 To manually run the minimal test suite, install multiphonon, clone this repository, and run
