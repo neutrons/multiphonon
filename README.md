@@ -30,11 +30,11 @@ This code converts a S(Q,E) INS spectrum to DOS.
 
 ## Installation
 
-Installation is handled with conda. Please see ./multiphonon/installation.html for details.
+Installation is handled with conda. Please see [Installation](https://sns-chops.github.io/multiphonon/installation.html) for details.
 
 ## Usage
 
-Please see ./multiphonon/usage.html for details.
+Please see [Usage](https://sns-chops.github.io/multiphonon/usage.html) for details.
 
 ## Community guidelines
 
