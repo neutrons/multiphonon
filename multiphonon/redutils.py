@@ -1,36 +1,58 @@
-import os, sys
+import os
+import sys
 
-def _createDefaultMantidUserConfig(facility='SNS'):
+
+def _createDefaultMantidUserConfig(facility="SNS"):
     # create default Mantid user configuration for DEMO purpose.
-    import os
-    mantid_config_path = os.path.expanduser('~/.mantid/Mantid.user.properties')
+    mantid_config_path = os.path.expanduser("~/.mantid/Mantid.user.properties")
     mantid_user_dir = os.path.dirname(mantid_config_path)
     if not os.path.exists(mantid_config_path):
         if not os.path.exists(mantid_user_dir):
             os.makedirs(mantid_user_dir)
-        with open(mantid_config_path, 'wt') as of:
-            of.write('default.facility=%s' % facility)
+        with open(mantid_config_path, "wt") as of:
+            of.write("default.facility=%s" % facility)
     return
+
+
 # this should be done before mantid is imported
 _createDefaultMantidUserConfig()
 
 
 mantid_checked = False
+
+
 def _checkMantid():
     print("* Checking Mantid ...")
-    import subprocess as sp, shlex
-    sp.call(shlex.split("python -c 'import matplotlib, mantid'"), stdout=sp.PIPE, stderr=sp.PIPE) # sometimes mantid import for the first time may fail
+    import subprocess as sp
+    import shlex
+
+    sp.call(
+        shlex.split("python -c 'import matplotlib, mantid'"),
+        stdout=sp.PIPE,
+        stderr=sp.PIPE,
+    )  # sometimes mantid import for the first time may fail
     if sp.call(shlex.split("python -c 'import matplotlib, mantid'")):
         raise RuntimeError("Please install mantid")
     global mantid_checked
     mantid_checked = True
     print("  - Done.")
     return
+
+
 if not mantid_checked:
     _checkMantid()
 
 
-def reduce(nxsfile, qaxis, outfile, use_ei_guess=False, ei_guess=None, eaxis=None, tof2E=True, ibnorm='ByCurrent'):
+def reduce(
+    nxsfile,
+    qaxis,
+    outfile,
+    use_ei_guess=False,
+    ei_guess=None,
+    eaxis=None,
+    tof2E=True,
+    ibnorm="ByCurrent",
+):
     """reduce a NeXus file to a I(Q,E) histogram using Mantid
 
     This is a wrapper of Mantid algorithms to reduce a NeXus file to IQE histogram.
@@ -65,35 +87,38 @@ def reduce(nxsfile, qaxis, outfile, use_ei_guess=False, ei_guess=None, eaxis=Non
         Incident beam normalization choice. Allowed values: None, ByCurrent, ToMonitor
         For more details, see http://docs.mantidproject.org/nightly/algorithms/DgsReduction-v1.html
     """
-    from mantid.simpleapi import DgsReduction, SaveNexus, Load
+    from mantid.simpleapi import DgsReduction, Load
     from mantid import mtd
     import mantid.simpleapi as msa
-    if tof2E == 'guess':
+
+    if tof2E == "guess":
         # XXX: this is a simple guess. all raw data files seem to have root "entry"
-        cmd = 'h5ls %s' % nxsfile
-        import subprocess as sp, shlex
+        cmd = "h5ls %s" % nxsfile
+        import subprocess as sp
+        import shlex
+
         o = sp.check_output(shlex.split(cmd)).strip().split()[0]
-        if sys.version_info >= (3,0) and isinstance(o, bytes):
+        if sys.version_info >= (3, 0) and isinstance(o, bytes):
             o = o.decode()
-        tof2E = o == 'entry'
+        tof2E = o == "entry"
     if tof2E:
         if use_ei_guess:
             DgsReduction(
                 SampleInputFile=nxsfile,
                 IncidentEnergyGuess=ei_guess,
                 UseIncidentEnergyGuess=use_ei_guess,
-                OutputWorkspace='reduced',
+                OutputWorkspace="reduced",
                 EnergyTransferRange=eaxis,
                 IncidentBeamNormalisation=ibnorm,
-                )
+            )
         else:
             DgsReduction(
                 SampleInputFile=nxsfile,
-                OutputWorkspace='reduced',
+                OutputWorkspace="reduced",
                 EnergyTransferRange=eaxis,
                 IncidentBeamNormalisation=ibnorm,
-                )
-        reduced = mtd['reduced']
+            )
+        reduced = mtd["reduced"]
     else:
         reduced = Load(nxsfile)
     # get eaxis info from mtd workspace, if necessary
@@ -103,40 +128,46 @@ def reduce(nxsfile, qaxis, outfile, use_ei_guess=False, ei_guess=None, eaxis=Non
         emax = Edim.getMaximum()
         de = Edim.getX(1) - Edim.getX(0)
         eaxis = emin, de, emax
-    qmin, dq, qmax = qaxis; nq = int((qmax-qmin+dq/2.)/dq)
-    emin, de, emax = eaxis; ne = int((emax-emin+de/2.)/de)
+    qmin, dq, qmax = qaxis
+    nq = int((qmax - qmin + dq / 2.0) / dq)
+    emin, de, emax = eaxis
+    ne = int((emax - emin + de / 2.0) / de)
     #
     md = msa.ConvertToMD(
         InputWorkspace=reduced,
-        QDimensions='|Q|',
-        dEAnalysisMode='Direct',
+        QDimensions="|Q|",
+        dEAnalysisMode="Direct",
         MinValues="%s,%s" % (qmin, emin),
         MaxValues="%s,%s" % (qmax, emax),
-        )
+    )
     binned = msa.BinMD(
         InputWorkspace=md,
         AxisAligned=1,
         AlignedDim0="|Q|,%s,%s,%s" % (qmin, qmax, nq),
         AlignedDim1="DeltaE,%s,%s,%s" % (emin, emax, ne),
-        )
+    )
     # create histogram
-    import histogram as H, histogram.hdf as hh
-    data=binned.getSignalArray().copy()
-    err2=binned.getErrorSquaredArray().copy()
-    nev=binned.getNumEventsArray()
-    data/=nev
-    err2/=(nev*nev)
+    import histogram as H
+    import histogram.hdf as hh
+
+    data = binned.getSignalArray().copy()
+    err2 = binned.getErrorSquaredArray().copy()
+    nev = binned.getNumEventsArray()
+    data /= nev
+    err2 /= nev * nev
     import numpy as np
-    qaxis = H.axis('Q', boundaries=np.arange(qmin, qmax+dq/2., dq), unit='1./angstrom')
-    eaxis = H.axis('E', boundaries=np.arange(emin, emax+de/2., de), unit='meV')
-    hist = H.histogram('IQE', (qaxis, eaxis), data=data, errors=err2)
-    if outfile.endswith('.nxs'):
+
+    qaxis = H.axis(
+        "Q", boundaries=np.arange(qmin, qmax + dq / 2.0, dq), unit="1./angstrom"
+    )
+    eaxis = H.axis("E", boundaries=np.arange(emin, emax + de / 2.0, de), unit="meV")
+    hist = H.histogram("IQE", (qaxis, eaxis), data=data, errors=err2)
+    if outfile.endswith(".nxs"):
         import warnings
-        warnings.warn("reduce function no longer writes iqe.nxs nexus file. it only writes iqe.h5 histogram file")
-        outfile = outfile[:-4] + '.h5'
+
+        warnings.warn(
+            "reduce function no longer writes iqe.nxs nexus file. it only writes iqe.h5 histogram file"
+        )
+        outfile = outfile[:-4] + ".h5"
     hh.dump(hist, outfile)
     return hist
-
-
-
-

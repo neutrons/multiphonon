@@ -7,10 +7,10 @@
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.00440/status.svg)](https://doi.org/10.21105/joss.00440)
 
 # multiphonon
-This is a rewrite of multiphonon (getDOS) code that was originally authored by 
+This is a rewrite of multiphonon (getDOS) code that was originally authored by
 Max Kresch during the [DANSE project](http://danse.us/) and
 was then revised by several authors including Brandon, Chen, Jennifer, and Dipanshu
-(their work were recorded as branches in this repo). 
+(their work were recorded as branches in this repo).
 It fixes some problems in the earlier versions of getDOS code and implemented new features.
 The original requirements of this project is captured at [this ticket](https://github.com/sns-chops/multiphonon/issues/32).
 And details of the features of this code can be found below.

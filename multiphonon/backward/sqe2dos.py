@@ -2,16 +2,25 @@
 #
 # Jiao Lin <jiao.lin@gmail.com>
 
-import numpy as np, histogram as H, histogram.hdf as hh, os
+import numpy as np
+import histogram.hdf as hh
+import os
 
 
 def sqe2dos(
-        sqe, T, Ecutoff, elastic_E_cutoff, M,
-        C_ms=None, Ei=None,
-        workdir = 'work', 
-        MAX_ITERATION = 20, TOLERATION = 1e-4,
-        initdos = None, update_strategy_weights = None,
-        ):
+    sqe,
+    T,
+    Ecutoff,
+    elastic_E_cutoff,
+    M,
+    C_ms=None,
+    Ei=None,
+    workdir="work",
+    MAX_ITERATION=20,
+    TOLERATION=1e-4,
+    initdos=None,
+    update_strategy_weights=None,
+):
     """Given a SQE, compute DOS
 
     This is an iterator.
@@ -23,7 +32,7 @@ def sqe2dos(
     * Compute a new DOS from the single-phonon SQE
     * Compare the new DOS to the previous one and calculate the difference
     * If difference is large, continue the iteration. Otherwise the new DOS is what we want
-    
+
     Parameters
     ----------
     sqe : histogram
@@ -54,7 +63,7 @@ def sqe2dos(
         initial guess of DOS
 
     update_strategy_weights : 2-tuple of floats
-        Weights for the update strategies (force continuity, area conservation). 
+        Weights for the update strategies (force continuity, area conservation).
         Useful only if multiple Ei.
 
     MAX_ITERATION: int
@@ -64,7 +73,7 @@ def sqe2dos(
         Toleration for convergence test
 
     """
-    mask = sqe.I != sqe.I    
+    mask = sqe.I != sqe.I
     corrected_sqe = sqe
     prev_dos = initdos
     total_rounds = 0
@@ -72,17 +81,22 @@ def sqe2dos(
         # compute dos.
         # corrected_sqe: the most recent corrected sqe histogram. same shape as input sqe
         dos = singlephonon_sqe2dos(
-            corrected_sqe, T, Ecutoff, elastic_E_cutoff, M,
-            initdos=prev_dos, update_weights=update_strategy_weights)
+            corrected_sqe,
+            T,
+            Ecutoff,
+            elastic_E_cutoff,
+            M,
+            initdos=prev_dos,
+            update_weights=update_strategy_weights,
+        )
         # dos only contains positive portion of the Eaxis of the corrected_sqe
         yield dos
         # compute expected sqe
         from ..forward import dos2sqe
+
         # all sqes are histograms and have the same axes of the input experimental sqe
         # the tot_inel_sqe is masked by the input experimental sqe
-        singlephonon_sqe, mpsqe, mssqe, tot_inel_sqe = dos2sqe(
-            dos, C_ms, sqe, T, M, Ei
-        )
+        singlephonon_sqe, mpsqe, mssqe, tot_inel_sqe = dos2sqe(dos, C_ms, sqe, T, M, Ei)
         # scale exp sqe for comparision.
         # after scale the total intensity of the E>elastic_E_cutoff[1] portion of the exp sqe
         # matches that of the tot_inel_sqe
@@ -90,79 +104,83 @@ def sqe2dos(
         # compute SQE correction
         sqe_correction = mpsqe + mssqe
         # compute corrected SQE
-        corrected_sqe = sqe + sqe_correction * (-1., 0)
+        corrected_sqe = sqe + sqe_correction * (-1.0, 0)
         # compute residual
-        residual_sqe = corrected_sqe + singlephonon_sqe * (-1., 0)
+        residual_sqe = corrected_sqe + singlephonon_sqe * (-1.0, 0)
         # save intermediate results
         cwd = os.path.join(workdir, "round-%d" % roundno)
         if not os.path.exists(cwd):
             os.makedirs(cwd)
+
         def savesqe(sqe, fn):
             sqe.I[mask] = np.nan
             hh.dump(sqe, os.path.join(cwd, fn))
             return
-        savesqe(sqe, 'exp-sqe.h5')
-        savesqe(mpsqe, 'mp-sqe.h5')
-        savesqe(mssqe, 'ms-sqe.h5')
-        savesqe(sqe_correction, 'sqe_correction.h5')
-        savesqe(corrected_sqe, 'corrected_sqe.h5')
-        savesqe(singlephonon_sqe, 'sp-sqe.h5')
-        savesqe(residual_sqe, 'residual-sqe.h5')
-        savesqe(tot_inel_sqe, 'total-inel-sqe.h5')
+
+        savesqe(sqe, "exp-sqe.h5")
+        savesqe(mpsqe, "mp-sqe.h5")
+        savesqe(mssqe, "ms-sqe.h5")
+        savesqe(sqe_correction, "sqe_correction.h5")
+        savesqe(corrected_sqe, "corrected_sqe.h5")
+        savesqe(singlephonon_sqe, "sp-sqe.h5")
+        savesqe(residual_sqe, "residual-sqe.h5")
+        savesqe(tot_inel_sqe, "total-inel-sqe.h5")
         # save DOS
-        hh.dump(dos, os.path.join(cwd, 'dos.h5'))
+        hh.dump(dos, os.path.join(cwd, "dos.h5"))
         # write scripts
         create_script(
-            os.path.join(cwd, "plot_sqe.py"),
-            plot_intermediate_result_sqe_code
+            os.path.join(cwd, "plot_sqe.py"), plot_intermediate_result_sqe_code
         )
-        create_script(
-            os.path.join(cwd, "plot_se.py"),
-            plot_intermediate_result_se_code
-        )
+        create_script(os.path.join(cwd, "plot_se.py"), plot_intermediate_result_se_code)
         total_rounds += 1
         if prev_dos:
             if isclose(dos, prev_dos, TOLERATION):
                 break
         prev_dos = dos
         continue
-    # in the end, add error of residual to the error bar 
+
+    # in the end, add error of residual to the error bar
     # of the DOS
     def get_pos_se(sqe):
-        s = sqe[(), (elastic_E_cutoff[-1],None)].copy()
-        s.I[s.I!=s.I] = 0
-        s.E2[s.E2!=s.E2] = 0
-        return s.sum('Q')
+        s = sqe[(), (elastic_E_cutoff[-1], None)].copy()
+        s.I[s.I != s.I] = 0
+        s.E2[s.E2 != s.E2] = 0
+        return s.sum("Q")
+
     residual_pos_se = get_pos_se(residual_sqe)
     exp_pos_se = get_pos_se(sqe)
-    hh.dump(exp_pos_se, os.path.join(workdir, 'I_E-exp-posE.h5'))
-    hh.dump(residual_pos_se, os.path.join(workdir, 'residual_E-posE.h5'))
+    hh.dump(exp_pos_se, os.path.join(workdir, "I_E-exp-posE.h5"))
+    hh.dump(residual_pos_se, os.path.join(workdir, "residual_E-posE.h5"))
     # limit the range of update
     if Ecutoff < residual_pos_se.E[-1]:
         residual_pos_se = residual_pos_se[(None, Ecutoff)]
         exp_pos_se = exp_pos_se[(None, Ecutoff)]
     # compute relative error
-    rel_err_from_residual = np.abs(residual_pos_se.I)/exp_pos_se.I
+    rel_err_from_residual = np.abs(residual_pos_se.I) / exp_pos_se.I
     # add to the error bar
     final_dos = dos.copy()
-    final_dos_subset = final_dos[(residual_pos_se.E[0], min(Ecutoff, residual_pos_se.E[-1]))]
-    final_dos_subset.E2 += (final_dos_subset.I * rel_err_from_residual[:final_dos_subset.size()])**2
+    final_dos_subset = final_dos[
+        (residual_pos_se.E[0], min(Ecutoff, residual_pos_se.E[-1]))
+    ]
+    final_dos_subset.E2 += (
+        final_dos_subset.I * rel_err_from_residual[: final_dos_subset.size()]
+    ) ** 2
     hh.dump(final_dos, os.path.join(workdir, "final-dos.h5"))
     #
     create_script(
-        os.path.join(workdir, 'plot_dos_iteration.py'),
-        plot_dos_iteration_code % dict(total_rounds=total_rounds)
+        os.path.join(workdir, "plot_dos_iteration.py"),
+        plot_dos_iteration_code % dict(total_rounds=total_rounds),
     )
     create_script(
-        os.path.join(workdir, 'plot_residual.py'),
+        os.path.join(workdir, "plot_residual.py"),
         plot_residual_code,
     )
-    computeDirtyDOS(sqe, final_dos, M, T, os.path.join(workdir, 'dirdydos'))
+    computeDirtyDOS(sqe, final_dos, M, T, os.path.join(workdir, "dirdydos"))
     return
 
 
 def computeDirtyDOS(sqe, dos, M, T, workdir):
-    """dirty dos calculation is procedure that quickly 
+    """dirty dos calculation is procedure that quickly
     "correct" sqe using the one-phonon Q multiplier.
     After correction, the sqe would look like mostly Q-independent,
     and the sum over Q axis can give a very rough estimate of the DOS.
@@ -171,39 +189,43 @@ def computeDirtyDOS(sqe, dos, M, T, workdir):
     if not os.path.exists(workdir):
         os.makedirs(workdir)
     from ..forward.phonon import computeSNQ, DWExp, kelvin2mev, gamma0
-    beta = 1./(T*kelvin2mev)
+
+    beta = 1.0 / (T * kelvin2mev)
     dos1 = dos[(None, sqe.E[-1])]
-    E = dos.E; Q = sqe.Q; g = dos.I
+    E = dos.E
+    Q = sqe.Q
+    g = dos.I
     dE = E[1] - E[0]
     DW2 = DWExp(Q, M, E, g, beta, dE)
     sq = computeSNQ(DW2, 1)
     sqe1 = sqe.copy()
     sqe1.I /= sq[:, np.newaxis]
     sqe1.E2 /= sq[:, np.newaxis] * sq[:, np.newaxis]
-    hh.dump(sqe1, os.path.join(workdir, 'corrected-sqe.h5'))
+    hh.dump(sqe1, os.path.join(workdir, "corrected-sqe.h5"))
     # compute a sum to obtain S(E)
-    Qdiff = Q[-1]-Q[0]
+    Qdiff = Q[-1] - Q[0]
     # take the middle part. 1/6 is kind of arbitrary
-    se1 = sqe1[ (Q[0]+Qdiff/6., Q[-1]-Qdiff/6.), (E[0], None) ].sum('Q')
-    hh.dump(se1, os.path.join(workdir, 'se.h5'))
+    se1 = sqe1[(Q[0] + Qdiff / 6.0, Q[-1] - Qdiff / 6.0), (E[0], None)].sum("Q")
+    hh.dump(se1, os.path.join(workdir, "se.h5"))
     assert np.allclose(se1.E, dos1.E)
     #
-    g0 = gamma0(E,g, beta, dE)
-    fE = (1-np.exp(-se1.E*beta)) * se1.E * g0
+    g0 = gamma0(E, g, beta, dE)
+    fE = (1 - np.exp(-se1.E * beta)) * se1.E * g0
     ddos = se1.copy()
     ddos.I *= fE
-    ddos.E2 *= fE*fE
-    hh.dump(ddos, os.path.join(workdir, 'ddos.h5'))
+    ddos.E2 *= fE * fE
+    hh.dump(ddos, os.path.join(workdir, "ddos.h5"))
     return
 
 
 def scale_expsqe_to_match_inel_se(expsqe, simsqe, elastic_E_positive_cutoff):
     # Compute norm_adjustment
     def get_pos_tot_int(sqe):
-        subset = sqe[(), (elastic_E_positive_cutoff,None)].copy().I
-        subset[subset!=subset] = 0
+        subset = sqe[(), (elastic_E_positive_cutoff, None)].copy().I
+        subset[subset != subset] = 0
         return subset.sum()
-    norm_adjustment = get_pos_tot_int(simsqe)/get_pos_tot_int(expsqe)
+
+    norm_adjustment = get_pos_tot_int(simsqe) / get_pos_tot_int(expsqe)
     expsqe.I *= norm_adjustment
     expsqe.E2 *= norm_adjustment**2
     return
@@ -214,9 +236,10 @@ def isclose(dos1, dos2, TOLERATION):
 
 
 def create_script(fn, content):
-    with open(fn, 'wt') as stream:
+    with open(fn, "wt") as stream:
         stream.write(content)
     import stat
+
     st = os.stat(fn)
     os.chmod(fn, st.st_mode | stat.S_IEXEC)
     return
@@ -239,12 +262,12 @@ def removeElasticPeak(sqe, elastic_E_cutoff):
     increments *= dI[:, np.newaxis]
     linear_interp_I = leftIs[:, np.newaxis] + increments
     sqe[(), elastic_E_cutoff].I[:] = linear_interp_I
-    return sqe                                                        
+    return sqe
 
 
 def normalizeExpSQE(sqe):
     # integration of S(E) should be 1 for every Q
-    # the idea here is to for each Q, we calculate 
+    # the idea here is to for each Q, we calculate
     # a normalization factor, and then take the median of
     # all normalization factors.
     mask = sqe.I != sqe.I
@@ -257,7 +280,7 @@ def normalizeExpSQE(sqe):
     # but since we are not measuring the fulling dynamical
     # range due to limitation of instrument and Ei
     # that normalization holds true only at a small
-    # region at low Q, but not too low. 
+    # region at low Q, but not too low.
     # so we take a front portion of the Q axis
     # and ignore the very low Q where the dynamical range
     # is cut off (those are marked by nans)
@@ -268,12 +291,12 @@ def normalizeExpSQE(sqe):
     sqe.I *= norm
     sqe.E2 *= norm*norm
     return sqe
-    
+
 
 # this is also OK but not as simple and robust as normalizeExpSQE
 def normalizeExpSQE_inelonly(sqe, dos, M, beta, elastic_E_cutoff):
     # integration of inelastic S(E) should be 1-exp(-2W) for every Q
-    # the idea here is to for each Q, we calculate 
+    # the idea here is to for each Q, we calculate
     # a normalization factor, and then take the median of
     # all normalization factors.
     sqe1 = removeElasticPeak(sqe.copy(), elastic_E_cutoff)
@@ -285,7 +308,7 @@ def normalizeExpSQE_inelonly(sqe, dos, M, beta, elastic_E_cutoff):
     integration = 1 - DW
     I = sqe1.I
     ps = I.sum(1) * dE
-    # 
+    #
     norm_factors = integration/ps
     norm = np.median(norm_factors)
     sqe.I *= norm
@@ -293,10 +316,13 @@ def normalizeExpSQE_inelonly(sqe, dos, M, beta, elastic_E_cutoff):
     return sqe
 """
 
-# 
+#
 from .singlephonon_sqe2dos import sqe2dos as singlephonon_sqe2dos
-from ._sqe2dos_script_templates import \
-    plot_intermediate_result_sqe_code,plot_intermediate_result_se_code, \
-    plot_dos_iteration_code, plot_residual_code
+from ._sqe2dos_script_templates import (
+    plot_intermediate_result_sqe_code,
+    plot_intermediate_result_se_code,
+    plot_dos_iteration_code,
+    plot_residual_code,
+)
 
-# End of file 
+# End of file

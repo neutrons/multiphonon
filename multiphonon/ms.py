@@ -9,19 +9,19 @@ compute multiple scattering
 
 
 def sqe(mpsqe, Ei):
-    """given multiphonon SQE, compute multiple scattering sqe
-    """
+    """given multiphonon SQE, compute multiple scattering sqe"""
     # multiple scattering (MS) is uniform along Q
     # so we want to compute the average S from multi-phonon
     # scattering and assign the value to MS result
     # first compute the mask
     from .sqe import dynamical_range_mask
     import numpy as np
+
     mask = dynamical_range_mask(mpsqe, Ei)
     # set outside to zero
     mpsqe.I[mask] = 0
     # average
-    aveS = mpsqe.I.sum(0)/np.logical_not(mask).sum(0)
+    aveS = mpsqe.I.sum(0) / np.logical_not(mask).sum(0)
     # res
     mssqe = mpsqe.copy()
     mssqe.I[:] = aveS[np.newaxis, :]
@@ -29,4 +29,4 @@ def sqe(mpsqe, Ei):
     return mssqe
 
 
-# End of file 
+# End of file

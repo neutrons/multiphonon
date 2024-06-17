@@ -3,7 +3,7 @@ name: CI
 env: {"CI_NAME": "github-actions"}
 
 on:
-  workflow_dispatch:    
+  workflow_dispatch:
   #push:
   #  branches:
   #    - master
@@ -28,7 +28,7 @@ jobs:
     steps:
       - name: install glut
         run: sudo apt-get update && sudo apt-get install -y procps freeglut3-dev libglu1-mesa unzip
-        
+
       - name: Check out source code
         uses: actions/checkout@v2
         with:

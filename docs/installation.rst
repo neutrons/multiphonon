@@ -15,10 +15,10 @@ on a recent 64bit linux (ubuntu/fedora/centos) distribution::
 
 Information on dependencies of this code can be found at `the conda recipe <../conda-recipe/meta.yaml>`_.
 
-      
+
 Full installation
 -----------------
-  
+
 The full installation requires `mantid <http://mantidproject.org>`_-framework, which can be installed using conda
 on a recent, 64bit, linux (ubuntu/fedora/centos) **standard desktop** distribution.
 
@@ -60,11 +60,11 @@ If mantid is not used, system requirements may be relaxed.
 
 
 Why not PyPI installation
--------------------------      
+-------------------------
 Some required and optional dependencies of multiphonon contain sophistated C++ libraries so it is much easier to rely
 on the conda environment for installation. However, multiphonon package itself is a pure python package,
 and can be installed by::
 
     $ python setup.py install
-    
+
 if all dependecies are already installed.
