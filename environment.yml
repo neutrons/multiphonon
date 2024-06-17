@@ -1,0 +1,21 @@
+name: multiphonon
+channels:
+  - conda-forge
+  - mantid
+dependencies:
+  - python = 3.9
+  - pyre = 0.8.3
+  - histogram = 0.3.9
+  - ipywidgets # used in one test
+  - matplotlib
+  - mantid-framework = 6.3
+  - pre-commit
+  - pytest
+  - pytest-cov
+  - python
+  - python-build
+  - numpy = 1.20.3
+  - scipy = 1.9.0
+  - versioningit
+  - setuptools
+  - coveralls
