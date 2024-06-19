@@ -12,8 +12,8 @@ ignore = ["D203", # conflict with D211
           "D213", # conflict with D212
           "D205", # conflict
           "ANN201", "D400", "D401", "D404", "D415", # Unnecessary
-          "ARG002", "N802", "N803","N806", "D100","D101","D102","D103", "D104","D107","D417", # put it back in the future
+          "ARG001","ARG002", "N802", "N803","N806", "D100","D101","D102","D103", "D104","D107","D417", # put it back in the future
           "N812", "N999", "E731", "E741", "C901", # back in the future too
-          "BLE001", "D105", "E722", "F821" ,"F841", "N815", "N816", "N818","A001","A002", "ARG001",  # in progress
+          "BLE001", "D105", "E722", "F821" ,"F841", "N815", "N816", "N818",  # in progress
           ]
 exclude = ["docs/conf.py"]

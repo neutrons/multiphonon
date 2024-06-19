@@ -31,7 +31,7 @@ class GetSampleNxs(wiz.Step):
             start_dir = "/SNS/ARCS"
         self.fs = fileselector.FileSelectorPanel("Select a file", start_dir=start_dir, type="file")
 
-        def next(s):
+        def next(s):  # noqa A001
             self.sample_nxs = self.fs.selected
             self.handle_next_button_click(s)
             return
@@ -74,7 +74,7 @@ class GetMTNxs(wiz.Step):
         start_dir = os.path.dirname(self.context.mt_nxs or self.context.sample_nxs)
         self.fs = fileselector.FileSelectorPanel("Select a file", start_dir=start_dir, type="file")
 
-        def next(s):
+        def next(s):  # noqa A001
             self.mt_nxs = self.fs.selected
             self.handle_next_button_click(s)
             return
@@ -270,7 +270,7 @@ class GetInitDOS(wiz.Step):
         start_dir = "/SNS/ARCS" if context.initdos is None else os.path.dirname(context.initdos)
         self.fs = fileselector.FileSelectorPanel("Select a file", start_dir=start_dir, type="file")
 
-        def next(s):
+        def next(s):  # noqa A001
             self.initdos = self.fs.selected
             self.handle_next_button_click(s)
             return

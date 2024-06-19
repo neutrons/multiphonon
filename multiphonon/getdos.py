@@ -239,12 +239,12 @@ def _checkEaxis(Emin, Emax, dE):
     return new
 
 
-def _normalize_axis_setting(min, max, delta):
+def _normalize_axis_setting(min_value, max_value, delta):
     # try to deal with numerical error
-    nsteps = round(1.0 * (max - min) / delta)
-    if abs(max - (min + nsteps * delta)) < 1e-5:
-        max = max + delta / 1.0e4
-    return min, max, delta
+    nsteps = round(1.0 * (max_value - min_value) / delta)
+    if abs(max_value - (min_value + nsteps * delta)) < 1e-5:
+        max_value = max_value + delta / 1.0e4
+    return min_value, max_value, delta
 
 
 def _md5(s):
@@ -253,7 +253,7 @@ def _md5(s):
     return hashlib.md5(s).hexdigest()
 
 
-def raw2iqe(eventnxs, iqe_h5, Eaxis, Qaxis, type):
+def raw2iqe(eventnxs, iqe_h5, Eaxis, Qaxis, type):  # noqa A002
     """Read and reduce a raw nxs file.  If the reduced file already exists it
     will read the existing file rather than recreate it.
 
