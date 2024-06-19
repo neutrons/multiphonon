@@ -11,12 +11,12 @@ import histogram as H
 import histogram.hdf as hh
 import numpy as np
 
+from multiphonon.backward import sqe2dos
+
 here = os.path.dirname(__file__)
 datadir = os.path.join(here, "../data")
 sys.path.insert(0, datadir)
-from dos import loadDOS
-
-from multiphonon.backward import sqe2dos
+from dos import loadDOS  # noqa: E402, needed to be after the sys path append
 
 interactive = False
 
