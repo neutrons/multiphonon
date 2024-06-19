@@ -2,33 +2,32 @@
 #
 
 
-interactive = False
-
-import sys
 import os
+import sys
+import unittest
+import warnings
+
+import histogram as H
+import histogram.hdf as hh
+import numpy as np
 
 here = os.path.dirname(__file__)
 datadir = os.path.join(here, "../data")
 sys.path.insert(0, datadir)
-
-import unittest
-import warnings
-import numpy as np
-import histogram.hdf as hh
-import histogram as H
-from multiphonon.backward import sqe2dos
 from dos import loadDOS
+
+from multiphonon.backward import sqe2dos
+
+interactive = False
 
 
 class TestCase(unittest.TestCase):
     def test1a(self):
-        "singlephonon_sqe2dos: simulated vanadium SQE -> DOS"
+        """singlephonon_sqe2dos: simulated vanadium SQE -> DOS"""
         S = hh.load(os.path.join(datadir, "V-S1.h5"))
         with warnings.catch_warnings(record=True) as ws:
             warnings.simplefilter("always")
-            DOS = sqe2dos.singlephonon_sqe2dos(
-                S, T=300, Ecutoff=55.0, elastic_E_cutoff=(0.0, 0.0), M=50.94
-            )
+            DOS = sqe2dos.singlephonon_sqe2dos(S, T=300, Ecutoff=55.0, elastic_E_cutoff=(0.0, 0.0), M=50.94)
             for w in ws:
                 assert "Scaling factor" not in str(w)
         E = DOS.E
@@ -48,14 +47,12 @@ class TestCase(unittest.TestCase):
         return
 
     def test1b(self):
-        "singlephonon_sqe2dos: exp vanadium SQE -> DOS"
+        """singlephonon_sqe2dos: exp vanadium SQE -> DOS"""
         iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
         from multiphonon.sqe import interp
 
         newiqe = interp(iqehist, newE=np.arange(-50, 50, 1.0))
-        DOS = sqe2dos.singlephonon_sqe2dos(
-            newiqe, T=300, Ecutoff=65.0, elastic_E_cutoff=(-20.0, 6.7), M=50.94
-        )
+        DOS = sqe2dos.singlephonon_sqe2dos(newiqe, T=300, Ecutoff=65.0, elastic_E_cutoff=(-20.0, 6.7), M=50.94)
         path = os.path.join(here, "expected_results", "test1b-dos.h5")
         expected = hh.load(path)
         self.assertTrue(np.allclose(DOS.I, expected.I))
@@ -66,7 +63,7 @@ class TestCase(unittest.TestCase):
         return
 
     def test1b2(self):
-        "singlephonon_sqe2dos: check energy axis"
+        """singlephonon_sqe2dos: check energy axis"""
         iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
         from multiphonon.sqe import interp
 
@@ -76,13 +73,11 @@ class TestCase(unittest.TestCase):
         )
 
         with self.assertRaises(EnergyAxisMissingBinCenterAtZero):
-            DOS = sqe2dos.singlephonon_sqe2dos(
-                newiqe, T=300, Ecutoff=65.0, elastic_E_cutoff=(-20.0, 6.7), M=50.94
-            )
+            DOS = sqe2dos.singlephonon_sqe2dos(newiqe, T=300, Ecutoff=65.0, elastic_E_cutoff=(-20.0, 6.7), M=50.94)
         return
 
     def test1c(self):
-        "singlephonon_sqe2dos: partial update"
+        """singlephonon_sqe2dos: partial update"""
         iqehist = hh.load(os.path.join(datadir, "graphite-Ei_130-iqe.h5"))
         initdos = hh.load(os.path.join(datadir, "graphite-Ei_300-dos.h5"))
         newdos = sqe2dos.singlephonon_sqe2dos(
@@ -101,7 +96,7 @@ class TestCase(unittest.TestCase):
         return
 
     def test1c1(self):
-        "singlephonon_sqe2dos: partial update -- keep area"
+        """singlephonon_sqe2dos: partial update -- keep area"""
         iqehist = hh.load(os.path.join(datadir, "graphite-Ei_130-iqe.h5"))
         initdos = hh.load(os.path.join(datadir, "graphite-Ei_300-dos.h5"))
         newdos = sqe2dos.singlephonon_sqe2dos(
@@ -129,7 +124,7 @@ class TestCase(unittest.TestCase):
         return
 
     def test1c2(self):
-        "singlephonon_sqe2dos: partial update -- force continuous"
+        """singlephonon_sqe2dos: partial update -- force continuous"""
         iqehist = hh.load(os.path.join(datadir, "graphite-Ei_130-iqe.h5"))
         initdos = hh.load(os.path.join(datadir, "graphite-Ei_300-dos.h5"))
         newdos = sqe2dos.singlephonon_sqe2dos(
@@ -157,7 +152,7 @@ class TestCase(unittest.TestCase):
         return
 
     def test1d(self):
-        "singlephonon_sqe2dos: partial update -- warnings"
+        """singlephonon_sqe2dos: partial update -- warnings"""
         iqehist = hh.load(os.path.join(datadir, "graphite-Ei_30-iqe.h5"))
         initdos = hh.load(os.path.join(datadir, "graphite-Ei_130-dos.h5"))
         with warnings.catch_warnings(record=True) as ws:
@@ -172,9 +167,7 @@ class TestCase(unittest.TestCase):
             )
             has_scaling_factor_warning = False
             for w in ws:
-                has_scaling_factor_warning = has_scaling_factor_warning or (
-                    "Scaling factor" in str(w)
-                )
+                has_scaling_factor_warning = has_scaling_factor_warning or ("Scaling factor" in str(w))
                 continue
             self.assertTrue(has_scaling_factor_warning)
         # plot

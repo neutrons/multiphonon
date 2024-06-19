@@ -1,13 +1,16 @@
-"""
-This is a simple example where I(Q,E) data is already in the form
+"""This is a simple example where I(Q,E) data is already in the form
 of a histogram, reduced from the raw experimental data.
 All this script does is to convert I(Q,E) to Density of States
 by performing multiphonon correction.
 """
 
-import histogram.hdf as hh
 import os
+
+import histogram.hdf as hh
 import numpy as np
+
+from multiphonon.backward import sqe2dos
+from multiphonon.sqe import interp
 
 # when the system is headless, do not plot
 headless = "DISPLAY" not in os.environ or not os.environ["DISPLAY"]
@@ -22,16 +25,12 @@ os.chdir(here)
 iqehist = hh.load("data/Al-iqe.h5")
 
 # interpolate I(Q, E) data so that the energy axis has "zero" as a bin center
-from multiphonon.sqe import interp
-
 newiqe = interp(iqehist, newE=np.arange(-40, 70, 1.0))
 
 # save interpolated data just in case we need it later
 hh.dump(newiqe, "data/Al-iqe-interped.h5")
 
 # create processing engine with processing parameters
-from multiphonon.backward import sqe2dos
-
 workdir = "work-Al"
 iterdos = sqe2dos.sqe2dos(
     newiqe,

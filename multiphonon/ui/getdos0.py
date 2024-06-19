@@ -2,10 +2,7 @@ def notebookUI(samplenxs, mtnxs, initdos=None, options=None, load_options_path=N
     import yaml
 
     if options is not None and load_options_path:
-        raise RuntimeError(
-            "Both options and load_options_path were set: %s, %s"
-            % (options, load_options_path)
-        )
+        raise RuntimeError("Both options and load_options_path were set: %s, %s" % (options, load_options_path))
     if load_options_path:
         with open(load_options_path) as stream:
             options = yaml.load(stream)
@@ -15,39 +12,21 @@ def notebookUI(samplenxs, mtnxs, initdos=None, options=None, load_options_path=N
     import ipywidgets as widgets
     from IPython.display import display
 
-    w_mt_fraction = widgets.BoundedFloatText(
-        description="mt_fraction", min=0.0, max=100.0, value=options["mt_fraction"]
-    )
+    w_mt_fraction = widgets.BoundedFloatText(description="mt_fraction", min=0.0, max=100.0, value=options["mt_fraction"])
     w_const_bg_fraction = widgets.BoundedFloatText(
         description="const_bg_fraction",
         min=0.0,
         max=1.0,
         value=options.get("const_bg_fraction", 0.0),
     )
-    w_Emin = widgets.BoundedFloatText(
-        description="Emin", min=-1000.0, max=0.0, value=options["Emin"]
-    )
-    w_Emax = widgets.BoundedFloatText(
-        description="Emax", min=0.0, max=1000.0, value=options["Emax"]
-    )
-    w_dE = widgets.BoundedFloatText(
-        description="dE", min=0, max=50.0, value=options["dE"]
-    )
-    w_Qmin = widgets.BoundedFloatText(
-        description="Qmin", min=0, max=50.0, value=options["Qmin"]
-    )
-    w_Qmax = widgets.BoundedFloatText(
-        description="Qmax", min=0.0, max=50.0, value=options["Qmax"]
-    )
-    w_dQ = widgets.BoundedFloatText(
-        description="dQ", min=0, max=5.0, value=options["dQ"]
-    )
-    w_T = widgets.BoundedFloatText(
-        description="Temperature", min=0.0, max=5000.0, value=options["T"]
-    )
-    w_Ecutoff = widgets.BoundedFloatText(
-        description="Max energy of phonons", min=0, max=1000.0, value=options["Ecutoff"]
-    )
+    w_Emin = widgets.BoundedFloatText(description="Emin", min=-1000.0, max=0.0, value=options["Emin"])
+    w_Emax = widgets.BoundedFloatText(description="Emax", min=0.0, max=1000.0, value=options["Emax"])
+    w_dE = widgets.BoundedFloatText(description="dE", min=0, max=50.0, value=options["dE"])
+    w_Qmin = widgets.BoundedFloatText(description="Qmin", min=0, max=50.0, value=options["Qmin"])
+    w_Qmax = widgets.BoundedFloatText(description="Qmax", min=0.0, max=50.0, value=options["Qmax"])
+    w_dQ = widgets.BoundedFloatText(description="dQ", min=0, max=5.0, value=options["dQ"])
+    w_T = widgets.BoundedFloatText(description="Temperature", min=0.0, max=5000.0, value=options["T"])
+    w_Ecutoff = widgets.BoundedFloatText(description="Max energy of phonons", min=0, max=1000.0, value=options["Ecutoff"])
     w_ElasticPeakMin = widgets.BoundedFloatText(
         description="Emin of elastic peak",
         min=-300.0,
@@ -60,15 +39,9 @@ def notebookUI(samplenxs, mtnxs, initdos=None, options=None, load_options_path=N
         max=300.0,
         value=options["ElasticPeakMax"],
     )
-    w_M = widgets.BoundedFloatText(
-        description="Average atom mass", min=1.0, max=1000.0, value=options["M"]
-    )
-    w_C_ms = widgets.BoundedFloatText(
-        description="C_ms", min=0.0, max=10.0, value=options["C_ms"]
-    )
-    w_Ei = widgets.BoundedFloatText(
-        description="Ei", min=0, max=2000.0, value=options["Ei"]
-    )
+    w_M = widgets.BoundedFloatText(description="Average atom mass", min=1.0, max=1000.0, value=options["M"])
+    w_C_ms = widgets.BoundedFloatText(description="C_ms", min=0.0, max=10.0, value=options["C_ms"])
+    w_Ei = widgets.BoundedFloatText(description="Ei", min=0, max=2000.0, value=options["Ei"])
     w_workdir = widgets.Text(description="work dir", value=options["workdir"])
 
     update_strategy_weights = options.get("update_strategy_weights", (0.5, 0.5))
@@ -114,9 +87,7 @@ def notebookUI(samplenxs, mtnxs, initdos=None, options=None, load_options_path=N
         import warnings
 
         warnings.simplefilter(action="ignore", category=FutureWarning)
-        dos_update_weights = _get_dos_update_weights(
-            w_update_weight_continuity.value, w_update_weight_area.value
-        )
+        dos_update_weights = _get_dos_update_weights(w_update_weight_continuity.value, w_update_weight_area.value)
         #
         kargs = dict(
             mt_fraction=w_mt_fraction.value,
@@ -138,6 +109,7 @@ def notebookUI(samplenxs, mtnxs, initdos=None, options=None, load_options_path=N
             update_strategy_weights=dos_update_weights,
         )
         import os
+
         import yaml
 
         # pprint.pprint(samplenxs)
@@ -179,8 +151,8 @@ def _get_dos_update_weights(*w):
 
 # modified from https://github.com/alexanderkuk/log-progress
 def log_progress(sequence, every=None, size=None):
-    from ipywidgets import IntProgress, HTML, VBox
     from IPython.display import display
+    from ipywidgets import HTML, IntProgress, VBox
 
     is_iterator = False
     if size is None:
@@ -211,14 +183,10 @@ def log_progress(sequence, every=None, size=None):
         for index, msg in enumerate(sequence, 1):
             if index == 1 or index % every == 0:
                 if is_iterator:
-                    label.value = "Running: {index} / ?: {msg}...".format(
-                        index=index, msg=msg
-                    )
+                    label.value = f"Running: {index} / ?: {msg}..."
                 else:
                     progress.value = index
-                    label.value = "Running: {index} / {size}: {msg}...".format(
-                        index=index, size=size, msg=msg
-                    )
+                    label.value = f"Running: {index} / {size}: {msg}..."
     except:
         progress.bar_style = "danger"
         raise

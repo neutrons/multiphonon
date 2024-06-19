@@ -2,8 +2,8 @@
 #
 # Jiao Lin <jiao.lin@gmail.com>
 
-import numpy as np
 import histogram as H
+import numpy as np
 
 
 class EnergyAxisMissingBinCenterAtZero(Exception):
@@ -11,8 +11,7 @@ class EnergyAxisMissingBinCenterAtZero(Exception):
 
 
 def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None, update_weights=None):
-    """
-    Given a single-phonon SQE, compute DOS
+    """Given a single-phonon SQE, compute DOS
 
     The basic procedure is
      * construct an initial guess of DOS
@@ -51,21 +50,15 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None, update_weights=N
     assert dE > 0, "Energy axis must be incremental"
     Eplus = Efull[Efull > -dE / 2]
     if abs(Eplus[0]) > dE / 1e6:
-        raise EnergyAxisMissingBinCenterAtZero(
-            '"0" must be one of the bin centers of the energy axis'
-        )
+        raise EnergyAxisMissingBinCenterAtZero('"0" must be one of the bin centers of the energy axis')
     Eplus[0] = 0.0
     if initdos is None:
         initdos = guess_init_dos(Eplus, Ecutoff)
     else:
         # make sure the energy axis is compatible with sqe
         dos_Eaxis_part1 = initdos[(Eplus[0], Eplus[-1])].E
-        if dos_Eaxis_part1.size != Eplus.size or not np.allclose(
-            dos_Eaxis_part1, Eplus
-        ):
-            raise RuntimeError(
-                "Incompatible energy axis. DOS: %s, SQE: %s" % (dos_Eaxis_part1, Eplus)
-            )
+        if dos_Eaxis_part1.size != Eplus.size or not np.allclose(dos_Eaxis_part1, Eplus):
+            raise RuntimeError("Incompatible energy axis. DOS: %s, SQE: %s" % (dos_Eaxis_part1, Eplus))
         pass
     # compute sqe from dos
     from ..forward.phonon import computeSQESet, kelvin2mev
@@ -89,9 +82,7 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None, update_weights=N
     expse_E2 = expsqeE2_Epositive.sum(0)
     # - simulation
     simsqe_arr = sqeset[0]
-    simsqe = H.histogram(
-        "simsqe", [("Q", Q2, "1./angstrom"), ("E", E2, "meV")], simsqe_arr
-    )
+    simsqe = H.histogram("simsqe", [("Q", Q2, "1./angstrom"), ("E", E2, "meV")], simsqe_arr)
     simsqe_Epositive = simsqe[(), (Eplus[0], Eplus[-1])]
     simsqe_Epositive.I[mask] = 0
     simse = simsqe_Epositive.I.sum(0)
@@ -107,9 +98,7 @@ def sqe2dos(sqe, T, Ecutoff, elastic_E_cutoff, M, initdos=None, update_weights=N
     dos_in_range.I[dos_in_range.I != dos_in_range.I] = 0
     # clean up data near elastic line
     n_small_E = (Eplus < elastic_E_cutoff[1]).sum()
-    dos_in_range.I[:n_small_E] = (
-        Eplus[:n_small_E] ** 2 * dos_in_range.I[n_small_E] / Eplus[n_small_E] ** 2
-    )
+    dos_in_range.I[:n_small_E] = Eplus[:n_small_E] ** 2 * dos_in_range.I[n_small_E] / Eplus[n_small_E] ** 2
     # keep positive
     dos_in_range.I[dos_in_range.I < 0] = 0
     dos_in_range.E2[:] = (dos_in_range.I * dos_relative_error) ** 2
@@ -148,7 +137,7 @@ def update_dos(original_dos_hist, new_dos_hist, Emin, Emax, weights=None):
 
 
 def guess_init_dos(E, cutoff):
-    """return an initial DOS
+    """Return an initial DOS
 
     It is x^2 near E=0, and flat after that, until it reaches
     maximum E.
@@ -156,9 +145,7 @@ def guess_init_dos(E, cutoff):
     dos = np.ones(E.size, dtype=float)
     dos[E > cutoff] = 0.0
     end_of_E2_zone = cutoff / 3.0
-    dos[E < end_of_E2_zone] = (E * E / end_of_E2_zone / end_of_E2_zone)[
-        E < end_of_E2_zone
-    ]
+    dos[E < end_of_E2_zone] = (E * E / end_of_E2_zone / end_of_E2_zone)[E < end_of_E2_zone]
     dE = E[1] - E[0]
     norm = np.sum(dos) * dE
     g = dos / norm

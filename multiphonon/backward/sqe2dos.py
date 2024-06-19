@@ -2,9 +2,18 @@
 #
 # Jiao Lin <jiao.lin@gmail.com>
 
-import numpy as np
-import histogram.hdf as hh
 import os
+
+import histogram.hdf as hh
+import numpy as np
+
+from ._sqe2dos_script_templates import (
+    plot_dos_iteration_code,
+    plot_intermediate_result_se_code,
+    plot_intermediate_result_sqe_code,
+    plot_residual_code,
+)
+from .singlephonon_sqe2dos import sqe2dos as singlephonon_sqe2dos
 
 
 def sqe2dos(
@@ -128,9 +137,7 @@ def sqe2dos(
         # save DOS
         hh.dump(dos, os.path.join(cwd, "dos.h5"))
         # write scripts
-        create_script(
-            os.path.join(cwd, "plot_sqe.py"), plot_intermediate_result_sqe_code
-        )
+        create_script(os.path.join(cwd, "plot_sqe.py"), plot_intermediate_result_sqe_code)
         create_script(os.path.join(cwd, "plot_se.py"), plot_intermediate_result_se_code)
         total_rounds += 1
         if prev_dos:
@@ -159,12 +166,8 @@ def sqe2dos(
     rel_err_from_residual = np.abs(residual_pos_se.I) / exp_pos_se.I
     # add to the error bar
     final_dos = dos.copy()
-    final_dos_subset = final_dos[
-        (residual_pos_se.E[0], min(Ecutoff, residual_pos_se.E[-1]))
-    ]
-    final_dos_subset.E2 += (
-        final_dos_subset.I * rel_err_from_residual[: final_dos_subset.size()]
-    ) ** 2
+    final_dos_subset = final_dos[(residual_pos_se.E[0], min(Ecutoff, residual_pos_se.E[-1]))]
+    final_dos_subset.E2 += (final_dos_subset.I * rel_err_from_residual[: final_dos_subset.size()]) ** 2
     hh.dump(final_dos, os.path.join(workdir, "final-dos.h5"))
     #
     create_script(
@@ -180,7 +183,7 @@ def sqe2dos(
 
 
 def computeDirtyDOS(sqe, dos, M, T, workdir):
-    """dirty dos calculation is procedure that quickly
+    """Dirty dos calculation is procedure that quickly
     "correct" sqe using the one-phonon Q multiplier.
     After correction, the sqe would look like mostly Q-independent,
     and the sum over Q axis can give a very rough estimate of the DOS.
@@ -188,7 +191,7 @@ def computeDirtyDOS(sqe, dos, M, T, workdir):
     """
     if not os.path.exists(workdir):
         os.makedirs(workdir)
-    from ..forward.phonon import computeSNQ, DWExp, kelvin2mev, gamma0
+    from ..forward.phonon import DWExp, computeSNQ, gamma0, kelvin2mev
 
     beta = 1.0 / (T * kelvin2mev)
     dos1 = dos[(None, sqe.E[-1])]
@@ -317,12 +320,6 @@ def normalizeExpSQE_inelonly(sqe, dos, M, beta, elastic_E_cutoff):
 """
 
 #
-from .singlephonon_sqe2dos import sqe2dos as singlephonon_sqe2dos
-from ._sqe2dos_script_templates import (
-    plot_intermediate_result_sqe_code,
-    plot_intermediate_result_se_code,
-    plot_dos_iteration_code,
-    plot_residual_code,
-)
+
 
 # End of file

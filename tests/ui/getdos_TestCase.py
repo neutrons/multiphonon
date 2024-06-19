@@ -1,19 +1,17 @@
 #!/usr/bin/env python
 #
 
+import os
+import unittest
+
 import pytest
 
 pytestmark = pytest.mark.needs_ipywe
 
 interactive = False
 
-import os
-
 here = os.path.abspath(os.path.dirname(__file__))
 datadir = os.path.join(here, "..", "data")
-
-
-import unittest
 
 
 class TestCase(unittest.TestCase):
@@ -27,7 +25,7 @@ class TestCase(unittest.TestCase):
         return
 
     def test1(self):
-        "multiphonon.ui.getdos"
+        """multiphonon.ui.getdos"""
         from multiphonon.ui import getdos
 
         context = getdos.Context()

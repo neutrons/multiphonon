@@ -1,7 +1,8 @@
-import histogram.hdf as hh
-import numpy as np
 import os
 import sys
+
+import histogram.hdf as hh
+import numpy as np
 
 # hide the warnings on divide by zero etc
 np.seterr(divide="ignore", invalid="ignore")
@@ -95,9 +96,7 @@ def getDOS(
         Max iteration
 
     """
-    for msg in reduce2iqe(
-        sample_nxs, Emin, Emax, dE, Qmin, Qmax, dQ, mt_nxs, iqe_h5, workdir
-    ):
+    for msg in reduce2iqe(sample_nxs, Emin, Emax, dE, Qmin, Qmax, dQ, mt_nxs, iqe_h5, workdir):
         yield msg
     iqe_h5, mtiqe_h5, Qaxis, Eaxis = msg
     iqehist = hh.load(iqe_h5)
@@ -200,6 +199,7 @@ def reduce2iqe(
 
     workdir: str
         path to working directory
+
     """
     # prepare paths
     if not os.path.exists(workdir):
@@ -213,9 +213,7 @@ def reduce2iqe(
     yield "Converting sample data to powder I(Q,E)..."
     raw2iqe(sample_nxs, iqe_h5, Eaxis, Qaxis, type="sample")
     if mt_nxs is not None:
-        _tomtpath = lambda p: os.path.join(
-            os.path.dirname(p), "mt-" + os.path.basename(p)
-        )
+        _tomtpath = lambda p: os.path.join(os.path.dirname(p), "mt-" + os.path.basename(p))
         mtiqe_h5 = _tomtpath(iqe_h5)
         yield "Converting MT data to powder I(Q,E)..."
         raw2iqe(mt_nxs, mtiqe_h5, Eaxis, Qaxis, type="MT")
@@ -236,8 +234,7 @@ def _checkEaxis(Emin, Emax, dE):
     Emax = int(Emax / dE) * dE
     new = Emin, Emax, dE
     warnings.warn(
-        "Zero has to be one of the ticks in the energy axis.\n"
-        "Energy axis modified from %s to %s \n" % (saved, new)
+        "Zero has to be one of the ticks in the energy axis.\n" "Energy axis modified from %s to %s \n" % (saved, new)
     )
     return new
 
@@ -276,6 +273,7 @@ def raw2iqe(eventnxs, iqe_h5, Eaxis, Qaxis, type):
     A tuple containing  Qmin, Qmax, Qdelta
 
     type : str
+
     """
     # if iqe_h5 exists and the parameters do not match,
     # we need to remove the old result
@@ -324,7 +322,7 @@ def raw2iqe(eventnxs, iqe_h5, Eaxis, Qaxis, type):
 
 
 def _fixEaxis(iqe_h5_path, Eaxis):
-    """when iqe is obtained from a nxs or nxspe file where
+    """When iqe is obtained from a nxs or nxspe file where
     tof axis is already converted to E, the reduced data may
     not have the Eaxis as desired. this method fixes it by
     interpolation

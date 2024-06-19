@@ -1,27 +1,25 @@
 #!/usr/bin/env python
 #
 
+import imp
+import os
+import unittest
+
+import histogram.hdf as hh
+import numpy as np
 import pytest
+
+from multiphonon.ui import batch
 
 # pytestmark = pytest.mark.skipif(False, reason="only run mannually")
 pytestmark = pytest.mark.needs_mantid
 
 interactive = False
 
-import os
-
 here = os.path.abspath(os.path.dirname(__file__))
 datadir = os.path.join(here, "..", "data")
 
-import imp
-
 dataurls = imp.load_source("dataurls", os.path.join(datadir, "dataurls.py"))
-
-import numpy as np
-import histogram.hdf as hh
-from multiphonon.ui import batch
-
-import unittest
 
 
 class TestCase(unittest.TestCase):
@@ -44,7 +42,7 @@ class TestCase(unittest.TestCase):
         return
 
     def test1(self):
-        "multiphonon.ui.batch"
+        """multiphonon.ui.batch"""
         _p = lambda f: os.path.join(self.tmpdir, f)
         sample_nxs_list = [_p("1.nxs"), _p("2.nxs")]
         mt_nxs_list = [None, None]
@@ -52,9 +50,7 @@ class TestCase(unittest.TestCase):
         self.assertTrue(
             np.allclose(
                 hh.load("work-1.nxs,None/final-dos.h5").I,
-                hh.load(
-                    os.path.join(here, "expected_results", "batch-1-final-dos.h5")
-                ).I,
+                hh.load(os.path.join(here, "expected_results", "batch-1-final-dos.h5")).I,
             )
         )
         return

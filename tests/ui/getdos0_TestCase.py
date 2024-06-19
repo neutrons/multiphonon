@@ -1,24 +1,22 @@
 #!/usr/bin/env python
 #
 
+import os
+import unittest
+
 import pytest
 
 pytestmark = pytest.mark.needs_ipywe
 
 interactive = False
 
-import os
-
 here = os.path.abspath(os.path.dirname(__file__))
 datadir = os.path.join(here, "..", "data")
 
 
-import unittest
-
-
 class TestCase(unittest.TestCase):
     def test1(self):
-        "multiphonon.ui.getdos0"
+        """multiphonon.ui.getdos0"""
         from multiphonon.ui import getdos0
 
         getdos0.notebookUI("sample.nxs", "mt.nxs")

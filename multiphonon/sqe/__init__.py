@@ -8,9 +8,9 @@ import numpy as np
 
 
 def _conv_unit_label(un):
-    "helper function for plotting"
+    """Helper function for plotting"""
     unstr = str(un)
-    conv = {"1e+10*m**-1": "$\AA ^{-1}$", "1.60218e-22*m**2*kg*s**-2": "meV"}
+    conv = {"1e+10*m**-1": r"$\AA ^{-1}$", "1.60218e-22*m**2*kg*s**-2": "meV"}
     try:
         out = conv[unstr]
     except KeyError:
@@ -23,7 +23,6 @@ def plot(iqe, ax=None, colorbar=True):
 
     Parameters
     ----------
-
     iqe: histogram
         input IQE
     optional arguments:
@@ -37,9 +36,7 @@ def plot(iqe, ax=None, colorbar=True):
     except:
         E = iqe.E
         pass
-    Qg, Eg = np.mgrid[
-        Q[0] : Q[-1] + 1e-5 : Q[1] - Q[0], E[0] : E[-1] + 1e-5 : E[1] - E[0]
-    ]
+    Qg, Eg = np.mgrid[Q[0] : Q[-1] + 1e-5 : Q[1] - Q[0], E[0] : E[-1] + 1e-5 : E[1] - E[0]]
     import numpy.ma as ma
 
     Zm = ma.array(iqe.I, mask=np.isnan(iqe.I))
@@ -50,12 +47,7 @@ def plot(iqe, ax=None, colorbar=True):
     imh = ax.pcolormesh(Qg, Eg, Zm, shading="auto")
     imh.set_clim(0, np.nanmax(iqe.I))
     ax.set_xlim(np.min(Q), np.max(Q))
-    axlabels = {
-        idx: "{}({})".format(
-            iqe.axes()[idx].name(), _conv_unit_label(iqe.axes()[idx].unit())
-        )
-        for idx in range(2)
-    }
+    axlabels = {idx: f"{iqe.axes()[idx].name()}({_conv_unit_label(iqe.axes()[idx].unit())})" for idx in range(2)}
     ax.set_xlabel(axlabels[0])
     ax.set_ylabel(axlabels[1])
     ax.set_xlim(np.min(Q), np.max(Q))
@@ -67,11 +59,10 @@ def plot(iqe, ax=None, colorbar=True):
 
 
 def interp(iqehist, newE):
-    """compute a new IQE histogram from the given IQE using the new energy array by interpolation
+    """Compute a new IQE histogram from the given IQE using the new energy array by interpolation
 
     Parameters
     ----------
-
     iqehist: histogram
         input IQE
 
@@ -129,13 +120,12 @@ def interp(iqehist, newE):
 
 
 def dynamical_range_mask(sqe, Ei):
-    """calculate a mask of dynamical range being measured
+    """Calculate a mask of dynamical range being measured
     at the given incident energy.
     0 means within dynamical range
 
     Parameters
     ----------
-
     sqe: histogram
         S(Q,E)
 
@@ -146,7 +136,7 @@ def dynamical_range_mask(sqe, Ei):
     Q = sqe.Q
     E = sqe.E
     Ef = Ei - E
-    from ..units.neutron import e2k, SE2K
+    from ..units.neutron import SE2K, e2k
 
     ki = e2k(Ei)
     kf = Ef**0.5 * SE2K

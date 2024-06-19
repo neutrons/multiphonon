@@ -3,19 +3,18 @@
 # Jiao Lin
 
 
-"""
-compute multiple scattering
-"""
+"""compute multiple scattering"""
 
 
 def sqe(mpsqe, Ei):
-    """given multiphonon SQE, compute multiple scattering sqe"""
+    """Given multiphonon SQE, compute multiple scattering sqe"""
     # multiple scattering (MS) is uniform along Q
     # so we want to compute the average S from multi-phonon
     # scattering and assign the value to MS result
     # first compute the mask
-    from .sqe import dynamical_range_mask
     import numpy as np
+
+    from .sqe import dynamical_range_mask
 
     mask = dynamical_range_mask(mpsqe, Ei)
     # set outside to zero

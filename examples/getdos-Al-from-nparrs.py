@@ -1,5 +1,4 @@
-"""
-This is a simple example where I(Q,E) data is already in the form
+"""This is a simple example where I(Q,E) data is already in the form
 of a histogram, reduced from the raw experimental data.
 All this script does is to convert I(Q,E) to Density of States
 by performing multiphonon correction.
@@ -8,10 +7,14 @@ is that here the histogram needs to be constructed from numpy
 arrays of Q, E axes and intensity and squared errorbar matrices.
 """
 
-import histogram.hdf as hh
-import histogram as H
 import os
+
+import histogram as H
+import histogram.hdf as hh
 import numpy as np
+
+from multiphonon.backward import sqe2dos
+from multiphonon.sqe import interp
 
 # when the system is headless, do not plot
 headless = "DISPLAY" not in os.environ or not os.environ["DISPLAY"]
@@ -29,21 +32,15 @@ I = np.load("data/Al-iqe-I.npy")  # 2D array of intensities
 E2 = np.load("data/Al-iqe-E2.npy")  # 2D array of errorbar squares
 
 # create a histogram object from the numpy arrays
-iqehist = H.histogram(
-    "IQE", [("Q", Q, "1./angstrom"), ("E", E, "meV")], data=I, errors=E2
-)
+iqehist = H.histogram("IQE", [("Q", Q, "1./angstrom"), ("E", E, "meV")], data=I, errors=E2)
 
 # interpolate I(Q, E) data so that the energy axis has "zero" as a bin center
-from multiphonon.sqe import interp
-
 newiqe = interp(iqehist, newE=np.arange(-40, 70, 1.0))
 
 # save interpolated data just in case we need it later
 hh.dump(newiqe, "data/Al-iqe-interped.h5")
 
 # create processing engine with processing parameters
-from multiphonon.backward import sqe2dos
-
 workdir = "work-Al-from-nparrs"
 iterdos = sqe2dos.sqe2dos(
     newiqe,

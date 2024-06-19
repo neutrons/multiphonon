@@ -1,19 +1,18 @@
 #!/usr/bin/env python
 #
 
+import os
+import sys
+import unittest
+
+import histogram.hdf as hh
+import numpy as np
+
+from multiphonon.sqe import dynamical_range_mask, interp
 
 interactive = False
-
-import sys
-import os
-
 datadir = os.path.join(os.path.dirname(__file__), "../data")
 sys.path.insert(0, datadir)
-
-import unittest
-import numpy as np
-import histogram.hdf as hh
-from multiphonon.sqe import interp, dynamical_range_mask
 
 
 class TestCase(unittest.TestCase):

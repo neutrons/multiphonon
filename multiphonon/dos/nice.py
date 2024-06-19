@@ -1,8 +1,6 @@
 # Jiao Lin <jiao.lin@gmail.com>
 
-"""
-make phonon Density of States nicer by fitting starting curve to a parabolic
-"""
+"""make phonon Density of States nicer by fitting starting curve to a parabolic"""
 
 import numpy as np
 
@@ -30,7 +28,7 @@ class ParabolicFittingError(Exception):
 
 
 def fitparabolic(E, g, N=100, minN=20):
-    """fit the near zero portion of the dos curve to parabolic"""
+    """Fit the near zero portion of the dos curve to parabolic"""
     """
     NOTE TO DEVELOPER:
     default minN=90 matches the default requirement for
@@ -62,7 +60,7 @@ def fitparabolic(E, g, N=100, minN=20):
 
 
 def linear_regression(x, y):
-    """fit y = cx. return c and R**2"""
+    """Fit y = cx. return c and R**2"""
     c = (x * y).sum() / (x * x).sum()
     y_ave = np.average(y)
     SS_tot = ((y - y_ave) ** 2).sum()
@@ -74,7 +72,7 @@ def linear_regression(x, y):
 # copied from
 # http://www.scipy.org/Cookbook/SignalSmooth
 def smooth(x, window_len=11, window="hanning"):
-    """smooth the data using a window with requested size.
+    """Smooth the data using a window with requested size.
 
     This method is based on the convolution of a scaled window with the signal.
     The signal is prepared by introducing reflected copies of the signal
@@ -90,19 +88,20 @@ def smooth(x, window_len=11, window="hanning"):
     output:
         the smoothed signal
 
-    example:
-
+    Example:
+    -------
     t=linspace(-2,2,0.1)
     x=sin(t)+randn(len(t))*0.1
     y=smooth(x)
 
-    see also:
-
+    See Also:
+    --------
     numpy.hanning, numpy.hamming, numpy.bartlett, numpy.blackman, numpy.convolve
     scipy.signal.lfilter
 
     TODO: the window parameter could be the window itself if an array instead of a string
     NOTE: length(output) != length(input), to correct this: return y[(window_len/2-1):-(window_len/2)] instead of just y.
+
     """
     import numpy
 
@@ -116,9 +115,7 @@ def smooth(x, window_len=11, window="hanning"):
         return x
 
     if window not in ["flat", "hanning", "hamming", "bartlett", "blackman"]:
-        raise ValueError(
-            "Window is on of 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'"
-        )
+        raise ValueError("Window is on of 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'")
 
     s = numpy.r_[x[window_len - 1 : 0 : -1], x, x[-1:-window_len:-1]]
     # print(len(s))

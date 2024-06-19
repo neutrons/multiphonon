@@ -3,8 +3,7 @@
 # Jiao Lin
 
 
-"""
-compute one-phonon and multi-phonon S(Q,E) from phonon DOS
+"""compute one-phonon and multi-phonon S(Q,E) from phonon DOS
 
 We follow the formulas in section
 "Calculation of Multiphonon Scattering"
@@ -15,17 +14,19 @@ Some of the implementation here were taken from
 Max Kresch's original multiphonon code.
 """
 
+import math
 import warnings
+
+import numpy as np
 
 
 def sqehist(E, g, **kwds):
-    """a simple wrapper of method sqe to return a histogram
+    """A simple wrapper of method sqe to return a histogram
 
     Please see method sqe for details of all keyword parameters
 
     Parameters
     ----------
-
     E:numpy array of floats
         energies in meV
 
@@ -54,7 +55,7 @@ def sqe(
     starting_order=2,
     Emax=None,
 ):
-    """compute sum of multiphonon SQE from dos
+    r"""Compute sum of multiphonon SQE from dos
 
       S = \sum_{i=2,N} S_i(Q,E)
 
@@ -62,7 +63,6 @@ def sqe(
 
     Parameters
     ----------
-
     E:numpy array of floats
         energies in meV
 
@@ -131,11 +131,10 @@ def sqe(
 
 
 def iterSQESet(N, Q, dQ, E, dE, M, g, beta):
-    """iterate over the set of S(Q,E) for n in [1,N]
+    """Iterate over the set of S(Q,E) for n in [1,N]
 
     Parameters
     ----------
-
     N:integer
         number of iterations
 
@@ -161,7 +160,6 @@ def iterSQESet(N, Q, dQ, E, dE, M, g, beta):
         1/(kBT)
 
     """
-
     E2, AnE_set = computeAnESet(N, E, g, beta, dE)
 
     DW2 = DWExp(Q, M, E, g, beta, dE)
@@ -175,11 +173,10 @@ def iterSQESet(N, Q, dQ, E, dE, M, g, beta):
 
 
 def computeSQESet(N, Q, dQ, E, dE, M, g, beta):
-    """compute the set of S(Q,E) for n in [1,N]
+    """Compute the set of S(Q,E) for n in [1,N]
 
     Parameters
     ----------
-
     N:integer
          number of iterations
 
@@ -205,7 +202,6 @@ def computeSQESet(N, Q, dQ, E, dE, M, g, beta):
         1/(kBT)
 
     """
-
     E2, AnE_set = computeAnESet(N, E, g, beta, dE)
 
     DW2 = DWExp(Q, M, E, g, beta, dE)
@@ -220,11 +216,10 @@ def computeSQESet(N, Q, dQ, E, dE, M, g, beta):
 
 
 def computeSnQSet(N, DW2):
-    """compute the set of Sn(Q) for n in [1,N]
+    """Compute the set of Sn(Q) for n in [1,N]
 
     Parameters
     ----------
-
     N:integer
         number of iterations
 
@@ -245,7 +240,6 @@ def computeSNQ(DW2, N):
 
     Parameters
     ----------
-
     N:integer
          a term in the phonon expansion
 
@@ -257,11 +251,10 @@ def computeSNQ(DW2, N):
 
 
 def computeAnESet(N, E, g, beta, dE):
-    """compute the set of An(E) for n in [1,N]
+    """Compute the set of An(E) for n in [1,N]
 
     Parameters
     ----------
-
     N:integer
         number of iterations
 
@@ -289,13 +282,12 @@ def computeAnESet(N, E, g, beta, dE):
 
 
 def AnE_from_n_1(A1E, Anm1E, dE):
-    """compute A_n(E) from A_{n-1}(E)
+    """Compute A_n(E) from A_{n-1}(E)
 
     A_n(E) = A1 (convolve) A_{n-1}
 
     Parameters
     ----------
-
     A1E:float
         array of energies
 
@@ -327,7 +319,6 @@ def convMatrix(y):
 
     Parameters
     ----------
-
     y:float
         a vector
 
@@ -339,7 +330,7 @@ def convMatrix(y):
 
 
 def computeA1E(E, g, beta, dE):
-    """compute A_1(E)
+    """Compute A_1(E)
 
     A_1(E) = g(E)/(E*gamma_0) / (exp(E/kBT) - 1)
 
@@ -348,9 +339,9 @@ def computeA1E(E, g, beta, dE):
               the output has 2N-1 elements, since the input
               energies are in [0, Emax], while the output energies
               are in [-Emax, Emax]
+
     Parameters
     ----------
-
     E: float
         energy transfer axis
 
@@ -383,7 +374,7 @@ def computeA1E(E, g, beta, dE):
 
 
 def reflected(x, y):
-    """compute reflected function
+    """Compute reflected function
 
     the input x array must starts with 0
     the result is xr, yr tuple
@@ -393,7 +384,6 @@ def reflected(x, y):
 
     Parameters
     ----------
-
     x:float
         a vector
 
@@ -418,7 +408,6 @@ def coth(x):
         a vector
 
     """
-
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         with np.errstate(divide="ignore"):
@@ -429,12 +418,11 @@ def coth(x):
 
 
 def gamma0(E, g, beta, dE):
-    """Compute gamma0
+    r"""Compute gamma0
     gamma0 = \int coth(E/2kBT) g(E)/E dE
 
     Parameters
     ----------
-
     E: float
         energy transfer axis
 
@@ -453,9 +441,7 @@ def gamma0(E, g, beta, dE):
     if not abs(dos_integrated - 1) < 1e-3:
         # import pickle as pkl
         # pkl.dump((E,g,beta,dE), open('mp.forward.phonon.gamma0-debug.pkl', 'w'))
-        raise RuntimeError(
-            "integrated dos should be 1, got %s instead" % (dos_integrated,)
-        )
+        raise RuntimeError("integrated dos should be 1, got %s instead" % (dos_integrated,))
     # compute function to integrate
     with np.errstate(invalid="ignore"):
         f = coth(beta * E / 2.0) * g / E
@@ -464,7 +450,7 @@ def gamma0(E, g, beta, dE):
     return np.sum(f) * dE
 
 
-"""
+r"""
 # this is an implementation that tries to deal with
 # low E part differently.
 # later we decided that it is better to just replace
@@ -523,17 +509,15 @@ def fitparabolic(x, y):
         a vector
 
     """
-
     x2 = x * x
     return (x2 * y).sum() / (x2 * x2).sum()
 
 
 def DWExp(Q, M, E, g, beta, dE):
-    """compute 2W, the exponent of the Debye Waller factor.
+    """Compute 2W, the exponent of the Debye Waller factor.
 
     Parameters
     ----------
-
     Q:float
         momentum transfer axis
 
@@ -559,11 +543,10 @@ def DWExp(Q, M, E, g, beta, dE):
 
 
 def recoilE(Q, M):
-    """compute recoil energy E_r(Q)
+    """Compute recoil energy E_r(Q)
 
     Parameters
     ----------
-
     Q:float
         momentum transfer axis
 
@@ -597,8 +580,5 @@ m_n = 1.6749272e-27  # kg
 
 kelvin2mev = 0.0862
 
-
-import numpy as np
-import math
 
 # End of file

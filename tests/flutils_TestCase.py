@@ -3,21 +3,20 @@
 # pytestmark = pytest.mark.skipif(False, reason="only run mannually")
 # pytestmark = pytest.mark.needs_mantid
 
-interactive = False
-
 import os
+import unittest
+
+import numpy as np
+
+interactive = False
 
 here = os.path.dirname(__file__)
 datadir = os.path.join(here, "data")
 
-import numpy as np
-
-import unittest
-
 
 class TestCase(unittest.TestCase):
     def test1(self):
-        "multiphonon.flutils"
+        """multiphonon.flutils"""
         from multiphonon.flutils import MDH2Histo
 
         h1 = MDH2Histo(os.path.join(datadir, "Al_md.h5"))
@@ -25,7 +24,7 @@ class TestCase(unittest.TestCase):
         return
 
     def test2(self):
-        "multiphonon.flutils"
+        """multiphonon.flutils"""
         from multiphonon.flutils import MDH2Histo
 
         h1 = MDH2Histo(os.path.join(datadir, "Al_md.h5"), Ei=50.0)

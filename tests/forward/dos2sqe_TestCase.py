@@ -2,23 +2,22 @@
 #
 
 
-interactive = False
-
-import sys
 import os
+import sys
+import unittest
 
+import histogram as H
+import histogram.hdf as hh
+import numpy as np
+
+interactive = False
 datadir = os.path.join(os.path.dirname(__file__), "..", "data")
 sys.path.insert(0, datadir)
-
-import unittest
-import numpy as np
-import histogram.hdf as hh
-import histogram as H
 
 
 class TestCase(unittest.TestCase):
     def test1(self):
-        "multiphonon.forward.dos2sqe"
+        """multiphonon.forward.dos2sqe"""
         from dos import loadDOS
 
         E, g = loadDOS()

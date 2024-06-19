@@ -23,8 +23,8 @@ mantid_checked = False
 
 def _checkMantid():
     print("* Checking Mantid ...")
-    import subprocess as sp
     import shlex
+    import subprocess as sp
 
     sp.call(
         shlex.split("python -c 'import matplotlib, mantid'"),
@@ -53,13 +53,12 @@ def reduce(
     tof2E=True,
     ibnorm="ByCurrent",
 ):
-    """reduce a NeXus file to a I(Q,E) histogram using Mantid
+    """Reduce a NeXus file to a I(Q,E) histogram using Mantid
 
     This is a wrapper of Mantid algorithms to reduce a NeXus file to IQE histogram.
 
     Parameters
     ----------
-
     nxsfile: str
         path to nxs file
 
@@ -86,16 +85,17 @@ def reduce(
     ibnorm: str
         Incident beam normalization choice. Allowed values: None, ByCurrent, ToMonitor
         For more details, see http://docs.mantidproject.org/nightly/algorithms/DgsReduction-v1.html
+
     """
-    from mantid.simpleapi import DgsReduction, Load
-    from mantid import mtd
     import mantid.simpleapi as msa
+    from mantid import mtd
+    from mantid.simpleapi import DgsReduction, Load
 
     if tof2E == "guess":
         # XXX: this is a simple guess. all raw data files seem to have root "entry"
         cmd = "h5ls %s" % nxsfile
-        import subprocess as sp
         import shlex
+        import subprocess as sp
 
         o = sp.check_output(shlex.split(cmd)).strip().split()[0]
         if sys.version_info >= (3, 0) and isinstance(o, bytes):
@@ -157,17 +157,13 @@ def reduce(
     err2 /= nev * nev
     import numpy as np
 
-    qaxis = H.axis(
-        "Q", boundaries=np.arange(qmin, qmax + dq / 2.0, dq), unit="1./angstrom"
-    )
+    qaxis = H.axis("Q", boundaries=np.arange(qmin, qmax + dq / 2.0, dq), unit="1./angstrom")
     eaxis = H.axis("E", boundaries=np.arange(emin, emax + de / 2.0, de), unit="meV")
     hist = H.histogram("IQE", (qaxis, eaxis), data=data, errors=err2)
     if outfile.endswith(".nxs"):
         import warnings
 
-        warnings.warn(
-            "reduce function no longer writes iqe.nxs nexus file. it only writes iqe.h5 histogram file"
-        )
+        warnings.warn("reduce function no longer writes iqe.nxs nexus file. it only writes iqe.h5 histogram file")
         outfile = outfile[:-4] + ".h5"
     hh.dump(hist, outfile)
     return hist

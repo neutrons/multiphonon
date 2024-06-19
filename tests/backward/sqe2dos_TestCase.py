@@ -1,28 +1,28 @@
 #!/usr/bin/env python
 #
+import os
+import sys
+import unittest
+import warnings
 
+import histogram.hdf as hh
+import numpy as np
+import pylab
+
+from multiphonon.backward import sqe2dos
+from multiphonon.sqe import interp
 
 interactive = False
-
-import sys
-import os
 
 datadir = os.path.join(os.path.dirname(__file__), "../data")
 sys.path.insert(0, datadir)
 here = os.path.dirname(__file__)
 
-import unittest
-import warnings
-import numpy as np
-import histogram.hdf as hh
-from multiphonon.backward import sqe2dos
-
 
 class TestCase(unittest.TestCase):
     def test2a(self):
-        "sqe2dos: V exp"
+        """sqe2dos: V exp"""
         iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
-        from multiphonon.sqe import interp
 
         newiqe = interp(iqehist, newE=np.arange(-15, 80, 1.0))
         hh.dump(newiqe, "V-iqe-interped.h5")
@@ -64,9 +64,8 @@ class TestCase(unittest.TestCase):
         return
 
     def test2a2(self):
-        "sqe2dos: check energy axis"
+        """sqe2dos: check energy axis"""
         iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
-        from multiphonon.sqe import interp
 
         newiqe = interp(iqehist, newE=np.arange(-15.5, 80, 1.0))
         iterdos = sqe2dos.sqe2dos(
@@ -94,7 +93,6 @@ class TestCase(unittest.TestCase):
 
     def test2b(self):
         iqehist = hh.load(os.path.join(datadir, "Al-iqe.h5"))
-        from multiphonon.sqe import interp
 
         newiqe = interp(iqehist, newE=np.arange(-40, 70, 1.0))
         hh.dump(newiqe, "Al-iqe-interped.h5")
@@ -188,7 +186,6 @@ class TestCase(unittest.TestCase):
 
 if __name__ == "__main__":
     interactive = True
-    import pylab
 
     unittest.main()
 

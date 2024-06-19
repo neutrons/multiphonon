@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 #
 
-import sys
 import os
+import sys
 
 sys.path.insert(0, os.path.abspath("../data"))
 
@@ -11,9 +11,10 @@ import unittest
 
 class TestCase(unittest.TestCase):
     def test1(self):
-        "multiphonon.forward.phonon.DWExp"
-        from multiphonon.forward.phonon import DWExp
+        """multiphonon.forward.phonon.DWExp"""
         from dos import loadDOS
+
+        from multiphonon.forward.phonon import DWExp
 
         E, g = loadDOS()
         dE = E[1] - E[0]

@@ -2,6 +2,6 @@
 #
 # Jiao Lin
 
-from ._version import __version__
+from ._version import __version__  # noqa: F401
 
 # End of file

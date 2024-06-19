@@ -1,25 +1,22 @@
 #!/usr/bin/env python
 #
 
+import os
+import sys
+import unittest
+
+import histogram as H
+import histogram.hdf as hh
+import numpy as np
 
 interactive = False
-
-import sys
-import os
-
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "data"))
-
-import unittest
-import numpy as np
-import histogram.hdf as hh
-
-
 expected_results_dir = os.path.join(os.path.dirname(__file__), "expected_results")
 
 
 class TestCase(unittest.TestCase):
     def test1(self):
-        "multiphonon.forward.phonon.computeAnESet"
+        """multiphonon.forward.phonon.computeAnESet"""
         from dos import loadDOS
 
         E, g = loadDOS()
@@ -33,9 +30,7 @@ class TestCase(unittest.TestCase):
         kelvin2mev = 0.0862
         beta = 1.0 / (300 * kelvin2mev)
         E, An_set = computeAnESet(N=5, E=E, g=g, beta=beta, dE=dE)
-        self._check(
-            E, np.load(os.path.join(expected_results_dir, "phonon.test1.E.npy"))
-        )
+        self._check(E, np.load(os.path.join(expected_results_dir, "phonon.test1.E.npy")))
         self._check(
             An_set,
             np.load(os.path.join(expected_results_dir, "phonon.test1.An_set.npy")),
@@ -50,7 +45,7 @@ class TestCase(unittest.TestCase):
         return
 
     def test2(self):
-        "multiphonon.forward.phonon.computeSQESet"
+        """multiphonon.forward.phonon.computeSQESet"""
         from dos import loadDOS
 
         E, g = loadDOS()
@@ -83,16 +78,14 @@ class TestCase(unittest.TestCase):
             # pylab.imshow(Sn.T)
             # pylab.show()
             # save(Sn, 'S%s' % (i+1))
-            self._check(
-                Sn, hh.load(os.path.join(expected_results_dir, "S%s.h5" % (i + 1,))).I
-            )
+            self._check(Sn, hh.load(os.path.join(expected_results_dir, "S%s.h5" % (i + 1,))).I)
             continue
         summed = S_set.sum(axis=0)
         save(summed, "S")
         return
 
     def test3(self):
-        "multiphonon.forward.phonon.sqe"
+        """multiphonon.forward.phonon.sqe"""
         from dos import loadDOS
 
         E, g = loadDOS()
@@ -107,9 +100,6 @@ class TestCase(unittest.TestCase):
         self.assertTrue(np.allclose(a1, a2))
 
     pass  # end of TestCase
-
-
-import histogram as H
 
 
 def saveSQE(Q, E, S, name):

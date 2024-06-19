@@ -8,13 +8,16 @@
 #
 #
 import os
+
 import histogram.hdf as hh
+
 from multiphonon.backward import sqe2dos
 
 # when the system is headless, do not plot
 headless = "DISPLAY" not in os.environ or not os.environ["DISPLAY"]
 if not headless:
     from matplotlib import pyplot as plt
+
     from multiphonon.sqe import plot as plot_sqe
 
 

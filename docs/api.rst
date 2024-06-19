@@ -49,4 +49,3 @@ helper functions
 .. autofunction:: multiphonon.redutils.reduce
 .. automodule:: multiphonon.backward.plotutils
    :members:
-

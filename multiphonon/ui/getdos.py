@@ -1,10 +1,12 @@
 # -*- python -*-
 #
+import os
+
 import ipywe.wizard as wiz
 import ipywidgets as ipyw
-from ipywe import fileselector
-import os
 import numpy as np
+from ipywe import fileselector
+
 from . import context2kargs
 
 
@@ -27,9 +29,7 @@ class GetSampleNxs(wiz.Step):
             start_dir = os.path.dirname(context.sample_nxs)
         else:
             start_dir = "/SNS/ARCS"
-        self.fs = fileselector.FileSelectorPanel(
-            "Select a file", start_dir=start_dir, type="file"
-        )
+        self.fs = fileselector.FileSelectorPanel("Select a file", start_dir=start_dir, type="file")
 
         def next(s):
             self.sample_nxs = self.fs.selected
@@ -72,9 +72,7 @@ class GetMTNxs(wiz.Step):
 
     def createFS(self):
         start_dir = os.path.dirname(self.context.mt_nxs or self.context.sample_nxs)
-        self.fs = fileselector.FileSelectorPanel(
-            "Select a file", start_dir=start_dir, type="file"
-        )
+        self.fs = fileselector.FileSelectorPanel("Select a file", start_dir=start_dir, type="file")
 
         def next(s):
             self.mt_nxs = self.fs.selected
@@ -107,16 +105,12 @@ class GetMTNxs(wiz.Step):
 
 # Step 3:
 class GetEiT(wiz.Step):
-    "Exp conditions: Ei, T"
+    """Exp conditions: Ei, T"""
 
     def createPanel(self):
         context = self.context
-        self.text_Ei = ipyw.BoundedFloatText(
-            description="Ei (meV)", value=context.Ei, min=0.0, max=10000
-        )
-        self.text_T = ipyw.BoundedFloatText(
-            description="Temperature (Kelvin)", value=context.T, min=0.0, max=10000
-        )
+        self.text_Ei = ipyw.BoundedFloatText(description="Ei (meV)", value=context.Ei, min=0.0, max=10000)
+        self.text_T = ipyw.BoundedFloatText(description="Temperature (Kelvin)", value=context.T, min=0.0, max=10000)
         OK = ipyw.Button(description="OK")
         OK.on_click(self.handle_next_button_click)
         widgets = [self.text_Ei, self.text_T, OK]
@@ -146,7 +140,7 @@ def round2(a, digits=1):
 #
 # Step 1:
 class GetEAxis(wiz.Step):
-    "E axis"
+    """E axis"""
 
     def createPanel(self):
         context = self.context
@@ -189,7 +183,7 @@ QEGridWizardStart = GetEAxis
 
 # Step 2:
 class GetQAxis(wiz.Step):
-    "Q axis"
+    """Q axis"""
 
     def createPanel(self):
         context = self.context
@@ -272,12 +266,8 @@ class GetInitDOS(wiz.Step):
 
     def createFS(self):
         context = self.context
-        start_dir = (
-            "/SNS/ARCS" if context.initdos is None else os.path.dirname(context.initdos)
-        )
-        self.fs = fileselector.FileSelectorPanel(
-            "Select a file", start_dir=start_dir, type="file"
-        )
+        start_dir = "/SNS/ARCS" if context.initdos is None else os.path.dirname(context.initdos)
+        self.fs = fileselector.FileSelectorPanel("Select a file", start_dir=start_dir, type="file")
 
         def next(s):
             self.initdos = self.fs.selected
@@ -340,6 +330,7 @@ class GetParameters(wiz.Step):
         kargs = context2kargs(context)
         # run getdos
         import os
+
         import yaml
 
         workdir = context.workdir
@@ -385,11 +376,10 @@ class GetParameters(wiz.Step):
 
 def createParameterInputWidgets(context):
     from collections import OrderedDict
+
     import ipywidgets as widgets
 
-    w_mt_fraction = widgets.BoundedFloatText(
-        description="mt_fraction", min=0.0, max=1.0, value=context.mt_fraction
-    )
+    w_mt_fraction = widgets.BoundedFloatText(description="mt_fraction", min=0.0, max=1.0, value=context.mt_fraction)
     w_const_bg_fraction = widgets.BoundedFloatText(
         description="const_bg_fraction",
         min=0.0,
@@ -414,12 +404,8 @@ def createParameterInputWidgets(context):
         max=context.Ei / 2.0,
         value=context.ElasticPeakMax,
     )
-    w_M = widgets.BoundedFloatText(
-        description="Average atom mass", min=1.0, max=1000.0, value=context.M
-    )
-    w_C_ms = widgets.BoundedFloatText(
-        description="C_ms", min=0.0, max=10.0, value=context.C_ms
-    )
+    w_M = widgets.BoundedFloatText(description="Average atom mass", min=1.0, max=1000.0, value=context.M)
+    w_C_ms = widgets.BoundedFloatText(description="C_ms", min=0.0, max=10.0, value=context.C_ms)
 
     update_strategy_weights = context.update_strategy_weights
     w_update_weight_continuity = widgets.BoundedFloatText(

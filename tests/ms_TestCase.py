@@ -1,22 +1,21 @@
 #!/usr/bin/env python
 #
 
+import os
+import unittest
+
+import histogram as H
+import histogram.hdf as hh
+
+from multiphonon import ms
 
 interactive = False
-
-import os
-
 datadir = os.path.join(os.path.dirname(__file__), "data")
-
-import unittest
-import histogram.hdf as hh
-import histogram as H
-from multiphonon import ms
 
 
 class TestCase(unittest.TestCase):
     def test1(self):
-        "multiphonon.ms"
+        """multiphonon.ms"""
         mpsqe = hh.load(os.path.join(datadir, "V-S2..5.h5"))
         mssqe = ms.sqe(mpsqe, Ei=110.0)
         if interactive:

@@ -1,22 +1,21 @@
 #!/usr/bin/env python
 #
 
+import os
+import sys
+import unittest
+
+import numpy
 
 skip = True
 interactive = False
 
-import sys
-import os
-
 sys.path.insert(0, os.path.abspath("../data"))
-
-import unittest
-import numpy
 
 
 class TestCase(unittest.TestCase):
     def test1(self):
-        "multiphonon.forward.phonon.computeAnESet: UN N dos"
+        """multiphonon.forward.phonon.computeAnESet: UN N dos"""
         E, g = readdos()
         dE = E[1] - E[0]
         # expand E a bit
@@ -39,14 +38,14 @@ class TestCase(unittest.TestCase):
         return
 
     def test2(self):
-        "multiphonon.forward.phonon.sqe: UN N dos"
+        """multiphonon.forward.phonon.sqe: UN N dos"""
         E, g = readdos()
         dE = E[1] - E[0]
         #
         from multiphonon.forward.phonon import sqe
 
         q, e, i = sqe(E, g, T=5, M=14, N=7, Qmax=45.0)
-        from histogram import plot, histogram
+        from histogram import histogram, plot
 
         axes = [("Q", q, "angstrom**-1"), ("E", e, "meV")]
         iqe = histogram("iqe", axes, i)

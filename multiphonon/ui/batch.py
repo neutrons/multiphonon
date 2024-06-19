@@ -3,7 +3,7 @@
 
 
 def process(sample_nxs_list, mt_nxs_list, parameter_yaml):
-    """process a series of files using a fixed set of parameters
+    """Process a series of files using a fixed set of parameters
 
     This implementation just shows one way of processing a batch job,
     where the processing parameters stay fixed except for
@@ -12,8 +12,9 @@ def process(sample_nxs_list, mt_nxs_list, parameter_yaml):
     implement his/her own methods.
     """
     import os
-    from . import Context, context2kargs
+
     from ..getdos import getDOS
+    from . import Context, context2kargs
 
     assert len(sample_nxs_list) == len(mt_nxs_list)
     # load parameters

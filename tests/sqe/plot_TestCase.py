@@ -1,22 +1,19 @@
 #!/usr/bin/env python
 #
+import os
+import unittest
 
+import histogram.hdf as hh
+
+from multiphonon.sqe import _conv_unit_label, plot
 
 interactive = False
-
-import os
-
 datadir = os.path.join(os.path.dirname(__file__), "../data")
-
-import unittest
-import histogram.hdf as hh
-from multiphonon.sqe import plot
-from multiphonon.sqe import _conv_unit_label
 
 
 class TestCase(unittest.TestCase):
     def test1(self):
-        "multiphonon.sqe.plot"
+        """multiphonon.sqe.plot"""
         sqe = hh.load(os.path.join(datadir, "V-iqe.h5"))
         if not interactive:
             import matplotlib
@@ -30,7 +27,7 @@ class TestCase(unittest.TestCase):
         return
 
     def test2(self):
-        "multiphonon.sqe.plot with existing axis"
+        """multiphonon.sqe.plot with existing axis"""
         import matplotlib
         from matplotlib import pyplot as plt
 
@@ -44,8 +41,7 @@ class TestCase(unittest.TestCase):
         return
 
     def test3(self):
-        "multiphonon.sqe._conv_unit_label with unknown axes label"
-
+        """multiphonon.sqe._conv_unit_label with unknown axes label"""
         jk = _conv_unit_label("test")
         assert jk == "test"
 

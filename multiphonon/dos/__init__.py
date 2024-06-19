@@ -4,11 +4,10 @@
 
 
 def interp(doshist, newE):
-    """compute a new DOS histogram from the given DOS using the new energy array by interpolation
+    """Compute a new DOS histogram from the given DOS using the new energy array by interpolation
 
     Parameters
     ----------
-
     doshist: histogram
         input DOS
 
@@ -16,8 +15,8 @@ def interp(doshist, newE):
         new energy centers in meV
 
     """
-    import numpy as np
     import histogram as H
+    import numpy as np
 
     try:
         E = doshist.energy

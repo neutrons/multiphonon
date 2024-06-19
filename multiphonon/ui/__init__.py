@@ -64,9 +64,7 @@ def context2kargs(context):
     d["Qmin"], d["Qmax"], d["dQ"] = context.Qaxis
     from .getdos0 import _get_dos_update_weights
 
-    d["update_strategy_weights"] = _get_dos_update_weights(
-        *context.update_strategy_weights
-    )
+    d["update_strategy_weights"] = _get_dos_update_weights(*context.update_strategy_weights)
     d["elastic_E_cutoff"] = context.ElasticPeakMin, context.ElasticPeakMax
     del d["ElasticPeakMax"], d["ElasticPeakMin"], d["Eaxis"], d["Qaxis"], d["mtiqe_h5"]
     return d

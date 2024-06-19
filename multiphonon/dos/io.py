@@ -8,8 +8,9 @@
 
 
 def fromascii(datapath, x_unit=None):
-    "read dos from an ascii data file"
+    """Read dos from an ascii data file"""
     import warnings
+
     import numpy as np
 
     # read data
@@ -60,8 +61,9 @@ def fromascii(datapath, x_unit=None):
     if x_unit == "meV":
         pass
     elif x_unit == "TeraHz":
-        from ..units.phonon import hertz2mev
         from math import pi
+
+        from ..units.phonon import hertz2mev
 
         E *= 2 * pi * 1e12 * hertz2mev
     else:
@@ -70,7 +72,7 @@ def fromascii(datapath, x_unit=None):
 
 
 def fromidf(datapath):
-    "read dos histogram from a idf data file"
+    """Read dos histogram from a idf data file"""
     from danse.ins.idf import readDOS
 
     e, Z = readDOS(datapath)

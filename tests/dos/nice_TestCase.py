@@ -1,22 +1,21 @@
 #!/usr/bin/env python
 #
 
-interactive = False
-
 import os
-import numpy as np
+import unittest
 
-here = os.path.dirname(__file__)
-datadir = os.path.join(here, "data")
+import numpy as np
 
 from multiphonon.dos import nice
 
-import unittest
+interactive = False
+here = os.path.dirname(__file__)
+datadir = os.path.join(here, "data")
 
 
 class TestCase(unittest.TestCase):
     def test1(self):
-        "smooth"
+        """Smooth"""
         t = np.linspace(-4, 4, 100)
         x = np.sin(t)
         xn = x + np.random.randn(len(t)) * 0.1

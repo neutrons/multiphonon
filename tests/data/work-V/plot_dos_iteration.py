@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 import os
 
-curdir = os.path.dirname(__file__)
-
 import matplotlib as mpl
-
-mpl.rcParams["figure.figsize"] = 6, 4.5
+from matplotlib import pyplot as plt
 
 from multiphonon.backward.plotutils import plot_dos_iteration
 
+curdir = os.path.dirname(__file__)
+
+mpl.rcParams["figure.figsize"] = 6, 4.5
+
 plot_dos_iteration(curdir, 6)
-from matplotlib import pyplot as plt
 
 plt.show()

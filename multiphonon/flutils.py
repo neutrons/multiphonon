@@ -1,11 +1,11 @@
-import histogram as H
-import h5py
 import copy
+
+import h5py
+import histogram as H
 
 
 def MDH2Histo(filename, Ei=None):
-    """
-    Load an hdf 5 file containing an MDHistogram workspace and
+    """Load an hdf 5 file containing an MDHistogram workspace and
     populate a histogram object.
     The MDHistogram workspace must have an axis with a long_name of 'DeltaE'
     and another one with a long_name of '|Q|'.
@@ -43,7 +43,7 @@ def MDH2Histo(filename, Ei=None):
             try:
                 Ei = rh["experiment0/logs/Ei"]["value"][:][0]
             except:
-                print("Problem reading Ei from{}".format(filename))
+                print(f"Problem reading Ei from{filename}")
     data = datain["signal"] / datain["num_events"]
     err2 = datain["errors_squared"] / (datain["num_events"] ** 2)
     # transpose data if it is from a file with Energy axis before the Q axis.

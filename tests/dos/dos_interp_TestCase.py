@@ -1,22 +1,23 @@
 #!/usr/bin/env python
 #
 
-interactive = False
 
 import os
-import numpy as np
-import histogram.hdf as hh
+import unittest
 
-here = os.path.dirname(__file__)
+import histogram.hdf as hh
+import numpy as np
 
 from multiphonon.dos import interp
 
-import unittest
+interactive = False
+
+here = os.path.dirname(__file__)
 
 
 class TestCase(unittest.TestCase):
     def test1(self):
-        "interp"
+        """Interp"""
         dos = hh.load(os.path.join(here, "dos_to_interp.h5"))
         newE = np.arange(0, 45, 0.5)
         newdos = interp(dos, newE)

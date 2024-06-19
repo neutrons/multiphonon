@@ -1,24 +1,25 @@
 #!/usr/bin/env python
 #
 
+import os
+import sys
+import unittest
+
+import histogram.hdf as hh
+import pylab
+
+from multiphonon.backward import sqe2dos
 
 interactive = False
-
-import sys
-import os
 
 datadir = os.path.join(os.path.dirname(__file__), "../data")
 sys.path.insert(0, datadir)
 here = os.path.dirname(__file__)
 
-import unittest
-import histogram.hdf as hh
-from multiphonon.backward import sqe2dos
-
 
 class TestCase(unittest.TestCase):
     def test2a(self):
-        "sqe2dos: V exp"
+        """sqe2dos: V exp"""
         iqehist = hh.load(os.path.join(datadir, "XYZ2-iqe-Ei_20.h5"))
         initdos = hh.load(os.path.join(datadir, "XYZ2-initdos-Ei_80.h5"))
         iterdos = sqe2dos.sqe2dos(
@@ -45,7 +46,6 @@ class TestCase(unittest.TestCase):
 
 if __name__ == "__main__":
     interactive = True
-    import pylab
 
     unittest.main()
 

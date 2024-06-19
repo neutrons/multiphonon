@@ -1,12 +1,12 @@
+import os
+
+import histogram.hdf as hh
 import matplotlib.pyplot as plt
 import numpy as np
-import histogram.hdf as hh
-import os
 
 
 def plot_dos_iteration(curdir, total_rounds=None):
-    """
-    plot the  DOS for each iteration
+    """Plot the  DOS for each iteration
 
     Parameters
     ----------
@@ -34,7 +34,7 @@ def plot_dos_iteration(curdir, total_rounds=None):
 
 
 def plot_residual(curdir):
-    """plot the  residual DOS
+    """Plot the  residual DOS
 
     Parameters
     ----------
@@ -42,7 +42,6 @@ def plot_residual(curdir):
         path to the root of the working directory for SQE->DOS calculation
 
     """
-
     exp_pos_se = hh.load(os.path.join(curdir, "I_E-exp-posE.h5"))
     residual_pos_se = hh.load(os.path.join(curdir, "residual_E-posE.h5"))
     E = exp_pos_se.E
@@ -54,17 +53,15 @@ def plot_residual(curdir):
 
 
 def plot_intermediate_result_sqe(curdir):
-    """plot the  intermediate S(Q,E)
+    """Plot the  intermediate S(Q,E)
 
     Parameters
     ----------
-
     curdir: str
         path to one of the iteration working directory for SQE->DOS calculation,
         for example, work/round-5
 
     """
-
     from ._sqe2dos_script_templates import plots_table as plots
 
     plots = plots.strip().splitlines()
@@ -94,17 +91,15 @@ def plot_intermediate_result_sqe(curdir):
 
 
 def plot_intermediate_result_se(curdir):
-    """plot the  intermediate S(E)
+    """Plot the  intermediate S(E)
 
     Parameters
     ----------
-
     curdir: str
         path to one of the iteration working directory for SQE->DOS calculation,
         for example, work/round-5
 
     """
-
     # mpl.rcParams['figure.figsize'] = 12,9
     from ._sqe2dos_script_templates import plots_table as plots
 
