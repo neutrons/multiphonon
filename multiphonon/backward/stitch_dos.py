@@ -98,8 +98,10 @@ class DOSStitcher(DOSStitcherBase):
         else:
             if abs(scale1 - scale2) / scale1 > 0.05:
                 warnings.warn(
-                    f"Scaling factor to combine DOSes calculated is not stable: {scale1} (using continuous criteria) vs {scale2} (using area criteria)\n"
-                    f"You may want to consider adjusting the parameters such as the E range (Emin ={Emin} Emax={Emax}) (Emax more specifically)"
+                    f"Scaling factor to combine DOSes calculated is not stable: {scale1} (using continuous criteria)"
+                    f" vs {scale2} (using area criteria)\n"
+                    f"You may want to consider adjusting the parameters such as the E range "
+                    f"(Emin ={Emin} Emax={Emax}) (Emax more specifically)"
                 )
             weights = self.weights
             if weights is None:

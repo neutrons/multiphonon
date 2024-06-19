@@ -253,7 +253,8 @@ class GetQAxis(wiz.Step):
 class GetInitDOS(wiz.Step):
     def createPanel(self):
         explanation = ipyw.HTML(
-            "If you are combining data from different incident energies, it is desirable to provide an DOS computed from higher Ei. "
+            "If you are combining data from different incident energies, "
+            "it is desirable to provide an DOS computed from higher Ei. "
             "Please choose the DOS histogram for initial input (you can also skip this step) :"
         )
         self.warning = ipyw.HTML()
