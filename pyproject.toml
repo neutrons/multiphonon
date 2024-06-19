@@ -11,9 +11,8 @@ select = ["A", "ARG","ASYNC","BLE","C90", "D", "E", "F", "I", "N", "UP032", "W"]
 ignore = ["D203", # conflict with D211
           "D213", # conflict with D212
           "D205", # conflict
-          "ANN201", "D400", "D401", "D404", "D415", # Unnecessary
-          "ARG001","ARG002", "N802", "N803","N806", "D100","D101","D102","D103", "D104","D107","D417", # put it back in the future
-          "N812", "N999", "E731", "E741", "C901", # back in the future too
-          "BLE001", "D105", "E722", "F821" ,"F841", "N815", "N816", "N818",  # in progress
+          "ANN201", "D400", "D401", "D404", "D415","F821", # Unnecessary
+          "ARG001","ARG002","BLE001", "N802", "N803","N806", "D100","D101","D102","D103", "D104","D107","D417", # put it back in the future
+          "N812", "N815", "N816","N818", "N999", "E731", "E741", "C901", "F841","E722", # back in the future too
           ]
 exclude = ["docs/conf.py"]

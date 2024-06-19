@@ -39,6 +39,7 @@ class Context:
         return
 
     def __str__(self):
+        """String method"""
         d = self.to_dict()
         l = ["%s=%s" % (k, v) for k, v in d.items()]
         return "\n".join(l)
