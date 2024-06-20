@@ -8,11 +8,39 @@ line-length = 124
 
 [tool.ruff.lint]
 select = ["A", "ARG","ASYNC","BLE","C90", "D", "E", "F", "I", "N", "UP032", "W"]
-ignore = ["D203", # conflict with D211
-          "D213", # conflict with D212
-          "D205", # conflict
-          "ANN201", "D400", "D401", "D404", "D415","F821", # Unnecessary
-          "ARG001","ARG002","BLE001", "N802", "N803","N806", "D100","D101","D102","D103", "D104","D107","D417", # put it back in the future
-          "N812", "N815", "N816","N818", "N999", "E731", "E741", "C901", "F841","E722", # back in the future too
+ignore = ["D203", # 1 blank line required before class docstring, conflict with D211
+          "D213", # Multi-line docstring summary should start at the second line, conflict with D212
+          "D205", # 1 blank line required between summary line and description, conflict
+          # Unnecessary
+          "ANN201", # Missing return type annotation for public function
+          "D400", # First line should end with a period
+          "D401", # First line of docstring should be in imperative mood
+          "D404", # First word of the docstring should not be "This"
+          "D415", #First line should end with a period, question mark, or exclamation point
+          "F821", # Undefined name
+          # For Future to be included
+          "ARG001", # Unused function argument
+          "ARG002", # Unused method argument
+          "BLE001", # Do not catch blind exception
+          "N802", # Function name should be lowercase
+          "N803", # Argument name should be lowercase
+          "N806", # Variable {name} in function should be lowercase
+          "D100", # Missing docstring in public module
+          "D101", # Missing docstring in public class
+          "D102", # Missing docstring in public method
+          "D103", # Missing docstring in public function
+          "D104", # Missing docstring in public package
+          "D107", # Missing docstring in __init__
+          "D417", # Missing argument description in the docstring for {definition}: {name}
+          "N812", # Lowercase {name} imported as non-lowercase {asname}
+          "N815", # Variable in class scope should not be mixedCase
+          "N816", # Variable in global scope should not be mixedCase
+          "N818", # Exception name should be named with an Error suffix
+          "N999", # Invalid module name
+          "E731", # Do not assign a lambda expression, use a def
+          "E741", # Ambiguous variable name
+          "C901", # {name} is too complex ({complexity} > {max_complexity})
+          "F841", # Local variable is assigned to but never used
+          "E722", # Do not use bare except
           ]
 exclude = ["docs/conf.py"]
