@@ -12,11 +12,11 @@ For SNS users, GetDOS can be performed at SNS analysis cluster through the jupyt
 * First log into SNS analysis cluster using thinlinc. The instructions for that can be found at https://analysis.sns.gov/
 * Inside the thinlinc session of analysis.sns.gov, open a browser window and connect to https://jupyter.sns.gov, and login with your XCAMS/UCAMS account credentials
 * Follow the tutorial videos below:
-    
+
   * `For the first time users, a setup is necessary  <https://www.youtube.com/embed/5XOX8RdHBnQ?start=0&end=36&version=3>`_
   * `Run GetDOS2 <https://www.youtube.com/embed/uTEEyifpG-k>`_ (this works for SNS data only)
 
-    
+
 GetDOS using local installation
 -------------------------------
 
@@ -39,7 +39,7 @@ to a phonon DOS spectrum
 
 The best way to learn how to perform such a conversion is to follow one of the notebooks
 or scripts in `examples <../examples>`_
-	   
+
 The processing is an iterative procedure, and in this plot you can see the DOS
 is getting better in each iteration:
 
@@ -72,7 +72,7 @@ Here is a plot of the density of states obtained from the :math:`E_i=300` meV da
    :width: 400px
 
 This data covers the full phonon DOS spectrum, but the resolution at lower energies are not optimal.
-	   
+
 Another dataset was meassured at :math:`E_i=130` meV. This is the measured S(Q,E):
 
 .. image:: images/graphite-SQE-Ei_130.png
@@ -100,7 +100,7 @@ curve.
 When the two algorithms disagree in calculating the scaling factor, you may see a warning message like this::
 
   UserWarning: Scaling factor to combine DOSes calculated is not stable: 1.19869218495 (using continuous criteria) vs 1.02762712281 (using area criteria)
-	   
+
 Sometimes the disagreement is acceptable, other times you may want to experiment with different stitching
 points to get better results.
 

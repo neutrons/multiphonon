@@ -43,7 +43,7 @@ To run the example notebooks, install in the same conda environment some extra p
 Start a jupyter server
 
     $ jupyter notebook
-    
+
 And then open an example notebook and follow instructions
 
 **Note:** For an example notebook, look for a pdf with same name. It should contain expected outputs and plots.
@@ -53,4 +53,3 @@ Notebooks:
   [the vanadium example with UI widgets](getdos2-V_Ei120meV.ipynb).
 * For users who are comfortable with python and jupyter notebook, please start with
   [the vanadium example without UI widgts](getdos2-V_Ei120meV-noUI.ipynb).
-
