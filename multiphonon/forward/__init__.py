@@ -76,6 +76,3 @@ def dos2sqe(dos, C_ms, sqe, T, M, Ei):
     tot_inel_sqe = singlephonon_sqe + mpsqe + mssqe
     tot_inel_sqe.I[mask] = np.nan
     return singlephonon_sqe, mpsqe, mssqe, tot_inel_sqe
-
-
-# End of file

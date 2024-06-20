@@ -579,6 +579,3 @@ m_n = 1.6749272e-27  # kg
 
 
 kelvin2mev = 0.0862
-
-
-# End of file

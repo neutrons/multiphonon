@@ -185,5 +185,3 @@ if __name__ == "__main__":
     import pylab
 
     unittest.main()
-
-# End of file

@@ -16,6 +16,3 @@ def loadDOS():
 
     E, g = nice_dos(E, Z)
     return E, g
-
-
-# End of file

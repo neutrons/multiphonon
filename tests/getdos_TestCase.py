@@ -82,5 +82,3 @@ def close_hist(h1, h2):
 if __name__ == "__main__":
     interactive = True
     unittest.main()
-
-# End of file

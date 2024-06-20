@@ -77,6 +77,3 @@ def fromidf(datapath):
 
     e, Z = readDOS(datapath)
     return e, Z, np.zeros(e.size)
-
-
-# End of file

@@ -28,6 +28,3 @@ def interp(doshist, newE):
     Eaxis = H.axis("E", newE, unit="meV")
     newHist = H.histogram("DOS", [Eaxis], data=newS, errors=newS_E2)
     return newHist
-
-
-# End of file

@@ -320,6 +320,3 @@ def normalizeExpSQE_inelonly(sqe, dos, M, beta, elastic_E_cutoff):
 """
 
 #
-
-
-# End of file

@@ -149,6 +149,3 @@ def dynamical_range_mask(sqe, Ei):
     mask = np.zeros(sqe.I.shape, dtype="bool")
     mask = (ki + kf > Q2d) * (ki + Q2d > kf) * (kf + Q2d > ki)
     return np.logical_not(mask)
-
-
-# End of file

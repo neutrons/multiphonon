@@ -179,5 +179,3 @@ def update_dos_(original_dos_hist, Emin, Emax, g, gerr, compute_scalefactor):
     newdos.E2/=norm*norm
     return newdos
 """
-
-# End of file

@@ -41,6 +41,3 @@ def process(sample_nxs_list, mt_nxs_list, parameter_yaml):
             for msg in getDOS(**kargs):
                 log.write("%s\n" % (msg,))
         continue
-
-
-# End of file

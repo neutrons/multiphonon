@@ -26,6 +26,3 @@ def sqe(mpsqe, Ei):
     mssqe.I[:] = aveS[np.newaxis, :]
     mssqe.I[mask] = np.nan
     return mssqe
-
-
-# End of file

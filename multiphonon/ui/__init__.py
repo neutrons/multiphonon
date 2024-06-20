@@ -69,6 +69,3 @@ def context2kargs(context):
     d["elastic_E_cutoff"] = context.ElasticPeakMin, context.ElasticPeakMax
     del d["ElasticPeakMax"], d["ElasticPeakMin"], d["Eaxis"], d["Qaxis"], d["mtiqe_h5"]
     return d
-
-
-# End of file

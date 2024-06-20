@@ -433,6 +433,3 @@ def createParameterInputWidgets(context):
     )
     w_Run = widgets.Button(description="Run")
     return w_inputs, w_Run
-
-
-# End of file
