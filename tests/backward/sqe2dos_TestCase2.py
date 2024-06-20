@@ -7,7 +7,6 @@ import unittest
 
 import histogram.hdf as hh
 import pylab
-
 from multiphonon.backward import sqe2dos
 
 interactive = False

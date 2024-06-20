@@ -7,7 +7,6 @@ import unittest
 
 import histogram.hdf as hh
 import numpy as np
-
 from multiphonon.dos import interp
 
 interactive = False

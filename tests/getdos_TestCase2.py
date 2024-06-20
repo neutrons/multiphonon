@@ -6,7 +6,6 @@ import os
 import unittest
 
 import pytest
-
 from multiphonon.getdos import getDOS
 
 # pytestmark = pytest.mark.skipif(False, reason="only run mannually")

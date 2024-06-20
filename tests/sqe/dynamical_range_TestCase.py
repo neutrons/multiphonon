@@ -7,7 +7,6 @@ import unittest
 
 import histogram.hdf as hh
 import numpy as np
-
 from multiphonon.sqe import dynamical_range_mask, interp
 
 interactive = False

@@ -13,7 +13,6 @@ class TestCase(unittest.TestCase):
     def test1(self):
         """multiphonon.forward.phonon.DWExp"""
         from dos import loadDOS
-
         from multiphonon.forward.phonon import DWExp
 
         E, g = loadDOS()

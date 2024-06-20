@@ -8,7 +8,6 @@ import warnings
 import histogram.hdf as hh
 import numpy as np
 import pylab
-
 from multiphonon.backward import sqe2dos
 from multiphonon.sqe import interp
 

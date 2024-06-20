@@ -12,7 +12,6 @@ import os
 import histogram as H
 import histogram.hdf as hh
 import numpy as np
-
 from multiphonon.backward import sqe2dos
 from multiphonon.sqe import interp
 
