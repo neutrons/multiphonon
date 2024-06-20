@@ -1,4 +1,4 @@
-# Vanadium phonon density of states.
+# Vanadium phonon density of states. 
 # x axis: frequency in terahz (note: not angular frequency)
 # Frequency(TeraHz)	DOS
 0.0	0.0
