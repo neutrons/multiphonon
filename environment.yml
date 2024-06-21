@@ -4,7 +4,7 @@ channels:
   - mantid
 dependencies:
   #- anaconda-client
- # - boa
+  #- boa
   - conda-build < 4
   - coverage
   - python = 3.9
@@ -25,3 +25,6 @@ dependencies:
   - versioningit
   - setuptools
   - coveralls
+  - pip
+  - pip:
+    - ipywe==0.1.3a1

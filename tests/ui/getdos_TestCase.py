@@ -26,11 +26,11 @@ class TestCase(unittest.TestCase):
 
     def test1(self):
         """multiphonon.ui.getdos"""
-        from multiphonon.ui import getdos
+        from multiphonon.ui import Context, getdos
 
-        context = getdos.Context()
+        context = Context()
         context.to_yaml("context.yaml")
-        context2 = getdos.Context()
+        context2 = Context()
         context2.from_yaml("context.yaml")
         s = str(context)
 

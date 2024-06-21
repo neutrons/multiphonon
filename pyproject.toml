@@ -50,9 +50,12 @@ pythonpath = [
   ".","src",
 ]
 testpaths = ["tests"]
-python_files = ["test*.py"]
+python_files = ["test*.py", "*TestCase*.py"]
 norecursedirs = [".git", "tmp*", "_tmp*", "__pycache__", "*dataset*", "*data_set*"]
-
+markers = [
+  "needs_mantid: mark a test that needs mantid",
+  "needs_ipywe: mark a test that needs ipywe"
+]
 
 [tool.ruff]
 line-length = 124
