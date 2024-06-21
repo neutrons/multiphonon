@@ -8,7 +8,6 @@ import unittest
 import histogram.hdf as hh
 import numpy as np
 import pytest
-
 from multiphonon.ui import batch
 
 # pytestmark = pytest.mark.skipif(False, reason="only run mannually")

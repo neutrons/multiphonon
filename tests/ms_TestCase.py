@@ -6,7 +6,6 @@ import unittest
 
 import histogram as H
 import histogram.hdf as hh
-
 from multiphonon import ms
 
 interactive = False
