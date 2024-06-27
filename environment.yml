@@ -2,7 +2,6 @@ name: multiphonon
 channels:
   - conda-forge
   - mcvine
-  - mantid
 dependencies:
   - anaconda-client
   - boa

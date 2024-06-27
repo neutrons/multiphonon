@@ -24,7 +24,6 @@ jobs:
             channels:
               - conda-forge
               - mcvine
-              - mantid
       - name: install multiphonon
         run: |
               python -m pip install -e .
@@ -53,7 +52,6 @@ jobs:
             channels:
               - conda-forge
               - mcvine
-              - mantid
       - name: install multiphonon
         run: |
               python -m pip install -e .
