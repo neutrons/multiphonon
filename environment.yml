@@ -3,8 +3,8 @@ channels:
   - conda-forge
   - mantid
 dependencies:
-  #- anaconda-client
-  #- boa
+  - anaconda-client
+  - boa
   - conda-build < 4
   - coverage
   - python = 3.9
