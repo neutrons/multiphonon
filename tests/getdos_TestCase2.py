@@ -3,7 +3,9 @@
 
 import imp
 import os
+import tempfile
 import unittest
+import warnings
 
 import pytest
 from multiphonon.getdos import getDOS
@@ -19,22 +21,22 @@ dataurls = imp.load_source("dataurls", os.path.join(datadir, "dataurls.py"))
 
 class TestCase(unittest.TestCase):
     def setUp(self):
-        dest = os.path.join(datadir, "ARCS_V_annulus.nxs")
+        self.tmpdirname = tempfile.TemporaryDirectory()
+        dest = os.path.join(self.tmpdirname.name, "ARCS_V_annulus.nxs")
         if os.path.exists(dest):
             return
         url = dataurls.ARCS_V_annulus
         cmd = "wget --quiet %r -O %r" % (url, dest)
-        if os.system(cmd):
-            raise RuntimeError("%s failed" % cmd)
-        return
+        exec_cmd(cmd)
 
     def test1a(self):
         """multiphonon.getdos: check energy axis"""
-        import warnings
-
+        workdir = os.path.join(self.tmpdirname.name, "work")
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
-            for _ in getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs"), Emin=-50.5, Emax=80, dE=1.0):
+            for _ in getDOS(
+                os.path.join(self.tmpdirname.name, "ARCS_V_annulus.nxs"), Emin=-50.5, Emax=80, dE=1.0, workdir=workdir
+            ):
                 assert len(w) == 1
                 assert "Energy axis modified" in str(w[-1].message)
                 break
@@ -42,23 +44,19 @@ class TestCase(unittest.TestCase):
 
     def test1b(self):
         """multiphonon.getdos: reuse reduction results"""
-        work = "work.getdos-reuse-reduction-results"
-        if os.path.exists(work):
-            import shutil
-
-            shutil.rmtree(work)
-        import warnings
+        work = os.path.join(self.tmpdirname.name, "work.getdos-reuse-reduction-results")
+        arcs_filepath = os.path.join(self.tmpdirname.name, "ARCS_V_annulus.nxs")
 
         with warnings.catch_warnings(record=True) as ws:
             warnings.simplefilter("always")
-            list(getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs"), workdir=work))
+            list(getDOS(arcs_filepath, workdir=work))
             for w in ws:
                 self.assertTrue("Reusing old reduction" not in str(w))
                 continue
         # get dos again, this time we should see a warning
         with warnings.catch_warnings(record=True) as ws:
             warnings.simplefilter("always")
-            list(getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs"), workdir=work))
+            list(getDOS(arcs_filepath, workdir=work))
             warned = False
             for w in ws:
                 warned = warned or ("Reusing old reduction" in str(w))
@@ -69,7 +67,7 @@ class TestCase(unittest.TestCase):
         # get dos using different settings. should not see warning
         with warnings.catch_warnings(record=True) as ws:
             warnings.simplefilter("always")
-            list(getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs"), Emin=0, workdir=work))
+            list(getDOS(arcs_filepath, Emin=0, workdir=work))
             for w in ws:
                 self.assertTrue("Reusing old reduction" not in str(w))
                 continue
@@ -80,6 +78,11 @@ class TestCase(unittest.TestCase):
         return
 
     pass  # end of TestCase
+
+
+def exec_cmd(cmd):
+    if os.system(cmd):
+        raise RuntimeError("%s failed" % cmd)
 
 
 if __name__ == "__main__":

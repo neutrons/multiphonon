@@ -3,6 +3,7 @@
 
 import imp
 import os
+import tempfile
 import unittest
 
 import histogram.hdf as hh
@@ -22,21 +23,25 @@ dataurls = imp.load_source("dataurls", os.path.join(datadir, "dataurls.py"))
 
 class TestCase(unittest.TestCase):
     def setUp(self):
-        dest = os.path.join(datadir, "ARCS_V_annulus.nxs")
+        self.tmpdirname = tempfile.TemporaryDirectory()
+        dest = os.path.join(self.tmpdirname.name, "ARCS_V_annulus.nxs")
         if os.path.exists(dest):
             return
         url = dataurls.ARCS_V_annulus
         cmd = "wget --quiet %r -O %r" % (url, dest)
-        if os.system(cmd):
-            raise RuntimeError("%s failed" % cmd)
-        return
+        exec_cmd(cmd)
+
+    def tearDown(self):
+        # Close the file, the directory will be removed after the test
+        self.tmpdirname.cleanup()
 
     def test1(self):
         """multiphonon.getdos"""
-        list(getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs")))
+        workdir = os.path.join(self.tmpdirname.name, "work")
+        list(getDOS(os.path.join(self.tmpdirname.name, "ARCS_V_annulus.nxs"), workdir=workdir))
         self.assertTrue(
             close_hist(
-                hh.load("work/final-dos.h5"),
+                hh.load(os.path.join(workdir, "final-dos.h5")),
                 hh.load(os.path.join(here, "expected_results", "getdos-test1-final-dos.h5")),
             )
         )
@@ -44,17 +49,18 @@ class TestCase(unittest.TestCase):
 
     def test2(self):
         """multiphonon.getdos: MT can"""
+        workdir = os.path.join(self.tmpdirname.name, "work-MT")
         list(
             getDOS(
-                os.path.join(datadir, "ARCS_V_annulus.nxs"),
-                mt_nxs=os.path.join(datadir, "ARCS_V_annulus.nxs"),
+                os.path.join(self.tmpdirname.name, "ARCS_V_annulus.nxs"),
+                mt_nxs=os.path.join(self.tmpdirname.name, "ARCS_V_annulus.nxs"),
                 mt_fraction=0.01,
-                workdir="work-MT",
+                workdir=workdir,
             )
         )
         self.assertTrue(
             close_hist(
-                hh.load("work-MT/final-dos.h5"),
+                hh.load(os.path.join(workdir, "final-dos.h5")),
                 hh.load(os.path.join(here, "expected_results", "getdos-test2-final-dos.h5")),
             )
         )
@@ -62,16 +68,22 @@ class TestCase(unittest.TestCase):
 
     def test3(self):
         """multiphonon.getdos: low T"""
-        list(getDOS(os.path.join(datadir, "ARCS_V_annulus.nxs"), T=1.5, workdir="work-lowT"))
+        workdir = os.path.join(self.tmpdirname.name, "work-lowT")
+        list(getDOS(os.path.join(self.tmpdirname.name, "ARCS_V_annulus.nxs"), T=1.5, workdir=workdir))
         self.assertTrue(
             close_hist(
-                hh.load("work-lowT/final-dos.h5"),
+                hh.load(os.path.join(workdir, "final-dos.h5")),
                 hh.load(os.path.join(here, "expected_results", "getdos-test3-final-dos.h5")),
             )
         )
         return
 
     pass  # end of TestCase
+
+
+def exec_cmd(cmd):
+    if os.system(cmd):
+        raise RuntimeError("%s failed" % cmd)
 
 
 def close_hist(h1, h2):
