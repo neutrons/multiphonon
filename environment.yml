@@ -4,6 +4,7 @@ channels:
   - mcvine
 dependencies:
   - anaconda-client
+  - boost = 1.71.0
   - boa
   - conda-build < 4
   - coverage
