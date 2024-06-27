@@ -4,6 +4,7 @@
 
 import os
 import sys
+import tempfile
 import unittest
 
 import histogram as H
@@ -27,12 +28,14 @@ class TestCase(unittest.TestCase):
         iqe = hh.load(os.path.join(datadir, "V-iqe.h5"))
         from multiphonon.sqe import interp
 
-        newiqe = interp(iqe, newE=np.arange(iqe.energy[0], 80.0, dE))
-        hh.dump(newiqe, "V-iqe-interped.h5")
-        from multiphonon.forward import dos2sqe
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            newiqe_filepath = os.path.join(tmpdirname, "V-iqe-interped.h5")
+            newiqe = interp(iqe, newE=np.arange(iqe.energy[0], 80.0, dE))
+            hh.dump(newiqe, newiqe_filepath)
+            from multiphonon.forward import dos2sqe
 
-        sqe = dos2sqe(doshist, 0.01, newiqe, 300, 50.94, 120.0)
-        return
+            sqe = dos2sqe(doshist, 0.01, newiqe, 300, 50.94, 120.0)
+            return
 
     pass  # end of TestCase
 

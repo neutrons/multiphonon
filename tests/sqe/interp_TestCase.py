@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #
 import os
+import tempfile
 import unittest
 
 import histogram.hdf as hh
@@ -16,8 +17,10 @@ class TestCase(unittest.TestCase):
         """multiphonon.sqe.interp"""
         sqe = hh.load(os.path.join(datadir, "V-iqe.h5"))
         newsqe = interp(sqe, newE=np.arange(-70, 70, 1.0))
-        hh.dump(newsqe, "V-iqe-interpd.h5")
-        return
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            newsqe_filepath = os.path.join(tmpdirname, "V-iqe-interpd.h5")
+            hh.dump(newsqe, newsqe_filepath)
+            return
 
     pass  # end of TestCase
 

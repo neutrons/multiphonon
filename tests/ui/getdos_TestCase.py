@@ -2,6 +2,7 @@
 #
 
 import os
+import tempfile
 import unittest
 
 import pytest
@@ -18,34 +19,39 @@ class TestCase(unittest.TestCase):
     def test_contextload(self):
         from multiphonon.ui import Context
 
-        cntxt = Context()
-        cntxt.to_yaml("context.yaml")
-        cntxt2 = Context()
-        cntxt2.from_yaml("context.yaml")
-        return
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            context_filepath = os.path.join(tmpdirname, "context.yaml")
+            cntxt = Context()
+            cntxt.to_yaml(context_filepath)
+            cntxt2 = Context()
+            cntxt2.from_yaml(context_filepath)
+            return
 
     def test1(self):
         """multiphonon.ui.getdos"""
         from multiphonon.ui import Context, getdos
 
-        context = Context()
-        context.to_yaml("context.yaml")
-        context2 = Context()
-        context2.from_yaml("context.yaml")
-        s = str(context)
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            context_filepath = os.path.join(tmpdirname, "context.yaml")
 
-        context.sample_nxs = "sample.nxs"
-        wiz = getdos.NxsWizardStart(context)
-        wiz.show()
-        wiz.sample_nxs = context.sample_nxs
-        wiz.validate()
-        wiz.nextStep()
+            context = Context()
+            context.to_yaml(context_filepath)
+            context2 = Context()
+            context2.from_yaml(context_filepath)
+            s = str(context)
 
-        wiz = getdos.GetMTNxs(context)
-        wiz.show()
-        wiz.mt_nxs = "mt.nxs"
-        wiz.validate()
-        wiz.nextStep()
+            context.sample_nxs = "sample.nxs"
+            wiz = getdos.NxsWizardStart(context)
+            wiz.show()
+            wiz.sample_nxs = context.sample_nxs
+            wiz.validate()
+            wiz.nextStep()
+
+            wiz = getdos.GetMTNxs(context)
+            wiz.show()
+            wiz.mt_nxs = "mt.nxs"
+            wiz.validate()
+            wiz.nextStep()
 
         wiz = getdos.GetEiT(context)
         wiz.show()
