@@ -23,6 +23,7 @@ jobs:
           condarc: |
             channels:
               - conda-forge
+              - mcvine
               - mantid
       - name: install multiphonon
         run: |
@@ -51,8 +52,9 @@ jobs:
           condarc: |
             channels:
               - conda-forge
+              - mcvine
               - mantid
-      - name: install garnet_reduction
+      - name: install multiphonon
         run: |
               python -m pip install -e .
       - name: building python wheel
@@ -66,7 +68,7 @@ jobs:
           cd conda.recipe
           echo "versioningit $(versioningit ../)"
           # build the package
-          CHANNELS="--channel mantid/label/main --channel conda-forge"
+          CHANNELS="--channel macvine --channel mantid/label/main --channel conda-forge"
           VERSION=$(versioningit ../) conda mambabuild --output-folder . .
           conda verify noarch/multiphonon*.tar.bz2
       - name: upload conda package to anaconda
