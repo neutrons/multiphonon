@@ -8,12 +8,12 @@ dependencies:
   - boa
   - conda-build < 4
   - coverage
-  - histogram
-  - numpy
-  - scipy
+  - histogram >= 0.3.9
+  - numpy >= 1.20.3
+  - scipy >= 1.9.0
   - python
-  - pyre
-  - mantid == 6.5
+  - pyre >= 0.8.3
+  - mantid >= 6.4
   - matplotlib
   - libmamba
   - libarchive
