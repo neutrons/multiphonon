@@ -14,7 +14,7 @@ dependencies:
   - python = 3.9
   - pyre = 0.8.3
   - matplotlib
-  - mantid = 6.3
+  - mantid-framework = 6.3
   - libmamba
   - libarchive
   - pre-commit
