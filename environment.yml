@@ -15,7 +15,7 @@ dependencies:
   - histogram = 0.3.9
   - matplotlib
   - pyre = 0.8.3
-  - mantid-framework = 6.3
+  - mantid-framework
   - libmamba
   - libarchive
   - pre-commit
