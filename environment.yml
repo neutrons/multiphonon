@@ -1,4 +1,4 @@
-name: multiphonon
+name: multiphonon_v2
 channels:
   - conda-forge
   - mcvine
@@ -14,7 +14,6 @@ dependencies:
   - python = 3.9
   - pyre = 0.8.3
   - matplotlib
-  - mantid-framework = 6.3
   - libmamba
   - libarchive
   - pre-commit
@@ -28,3 +27,4 @@ dependencies:
   - pip
   - pip:
     - ipywe == 0.1.3a1
+    - mantid-framework == 6.3
