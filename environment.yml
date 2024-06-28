@@ -4,18 +4,18 @@ channels:
   - mcvine
   - mantid
 dependencies:
-  - numpy
-  - scipy
-  - histogram
-  - matplotlib
   - anaconda-client
   - boa
   - conda-build < 4
   - coverage
-  - python=3.9
-  - boost
-  - pyre
-  - mantid-framework
+  - numpy = 1.20.3
+  - scipy = 1.9.0
+  - python = 3.9
+  - pyre = 0.8.3
+  - histogram = 0.3.9
+  #- ipywidgets # used in one test
+  - matplotlib
+  - mantid-framework = 6.3
   - libmamba
   - libarchive
   - pre-commit
@@ -27,4 +27,4 @@ dependencies:
   - coveralls
   - pip
   - pip:
-    - ipywe == 0.1.3a1
+    - ipywe==0.1.3a1
