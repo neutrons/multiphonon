@@ -4,16 +4,16 @@ channels:
   - mcvine
   - mantid
 dependencies:
-  - anaconda-client
-  - boa
-  - conda-build < 4
-  - coverage
-  - python
-  - boost
   - numpy
   - scipy
   - histogram
   - matplotlib
+  - anaconda-client
+  - boa
+  - conda-build < 4
+  - coverage
+  - python=3.9
+  - boost
   - pyre
   - mantid-framework
   - libmamba
