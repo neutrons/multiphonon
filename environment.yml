@@ -8,11 +8,7 @@ dependencies:
   - boa
   - conda-build < 4
   - coverage
-  - histogram = 0.3.9
-  - numpy = 1.20.3
-  - scipy = 1.9.0
-  - python = 3.9
-  - pyre = 0.8.3
+  - mantid-framework == 6.3
   - matplotlib
   - libmamba
   - libarchive
@@ -27,4 +23,8 @@ dependencies:
   - pip
   - pip:
     - ipywe == 0.1.3a1
-    - mantid-framework == 6.3
+    - histogram == 0.3.9
+    - numpy == 1.20.3
+    - scipy == 1.9.0
+    - python == 3.9
+    - pyre == 0.8.3
