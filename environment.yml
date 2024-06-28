@@ -9,12 +9,12 @@ dependencies:
   - conda-build < 4
   - coverage
   - python = 3.9
-  - boost = 1.71
-  - numpy = 1.20.3
-  - scipy = 1.9.0
-  - histogram = 0.3.9
+  - boost
+  - numpy
+  - scipy
+  - histogram
   - matplotlib
-  - pyre = 0.8.3
+  - pyre
   - mantid-framework
   - libmamba
   - libarchive
