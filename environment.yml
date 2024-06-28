@@ -8,7 +8,7 @@ dependencies:
   - boa
   - conda-build < 4
   - coverage
-  - python = 3.9
+  - python
   - boost
   - numpy
   - scipy
