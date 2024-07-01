@@ -1,4 +1,4 @@
-name: multiphonon_t2
+name: multiphonon
 channels:
   - conda-forge
   - mcvine
