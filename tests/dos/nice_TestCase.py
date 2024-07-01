@@ -5,7 +5,6 @@ import os
 import unittest
 
 import numpy as np
-
 from multiphonon.dos import nice
 
 interactive = False

@@ -3,11 +3,13 @@
 
 import os
 import sys
+import tempfile
 import unittest
 
 import histogram as H
 import histogram.hdf as hh
 import numpy as np
+import pytest
 
 interactive = False
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "data"))
@@ -44,6 +46,7 @@ class TestCase(unittest.TestCase):
             pylab.show()
         return
 
+    @pytest.mark.creates_extra_files
     def test2(self):
         """multiphonon.forward.phonon.computeSQESet"""
         from dos import loadDOS
@@ -103,9 +106,12 @@ class TestCase(unittest.TestCase):
 
 
 def saveSQE(Q, E, S, name):
-    h = H.histogram(name, [("Q", Q, "angstrom**-1"), ("E", E, "meV")], S)
-    hh.dump(h, "%s.h5" % (name,))
-    return
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        h = H.histogram(name, [("Q", Q, "angstrom**-1"), ("E", E, "meV")], S)
+        hh_filename = "%s.h5" % (name,)
+        hh_filepath = os.path.join(tmpdirname, hh_filename)
+        hh.dump(h, hh_filepath)
+        return
 
 
 if __name__ == "__main__":

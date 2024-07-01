@@ -8,7 +8,6 @@ import os
 
 import histogram.hdf as hh
 import numpy as np
-
 from multiphonon.backward import sqe2dos
 from multiphonon.sqe import interp
 

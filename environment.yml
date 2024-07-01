@@ -1,21 +1,33 @@
 name: multiphonon
 channels:
   - conda-forge
+  - mcvine
   - mantid
 dependencies:
-  - python = 3.9
-  - pyre = 0.8.3
-  - histogram = 0.3.9
-  - ipywidgets # used in one test
+  - anaconda-client
+  - boa
+  - check-wheel-contents
+  - conda-build
+  - conda-verify
+  - conda-build
+  - coverage
+  - histogram == 0.3.9
+  - numpy == 1.20.3
+  - scipy == 1.9.0
+  - python >=3.8
+  - pyre == 0.8.3
+  - mantid == 6.4
   - matplotlib
-  - mantid-framework = 6.3
+  - libmamba
+  - libarchive
   - pre-commit
   - pytest
   - pytest-cov
-  - python
   - python-build
-  - numpy = 1.20.3
-  - scipy = 1.9.0
   - versioningit
   - setuptools
   - coveralls
+  - ipywidgets # used in one test
+  - pip
+  - pip:
+    - ipywe == 0.1.3a1

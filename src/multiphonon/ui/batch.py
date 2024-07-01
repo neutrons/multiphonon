@@ -2,7 +2,7 @@
 #
 
 
-def process(sample_nxs_list, mt_nxs_list, parameter_yaml):
+def process(sample_nxs_list, mt_nxs_list, parameter_yaml, data_folder=""):
     """Process a series of files using a fixed set of parameters
 
     This implementation just shows one way of processing a batch job,
@@ -33,6 +33,10 @@ def process(sample_nxs_list, mt_nxs_list, parameter_yaml):
             os.path.basename(sample_nxs),
             os.path.basename(mt_nxs) if mt_nxs else mt_nxs,
         )
+        workdir = os.path.join(data_folder, workdir)
+        print("workdir", workdir)
+        print("sampleeeee: ", os.path.basename(sample_nxs))
+
         if not os.path.exists(workdir):
             os.makedirs(workdir)
         with open(os.path.join(workdir, "log.getdos"), "wt") as log:

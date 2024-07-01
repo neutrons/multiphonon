@@ -10,7 +10,6 @@ import warnings
 import histogram as H
 import histogram.hdf as hh
 import numpy as np
-
 from multiphonon.backward import sqe2dos
 
 here = os.path.dirname(__file__)

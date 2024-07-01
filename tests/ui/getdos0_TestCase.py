@@ -14,6 +14,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 datadir = os.path.join(here, "..", "data")
 
 
+@pytestmark
 class TestCase(unittest.TestCase):
     def test1(self):
         """multiphonon.ui.getdos0"""

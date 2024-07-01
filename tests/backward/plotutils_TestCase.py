@@ -19,7 +19,6 @@ class TestCase(unittest.TestCase):
 
             matplotlib.use("Agg")
         from matplotlib import pyplot as plt
-
         from multiphonon.backward import plotutils
 
         self.pu = plotutils

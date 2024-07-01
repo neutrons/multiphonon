@@ -119,7 +119,8 @@ def getDOS(
     # probably don't need this line
     newiqe = interp(iqehist, newE=np.arange(*Eaxis))
     # save interpolated data
-    hh.dump(newiqe, "iqe-interped.h5")
+    hh.dump(newiqe, os.path.join(workdir, "iqe-interped.h5"))
+    print("HEHEHEHEHEHEHE iqe- workdir: ", workdir)
     # init dos
     if initdos:
         initdos = hh.load(initdos)

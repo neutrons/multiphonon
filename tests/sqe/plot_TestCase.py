@@ -4,7 +4,6 @@ import os
 import unittest
 
 import histogram.hdf as hh
-
 from multiphonon.sqe import _conv_unit_label, plot
 
 interactive = False
