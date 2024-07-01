@@ -9,6 +9,7 @@ import unittest
 import histogram as H
 import histogram.hdf as hh
 import numpy as np
+import pytest
 
 interactive = False
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "data"))
@@ -45,6 +46,7 @@ class TestCase(unittest.TestCase):
             pylab.show()
         return
 
+    @pytest.mark.creates_extra_files
     def test2(self):
         """multiphonon.forward.phonon.computeSQESet"""
         from dos import loadDOS

@@ -24,31 +24,19 @@ dataurls = imp.load_source("dataurls", os.path.join(datadir, "dataurls.py"))
 
 class TestCase(unittest.TestCase):
     def test1(self):
+        """multiphonon.ui.batch"""
         with tempfile.TemporaryDirectory() as tmpdirname:
             tmpdir = os.path.join(tmpdirname, "tmp.batch")
             os.makedirs(tmpdir)
-            print("temp dir", tmpdir)
-
             dest = os.path.join(tmpdirname, "ARCS_V_annulus.nxs")
-            print("dest", dest)
             if not os.path.exists(dest):
                 url = dataurls.ARCS_V_annulus
                 cmd = "wget --quiet %r -O %r" % (url, dest)
                 exec_cmd(cmd)
-            # create temp dir
-            # self.tmpdir = tmpdir = os.path.abspath("tmp.batch")
-            # if os.path.exists(tmpdir):
-            #    import shutil
 
-            #    shutil.rmtree(tmpdir)
-            # os.makedirs(tmpdir)
-            # make symlinks to create "a series of" data files
             exec_cmd("ln -s %s %s/1.nxs" % (dest, tmpdir))
             exec_cmd("ln -s %s %s/2.nxs" % (dest, tmpdir))
-            # return
 
-            # def test1(self):
-            """multiphonon.ui.batch"""
             _p = lambda f: os.path.join(tmpdir, f)
             sample_nxs_list = [_p("1.nxs"), _p("2.nxs")]
             mt_nxs_list = [None, None]

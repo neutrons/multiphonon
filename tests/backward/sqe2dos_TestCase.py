@@ -23,7 +23,6 @@ class TestCase(unittest.TestCase):
     def test2a(self):
         """sqe2dos: V exp"""
         iqehist = hh.load(os.path.join(datadir, "V-iqe.h5"))
-
         with tempfile.TemporaryDirectory() as tmpdirname:
             newiqe = interp(iqehist, newE=np.arange(-15, 80, 1.0))
             hh.dump(newiqe, os.path.join(tmpdirname, "V-iqe-interped.h5"))

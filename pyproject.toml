@@ -54,7 +54,8 @@ python_files = ["test*.py", "*TestCase*.py"]
 norecursedirs = [".git", "tmp*", "_tmp*", "__pycache__", "*dataset*", "*data_set*"]
 markers = [
   "needs_mantid: mark a test that needs mantid",
-  "needs_ipywe: mark a test that needs ipywe"
+  "needs_ipywe: mark a test that needs ipywe",
+  "creates_extra_files: mark a test that creates additional temporary files"
 ]
 
 [tool.ruff]
