@@ -8,6 +8,7 @@ dependencies:
   - boa
   - conda-build
   - coverage
+  - numpy >= 1.20.3
   - histogram >= 0.3.9
   - scipy >= 1.9.0
   - python
