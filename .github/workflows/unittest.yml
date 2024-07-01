@@ -24,6 +24,7 @@ jobs:
             channels:
               - conda-forge
               - mcvine
+              - mantid
       - name: install multiphonon
         run: |
               python -m pip install -e .
@@ -52,6 +53,7 @@ jobs:
             channels:
               - conda-forge
               - mcvine
+              - mantid
       - name: install multiphonon
         run: |
               python -m pip install -e .
@@ -66,7 +68,7 @@ jobs:
           cd conda.recipe
           echo "versioningit $(versioningit ../)"
           # build the package
-          CHANNELS="--channel mcvine --channel conda-forge"
+          CHANNELS="--channel mcvine --channel mantid --channel conda-forge"
           VERSION=$(versioningit ../) conda mambabuild --output-folder . .
           conda verify noarch/multiphonon*.tar.bz2
       - name: upload conda package to anaconda
