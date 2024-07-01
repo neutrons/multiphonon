@@ -18,6 +18,7 @@ requires = [
   "wheel",
   "toml",
   "versioningit",
+  "histogram == 0.3.9",
   "numpy == 1.20.3",
   "scipy == 1.9.0"
 ]
