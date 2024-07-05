@@ -29,7 +29,7 @@ dependencies:
   - versioningit
   - setuptools
   - coveralls
-  - ipywidgets # used in one test
+  - ipywidgets # used in one  test
   - pip
   - pip:
     - ipywe == 0.1.3a1
