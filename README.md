@@ -64,7 +64,7 @@ The core algorithm is an iterative procedure:
 For more details of the basic principles of SQE->DOS conversion, please refer to Appendix of [1] and Section 6.5 "Calculation of Multiphonon Scattering" of [2].
 
 ## API doc
-See https://multiphonon.readthedocs.io/en/latest/
+See https://multiphonon.readthedocs.io/en/latest/api.html
 
 (previous http://neutrons.github.io/multiphonon/api.html)
 
