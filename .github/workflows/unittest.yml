@@ -54,10 +54,13 @@ jobs:
               - conda-forge
               - mcvine
               - mantid
-      - name: Build python wheel
+      - name: Create conda environment
         shell: bash -l {0}
         run: |
           conda env create -f conda_environment.yml
+      - name: Activate conda environment
+        shell: bash -l {0}
+        run: |
           conda activate multiphonon_conda
       - name: Build python wheel
         shell: bash -l {0}
