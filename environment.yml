@@ -5,7 +5,7 @@ channels:
   - mantid
 dependencies:
   - anaconda-client
-  - boa
+  #- boa >= 0.10.0
   - check-wheel-contents
   - conda-build
   - conda-verify

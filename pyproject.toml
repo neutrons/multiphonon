@@ -18,8 +18,8 @@ requires = [
   "wheel",
   "toml",
   "versioningit",
-  "numpy == 1.20.3",
-  "scipy == 1.9.0"
+  "numpy >= 1.20.3",
+  "scipy >= 1.9.0"
 ]
 build-backend = "setuptools.build_meta"
 
