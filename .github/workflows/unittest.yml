@@ -57,23 +57,13 @@ jobs:
       - name: Build python wheel
         shell: bash -l {0}
         run: |
+          conda env create -f conda_environment.yml
+          conda activate multiphonon_conda
+      - name: Build python wheel
+        shell: bash -l {0}
+        run: |
           python -m build --wheel --no-isolation
           check-wheel-contents dist/multiphonon-*.whl
-  conda-build:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -l {0}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: mamba-org/setup-micromamba@v1
-        with:
-          environment-file: conda_environment.yml
-          cache-environment-key: ${{ runner.os }}-env-${{ hashFiles('**/environment.yml') }}
-          cache-downloads-key: ${{ runner.os }}-downloads-${{ hashFiles('**/environment.yml') }}
-          condarc: |
-            channels:
-              - conda-forge
       - name: build conda package
         shell: bash -l {0}
         run: |
