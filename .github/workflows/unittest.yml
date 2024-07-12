@@ -73,9 +73,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: mamba-org/setup-micromamba@v1
         with:
-          environment-file: cobda_environment.yml
-          cache-environment-key: ${{ runner.os }}-env-${{ hashFiles('**/cobda_environment.yml') }}
-          cache-downloads-key: ${{ runner.os }}-downloads-${{ hashFiles('**/cobda_environment.yml') }}
+          environment-file: conda_environment.yml
+          cache-environment-key: ${{ runner.os }}-env-${{ hashFiles('**/conda_environment.yml') }}
+          cache-downloads-key: ${{ runner.os }}-downloads-${{ hashFiles('**/conda_environment.yml') }}
           condarc: |
             channels:
               - conda-forge
