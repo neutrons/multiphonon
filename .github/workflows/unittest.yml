@@ -54,19 +54,35 @@ jobs:
               - conda-forge
               - mcvine
               - mantid
-      - name: Create conda environment
-        shell: bash -l {0}
-        run: |
-          conda env create -f conda_environment.yml
-      - name: Activate conda environment
-        shell: bash -l {0}
-        run: |
-          conda activate multiphonon_conda
       - name: Build python wheel
         shell: bash -l {0}
         run: |
           python -m build --wheel --no-isolation
           check-wheel-contents dist/multiphonon-*.whl
+      - name: Upload python wheel
+        uses: actions/upload-artifact@v4
+        with:
+          name: multiphonon_wheel
+          path: dist/multiphonon-*.whl
+  conda-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mamba-org/setup-micromamba@v1
+        with:
+          environment-file: cobda_environment.yml
+          cache-environment-key: ${{ runner.os }}-env-${{ hashFiles('**/cobda_environment.yml') }}
+          cache-downloads-key: ${{ runner.os }}-downloads-${{ hashFiles('**/cobda_environment.yml') }}
+          condarc: |
+            channels:
+              - conda-forge
+      - name: Download python wheel from python-build
+        uses: actions/download-artifact@v4
+        with:
+          name: multiphonon_wheel
       - name: build conda package
         shell: bash -l {0}
         run: |
