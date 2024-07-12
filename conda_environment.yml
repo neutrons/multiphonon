@@ -30,7 +30,6 @@ dependencies:
   - histogram
   - pip
   - pip:
-    - histograms
-    - numpy
+    - numpy  #<2.0.0
     - scipy
     - ipywe == 0.1.3a1
