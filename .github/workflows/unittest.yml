@@ -80,24 +80,24 @@ jobs:
           condarc: |
             channels:
               - conda-forge
-      - name: Mkdir dist
-        shell: bash -l {0}
-        run: |
-          # set up environment
-          mkdir dist
-          cd dist/
+      # - name: Mkdir dist
+      #   shell: bash -l {0}
+      #   run: |
+      #     # set up environment
+      #     mkdir dist
       - name: Download python wheel from python-build
         uses: actions/download-artifact@v4
         with:
           name: multiphonon_wheel
+          path: dist
       - shell: bash -l {0}
         run: |
-          # set up environment
+          # show files
           ls -la
       - name: build conda package
         shell: bash -l {0}
         run: |
-          # set up environment
+          # enter conda
           cd conda.recipe
           echo "versioningit $(versioningit ../)"
           # build the package
