@@ -27,6 +27,7 @@ dependencies:
   - coveralls
   - ipywidgets # used in one test
   - pyre
+  - histogram
   - pip
   - pip:
     - histograms
