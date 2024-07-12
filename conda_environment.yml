@@ -1,16 +1,35 @@
-name: multiphonon_conda
+name: multiphonon_pip
 channels:
   - conda-forge
-  - mcvine
   - mantid
+  - mcvine
 dependencies:
   - anaconda-client
   - boa
   - check-wheel-contents
   - conda-build
   - conda-verify
+  - coverage
+  - mantid >= 6.4
+  - matplotlib
   - libmamba
   - libarchive
+  - pre-commit
+  - python >=3.8
+  - pytest
+  - pytest-cov
   - python-build
+  - sphinx
+  - sphinx-rtd-theme
+  - numpydoc
   - versioningit
   - setuptools
+  - coveralls
+  - ipywidgets # used in one test
+  - pyre
+  - pip
+  - pip:
+    - histograms
+    - numpy
+    - scipy
+    - ipywe == 0.1.3a1

@@ -80,6 +80,8 @@ jobs:
           condarc: |
             channels:
               - conda-forge
+              - mantid
+              - mcvine
       # - name: Mkdir dist
       #   shell: bash -l {0}
       #   run: |
