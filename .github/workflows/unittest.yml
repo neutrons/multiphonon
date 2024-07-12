@@ -65,6 +65,7 @@ jobs:
           name: multiphonon_wheel
           path: dist/multiphonon-*.whl
   conda-build:
+    needs: python-build
     runs-on: ubuntu-latest
     defaults:
       run:
