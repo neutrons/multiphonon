@@ -59,7 +59,7 @@ jobs:
         run: |
           python -m build --wheel --no-isolation
           check-wheel-contents dist/multiphonon-*.whl
-      - name: Upload python wheel
+      - name: Upload python wheel in the repo # the artifact is saved for building the conda package
         uses: actions/upload-artifact@v4
         with:
           name: multiphonon_wheel
@@ -82,11 +82,6 @@ jobs:
               - conda-forge
               - mantid
               - mcvine
-      # - name: Mkdir dist
-      #   shell: bash -l {0}
-      #   run: |
-      #     # set up environment
-      #     mkdir dist
       - name: Download python wheel from python-build
         uses: actions/download-artifact@v4
         with:
