@@ -28,6 +28,33 @@ This code converts a S(Q,E) INS spectrum to DOS.
 * Intermediate results are saved for further investigation
 * Handle inputs in nxs and nxspe files for sample and empty can measurements (requires Mantid)
 
+## Development Installation and Testing
+
+Create and activate conda environment for shiver development
+
+```bash
+conda env create
+# or
+mamba env create
+
+conda activate multiphonon
+```
+The environment.yml is used for building the code in editable mode and creating the python wheel
+
+Install multiphonon (in editable mode)
+
+```bash
+python -m pip install -e .
+
+```
+
+```bash
+pytest
+
+```
+
+The conda_environment.yml is only used to build the multiphonon as a conda package.
+
 ## Installation
 
 Installation is handled with conda. Please see [Installation instructions](https://sns-chops.github.io/multiphonon/installation.html) for details.

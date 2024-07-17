@@ -1,4 +1,6 @@
-name: multiphonon_pip
+#Only for conda build with boa depedency
+#Only use for building a conda package: conda mambabuild
+name: multiphonon_conda_build_only
 channels:
   - conda-forge
   - mantid

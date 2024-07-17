@@ -1,3 +1,5 @@
+#default environment for installing python package
+#Note: Use this
 name: multiphonon
 channels:
   - conda-forge
