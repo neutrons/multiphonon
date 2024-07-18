@@ -1,24 +1,26 @@
+#default environment for installing python package
+#Note: Use this
 name: multiphonon
 channels:
   - conda-forge
   - mcvine
   - mantid
 dependencies:
-  - anaconda-client
-  - boa
+  #- anaconda-client
+  #- boa
   - check-wheel-contents
-  - conda-build
-  - conda-verify
+  #- conda-build
+  #- conda-verify
   - coverage
   - histogram == 0.3.9
-  - numpy == 1.20.3
-  - scipy == 1.9.0
+  - numpy >= 1.20.3,< 2.0
+  - scipy >= 1.9.0,< 1.14.0
   - python >=3.8
   - pyre == 0.8.3
   - mantid == 6.4
   - matplotlib
-  - libmamba
-  - libarchive
+  #- libmamba
+  #- libarchive
   - pre-commit
   - pytest
   - pytest-cov

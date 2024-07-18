@@ -26,9 +26,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-conda.recipe/
 src/multiphonon/_version.py
-!conda.recipe/meta.yaml
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

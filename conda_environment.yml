@@ -1,0 +1,37 @@
+#Only for conda build with boa depedency
+#Only use for building a conda package: conda mambabuild
+name: multiphonon_conda_build_only
+channels:
+  - conda-forge
+  - mantid
+  - mcvine
+dependencies:
+  - anaconda-client
+  - boa
+  - check-wheel-contents
+  - conda-build
+  - conda-verify
+  - coverage
+  - mantid >= 6.4
+  - matplotlib
+  - libmamba
+  - libarchive
+  - pre-commit
+  - python >=3.8
+  - pytest
+  - pytest-cov
+  - python-build
+  - sphinx
+  - sphinx-rtd-theme
+  - numpydoc
+  - versioningit
+  - setuptools
+  - coveralls
+  - ipywidgets # used in one test
+  - pyre == 0.8.3
+  - histogram
+  - pip
+  - pip:
+    - numpy  #<2.0.0
+    - scipy
+    - ipywe == 0.1.3a1

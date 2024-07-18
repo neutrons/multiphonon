@@ -37,7 +37,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-  conda-build:
+  python-build:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -54,21 +54,50 @@ jobs:
               - conda-forge
               - mcvine
               - mantid
-      - name: install multiphonon
-        run: |
-              python -m pip install -e .
-      - name: building python wheel
+      - name: Build python wheel
         shell: bash -l {0}
         run: |
           python -m build --wheel --no-isolation
+          check-wheel-contents dist/multiphonon-*.whl
+      - name: Upload python wheel in the repo # the artifact is saved for building the conda package
+        uses: actions/upload-artifact@v4
+        with:
+          name: multiphonon_wheel
+          path: dist/multiphonon-*.whl
+  conda-build:
+    needs: python-build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mamba-org/setup-micromamba@v1
+        with:
+          environment-file: conda_environment.yml
+          cache-environment-key: ${{ runner.os }}-env-${{ hashFiles('**/conda_environment.yml') }}
+          cache-downloads-key: ${{ runner.os }}-downloads-${{ hashFiles('**/conda_environment.yml') }}
+          condarc: |
+            channels:
+              - conda-forge
+              - mantid
+              - mcvine
+      - name: Download python wheel from python-build
+        uses: actions/download-artifact@v4
+        with:
+          name: multiphonon_wheel
+          path: dist
+      - shell: bash -l {0}
+        run: |
+          # show files
+          ls -la
       - name: build conda package
         shell: bash -l {0}
         run: |
-          # set up environment
+          # enter conda
           cd conda.recipe
           echo "versioningit $(versioningit ../)"
           # build the package
-          CHANNELS="--channel mcvine --channel mantid --channel conda-forge"
           VERSION=$(versioningit ../) conda mambabuild --output-folder . .
           conda verify noarch/multiphonon*.tar.bz2
       - name: upload conda package to anaconda
