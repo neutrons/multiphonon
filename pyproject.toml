@@ -19,7 +19,9 @@ requires = [
   "toml",
   "versioningit",
   "numpy >= 1.20.3, <2.0",
-  "scipy >= 1.9.0, < 1.14.0"
+  "scipy >= 1.9.0, < 1.14.0",
+  "mantid == 6.4",
+  "pyre == 0.8.3"
 ]
 build-backend = "setuptools.build_meta"
 
