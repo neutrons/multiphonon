@@ -7,7 +7,7 @@ dependencies = [
   "numpy >= 1.20.3, <2.0",
   "scipy >= 1.9.0, < 1.14.0",
   "mantid == 6.4",
-  "pyre == 0.8.3"
+  "ipywe == 0.1.3a1"
 ]
 license = { text = "BSD" }
 keywords= ["neutron, inelastic neutron scattering, powder, phonon"]
