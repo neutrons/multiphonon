@@ -2,9 +2,9 @@
 #Only use for building a conda package: conda mambabuild
 name: multiphonon_conda_build_only
 channels:
-  - conda-forge
   - mantid
   - mcvine
+  - conda-forge
 dependencies:
   - anaconda-client
   - boa
