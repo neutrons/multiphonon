@@ -37,9 +37,11 @@ requirements:
   run:
     - numpy
     - histogram
+    - pyre
     - scipy
     - matplotlib
     - mantid
+    - ipywe
 
   test:
     imports:

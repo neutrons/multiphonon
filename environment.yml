@@ -2,9 +2,9 @@
 #Note: Use this
 name: multiphonon
 channels:
-  - conda-forge
-  - mcvine
   - mantid
+  - mcvine
+  - conda-forge
 dependencies:
   #- anaconda-client
   #- boa
