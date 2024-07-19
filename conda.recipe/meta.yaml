@@ -41,7 +41,6 @@ requirements:
     - scipy
     - matplotlib
     - mantid
-    - ipywe
 
   test:
     imports:
