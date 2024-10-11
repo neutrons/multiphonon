@@ -57,11 +57,11 @@ The conda_environment.yml is only used to build the multiphonon as a conda packa
 
 ## Installation
 
-Installation is handled with conda. Please see [Installation instructions](https://sns-chops.github.io/multiphonon/installation.html) for details.
+Installation is handled with conda. Please see [Installation instructions](https://neutrons.github.io/multiphonon/installation.html) for details.
 
 ## Usage
 
-Please see [usage](https://sns-chops.github.io/multiphonon/usage.html) for details.
+Please see [usage](https://neutrons.github.io/multiphonon/usage.html) for details.
 
 ## Community guidelines
 
