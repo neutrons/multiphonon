@@ -4,9 +4,6 @@ description="Multiphonon scattering and multiple scattering correction for powde
 dynamic = ["version"]
 requires-python = ">=3.8"
 dependencies = [
-  "numpy >= 1.20.3, <2.0",
-  "scipy >= 1.9.0, < 1.14.0",
-  "mantid == 6.4",
 ]
 license = { text = "BSD" }
 keywords= ["neutron, inelastic neutron scattering, powder, phonon"]
