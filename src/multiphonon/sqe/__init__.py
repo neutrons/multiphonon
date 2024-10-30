@@ -92,14 +92,14 @@ def interp(iqehist, newE):
     iqehist.I[mask] = 0
     iqehist.E2[mask] = 0
     Q = iqehist.Q
-    f = interpolate.interp2d(E, Q, iqehist.I, kind="linear")
-    E2f = interpolate.interp2d(E, Q, iqehist.E2, kind="linear")
+    f = interpolate.RectBivariateSpline(E, Q, iqehist.I.T, kx=1, ky=1)
+    E2f = interpolate.RectBivariateSpline(E, Q, iqehist.E2.T, kx=1, ky=1)
     dE = E[1] - E[0]
     Emin = E[0] // dE * dE
     Emax = E[-1] // dE * dE
     # Enew = np.arange(Emin, Emax+dE/2, dE)
-    newS = f(newE, Q)
-    newS_E2 = E2f(newE, Q)
+    newS = f(newE, Q).T
+    newS_E2 = E2f(newE, Q).T
     # create new histogram
     Eaxis = H.axis("E", newE, unit="meV")
     Qaxis = H.axis("Q", Q, unit="1./angstrom")

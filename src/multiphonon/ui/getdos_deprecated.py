@@ -1,4 +1,8 @@
 # -*- python -*-
+# This algorithm should be deprecated with the deletion of ipywe. This algorithm is not covered in tests.
+# Just in case users are using old jupyternotebooks that calls this algorithm it's renamed
+# with *_depracated keyword at the moment.
+# For this algorithm to work properly, ipywe needs to be installed.
 #
 import os
 
