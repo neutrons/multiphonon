@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 #
 
-import imp
 import os
 import tempfile
 import unittest
@@ -9,6 +8,7 @@ import warnings
 
 import pytest
 from multiphonon.getdos import getDOS
+from multiphonon.sqe import load_source
 
 # pytestmark = pytest.mark.skipif(False, reason="only run mannually")
 pytestmark = pytest.mark.needs_mantid
@@ -16,7 +16,9 @@ pytestmark = pytest.mark.needs_mantid
 interactive = False
 
 datadir = os.path.join(os.path.dirname(__file__), "data")
-dataurls = imp.load_source("dataurls", os.path.join(datadir, "dataurls.py"))
+
+
+dataurls = load_source("dataurls", os.path.join(datadir, "dataurls.py"))
 
 
 class TestCase(unittest.TestCase):
