@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 #
 
-import importlib.machinery
-import importlib.util
+
 import os
 import tempfile
 import unittest
@@ -11,6 +10,7 @@ import histogram.hdf as hh
 import numpy as np
 import pytest
 from multiphonon.getdos import getDOS
+from multiphonon.sqe import load_source
 
 # pytestmark = pytest.mark.skipif(False, reason="only run mannually")
 pytestmark = pytest.mark.needs_mantid
@@ -19,18 +19,6 @@ interactive = False
 
 here = os.path.dirname(__file__)
 datadir = os.path.join(here, "data")
-
-
-def load_source(modname, filename):
-    loader = importlib.machinery.SourceFileLoader(modname, filename)
-    spec = importlib.util.spec_from_file_location(modname, filename, loader=loader)
-    module = importlib.util.module_from_spec(spec)
-    # The module is always executed and not cached in sys.modules.
-    # Uncomment the following line to cache the module.
-    # sys.modules[module.__name__] = module
-    loader.exec_module(module)
-    return module
-
 
 dataurls = load_source("dataurls", os.path.join(datadir, "dataurls.py"))
 
