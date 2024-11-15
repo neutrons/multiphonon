@@ -16,7 +16,7 @@ dependencies:
   - scipy == 1.14.1
   - python >=3.10
   - pyre == 0.8.3
-  - mantid == 6.11.0.1
+  - mantid == 6.11.0
   - matplotlib
   - libmamba
   - libarchive
