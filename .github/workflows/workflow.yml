@@ -23,6 +23,7 @@ jobs:
           condarc: |
             channels:
               - mantid
+              - neutrons/label/rc
               - mcvine
               - conda-forge
       - name: install multiphonon

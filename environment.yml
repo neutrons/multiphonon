@@ -3,6 +3,7 @@
 name: multiphonon
 channels:
   - mantid
+  - neutrons/label/rc
   - mcvine
   - conda-forge
 dependencies:
@@ -31,6 +32,4 @@ dependencies:
   - setuptools
   - coveralls
   - ipywidgets # used in one test
-  - pip
-  - pip:
-    - git+https://github.com/neutrons/histogram-dev.git@next#egg=histogram-dev
+  - histogram
