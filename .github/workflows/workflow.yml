@@ -52,6 +52,7 @@ jobs:
           condarc: |
             channels:
               - mantid
+              - neutrons/label/rc
               - mcvine
               - conda-forge
       - name: Build python wheel
@@ -66,7 +67,8 @@ jobs:
           cd conda.recipe
           echo "versioningit $(versioningit ../)"
           # build the package
-          VERSION=$(versioningit ../) conda mambabuild --output-folder . .
+          CHANNELS="--channel mantid --channel neutrons/label/rc --channel mcvine --channel conda-forge"
+          VERSION=$(versioningit ../) conda mambabuild $CHANNELS --output-folder . .
           conda verify noarch/multiphonon*.tar.bz2
       - name: upload conda package to anaconda
         shell: bash -l {0}
