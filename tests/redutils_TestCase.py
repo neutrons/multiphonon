@@ -22,7 +22,7 @@ dataurls = load_source("dataurls", os.path.join(datadir, "dataurls.py"))
 class TestCase(unittest.TestCase):
     def setUp(self):
         self.tmpdirname = tempfile.TemporaryDirectory()
-        dest = os.path.join(datadir, "multiphonon-data","ARCS_V_annulus.nxs")
+        dest = os.path.join(datadir, "multiphonon-data", "ARCS_V_annulus.nxs")
         if os.path.exists(dest):
             return
         else:
@@ -33,7 +33,11 @@ class TestCase(unittest.TestCase):
         from multiphonon.redutils import reduce
 
         Qaxis = 0, 0.1, 14
-        reduce(os.path.join(datadir, "multiphonon-data","ARCS_V_annulus.nxs"), Qaxis, os.path.join(self.tmpdirname.name, "iqe.nxs"))
+        reduce(
+            os.path.join(datadir, "multiphonon-data", "ARCS_V_annulus.nxs"),
+            Qaxis,
+            os.path.join(self.tmpdirname.name, "iqe.nxs"),
+        )
         return
 
     def test2(self):
@@ -43,7 +47,7 @@ class TestCase(unittest.TestCase):
         Qaxis = -0.05, 0.1, 14.95001
         Eaxis = -100.5, 1.0, 99.5001
         reduce(
-            os.path.join(datadir, "multiphonon-data","ARCS_V_annulus.nxs"),
+            os.path.join(datadir, "multiphonon-data", "ARCS_V_annulus.nxs"),
             Qaxis,
             os.path.join(self.tmpdirname.name, "iqe.nxs"),
             eaxis=Eaxis,

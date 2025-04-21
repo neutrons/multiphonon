@@ -28,7 +28,7 @@ class TestCase(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdirname:
             tmpdir = os.path.join(tmpdirname, "tmp.batch")
             os.makedirs(tmpdir)
-            dest = os.path.join(datadir, "multiphonon-data","ARCS_V_annulus.nxs")
+            dest = os.path.join(datadir, "multiphonon-data", "ARCS_V_annulus.nxs")
             if os.path.exists(dest):
                 return
             else:

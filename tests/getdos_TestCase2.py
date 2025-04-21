@@ -47,7 +47,7 @@ class TestCase(unittest.TestCase):
     def test1b(self):
         """multiphonon.getdos: reuse reduction results"""
         work = os.path.join(self.tmpdirname.name, "work.getdos-reuse-reduction-results")
-        arcs_filepath = os.path.join(datadir, "multiphonon-data","ARCS_V_annulus.nxs")
+        arcs_filepath = os.path.join(datadir, "multiphonon-data", "ARCS_V_annulus.nxs")
 
         with warnings.catch_warnings(record=True) as ws:
             warnings.simplefilter("always")
