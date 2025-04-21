@@ -1,0 +1,3 @@
+[submodule "tests/data/multiphonon-data"]
+	path = tests/data/multiphonon-data
+	url = git@code.ornl.gov:sns-hfir-scse/infrastructure/test-data/multiphonon-data.git

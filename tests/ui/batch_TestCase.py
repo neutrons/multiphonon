@@ -28,12 +28,11 @@ class TestCase(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdirname:
             tmpdir = os.path.join(tmpdirname, "tmp.batch")
             os.makedirs(tmpdir)
-            dest = os.path.join(tmpdirname, "ARCS_V_annulus.nxs")
-            if not os.path.exists(dest):
-                url = dataurls.ARCS_V_annulus
-                cmd = "wget --quiet %r -O %r" % (url, dest)
-                exec_cmd(cmd)
-
+            dest = os.path.join(datadir, "multiphonon-data","ARCS_V_annulus.nxs")
+            if os.path.exists(dest):
+                return
+            else:
+                RuntimeError("file ARCS_V_annulus.nxs is missing")
             exec_cmd("ln -s %s %s/1.nxs" % (dest, tmpdir))
             exec_cmd("ln -s %s %s/2.nxs" % (dest, tmpdir))
 
