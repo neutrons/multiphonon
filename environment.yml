@@ -13,11 +13,11 @@ dependencies:
   - conda-build
   - conda-verify
   - coverage
-  - numpy == 1.26.4
+  - numpy >= 1.26.4
   - scipy == 1.14.1
   - python >=3.10
   - pyre == 0.8.3
-  - mantid
+  - mantid >= 6.12.0
   - matplotlib
   - libmamba
   - libarchive
@@ -33,4 +33,3 @@ dependencies:
   - coveralls
   - ipywidgets # used in one test
   - histogram
-#no change test
