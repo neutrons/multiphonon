@@ -10,7 +10,6 @@ import histogram.hdf as hh
 import numpy as np
 import pytest
 from multiphonon.getdos import getDOS
-from multiphonon.sqe import load_source
 
 # pytestmark = pytest.mark.skipif(False, reason="only run mannually")
 pytestmark = pytest.mark.needs_mantid
@@ -19,8 +18,6 @@ interactive = False
 
 here = os.path.dirname(__file__)
 datadir = os.path.join(here, "data")
-
-dataurls = load_source("dataurls", os.path.join(datadir, "dataurls.py"))
 
 
 class TestCase(unittest.TestCase):

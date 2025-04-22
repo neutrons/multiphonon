@@ -8,7 +8,6 @@ import warnings
 
 import pytest
 from multiphonon.getdos import getDOS
-from multiphonon.sqe import load_source
 
 # pytestmark = pytest.mark.skipif(False, reason="only run mannually")
 pytestmark = pytest.mark.needs_mantid
@@ -18,18 +17,14 @@ interactive = False
 datadir = os.path.join(os.path.dirname(__file__), "data")
 
 
-dataurls = load_source("dataurls", os.path.join(datadir, "dataurls.py"))
-
-
 class TestCase(unittest.TestCase):
     def setUp(self):
         self.tmpdirname = tempfile.TemporaryDirectory()
         dest = os.path.join(datadir, "multiphonon-data", "ARCS_V_annulus.nxs")
         if os.path.exists(dest):
             return
-        url = dataurls.ARCS_V_annulus
-        cmd = "wget --quiet %r -O %r" % (url, dest)
-        exec_cmd(cmd)
+        else:
+            raise RuntimeError("ARCS_V_annulus.nxs is missing.")
 
     def test1a(self):
         """multiphonon.getdos: check energy axis"""
