@@ -79,11 +79,6 @@ class TestCase(unittest.TestCase):
     pass  # end of TestCase
 
 
-def exec_cmd(cmd):
-    if os.system(cmd):
-        raise RuntimeError("%s failed" % cmd)
-
-
 def close_hist(h1, h2):
     return np.allclose(h1.I, h2.I) and np.allclose(h1.E2, h2.E2)
 

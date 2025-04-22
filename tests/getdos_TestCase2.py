@@ -81,11 +81,6 @@ class TestCase(unittest.TestCase):
     pass  # end of TestCase
 
 
-def exec_cmd(cmd):
-    if os.system(cmd):
-        raise RuntimeError("%s failed" % cmd)
-
-
 if __name__ == "__main__":
     interactive = True
     unittest.main()
