@@ -37,7 +37,7 @@ class TestCase(unittest.TestCase):
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
             for _ in getDOS(
-                os.path.join(self.tmpdirname.name, "ARCS_V_annulus.nxs"), Emin=-50.5, Emax=80, dE=1.0, workdir=workdir
+                os.path.join(datadir, "multiphonon-data", "ARCS_V_annulus.nxs"), Emin=-50.5, Emax=80, dE=1.0, workdir=workdir
             ):
                 assert len(w) == 1
                 assert "Energy axis modified" in str(w[-1].message)
