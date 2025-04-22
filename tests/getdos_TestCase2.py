@@ -24,7 +24,7 @@ dataurls = load_source("dataurls", os.path.join(datadir, "dataurls.py"))
 class TestCase(unittest.TestCase):
     def setUp(self):
         self.tmpdirname = tempfile.TemporaryDirectory()
-        dest = os.path.join(self.tmpdirname.name, "ARCS_V_annulus.nxs")
+        dest = os.path.join(datadir, "multiphonon-data", "ARCS_V_annulus.nxs")
         if os.path.exists(dest):
             return
         url = dataurls.ARCS_V_annulus
