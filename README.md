@@ -49,7 +49,7 @@ python -m pip install -e .
 ```
 
 ```bash
-pytest
+See "Run test" section below for how to set up git-lfs and run unit tests
 
 ```
 
@@ -98,6 +98,16 @@ See https://multiphonon.readthedocs.io/en/latest/api.html
 ## Run tests
 Tests are run automatically at [CI](https://github.com/neutrons/multiphonon/actions)
 
+Due to certain test files exceed github storage limit, git-lfs(large file storage) has been set up to host these test data. Git-lfs will need to be configured on local machine to download test data. To set up git-lfs, in root folder "multiphonon/" run:
+
+    $ git lfs pull
+    $ git submodule update --init --recursive
+
+A folder named "multiphonon-data" should appear under "tests/data/", from here run:
+
+    $ pytest
+
+to run all tests or follow instructions below to run minimal tests .
 
 To manually run the minimal test suite, install multiphonon, clone this repository, and run
 
