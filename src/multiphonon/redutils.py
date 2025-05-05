@@ -1,22 +1,4 @@
-import os
 import sys
-
-
-def _createDefaultMantidUserConfig(facility="SNS"):
-    # create default Mantid user configuration for DEMO purpose.
-    mantid_config_path = os.path.expanduser("~/.mantid/Mantid.user.properties")
-    mantid_user_dir = os.path.dirname(mantid_config_path)
-    if not os.path.exists(mantid_config_path):
-        if not os.path.exists(mantid_user_dir):
-            os.makedirs(mantid_user_dir)
-        with open(mantid_config_path, "wt") as of:
-            of.write("default.facility=%s" % facility)
-    return
-
-
-# this should be done before mantid is imported
-_createDefaultMantidUserConfig()
-
 
 mantid_checked = False
 
@@ -91,6 +73,7 @@ def reduce(
     from mantid import mtd
     from mantid.simpleapi import DgsReduction, Load
 
+    msa.config.setFacility("SNS")
     if tof2E == "guess":
         # XXX: this is a simple guess. all raw data files seem to have root "entry"
         cmd = "h5ls %s" % nxsfile
