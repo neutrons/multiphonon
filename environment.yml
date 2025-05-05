@@ -33,3 +33,4 @@ dependencies:
   - coveralls
   - ipywidgets # used in one test
   - histogram
+  - git-lfs

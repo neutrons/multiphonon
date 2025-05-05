@@ -98,6 +98,14 @@ See https://multiphonon.readthedocs.io/en/latest/api.html
 ## Run tests
 Tests are run automatically at [CI](https://github.com/neutrons/multiphonon/actions)
 
+Due to some test files exceeds github storage limit, git-lfs(large file storage) has been set up and will need to be configured on local machine to download test data. To set up git-lfs, make sure you are in root folder multiphonon/, then run:
+    $ git lfs pull
+    $ git submodule update --init --recursive
+
+A folder named "multiphonon-data" should appear under "tests/data/", from here run:
+    $ pytest
+
+to run all tests or to run minimal tests see instructions below.
 
 To manually run the minimal test suite, install multiphonon, clone this repository, and run
 
