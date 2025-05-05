@@ -49,7 +49,7 @@ python -m pip install -e .
 ```
 
 ```bash
-pytest
+See "Run test" section below for how to set up git-lfs and run unit tests
 
 ```
 
