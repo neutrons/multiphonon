@@ -34,3 +34,4 @@ dependencies:
   - ipywidgets # used in one test
   - histogram
   - git-lfs
+  - muparser < 2.3.5
