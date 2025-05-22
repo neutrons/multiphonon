@@ -41,6 +41,7 @@ requirements:
     - scipy
     - matplotlib
     - mantid
+    - muparser < 2.3.5
 
   test:
     imports:
