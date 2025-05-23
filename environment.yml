@@ -2,7 +2,7 @@
 #Note: Use this
 name: multiphonon
 channels:
-  - mantid
+  - mantid-ornl
   - neutrons/label/rc
   - mcvine
   - conda-forge
@@ -17,7 +17,7 @@ dependencies:
   - scipy == 1.14.1
   - python >=3.10
   - pyre == 0.8.3
-  - mantid >= 6.12.0
+  - mantid == 6.12.0.2
   - matplotlib
   - libmamba
   - libarchive
