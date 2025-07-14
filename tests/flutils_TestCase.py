@@ -20,6 +20,10 @@ class TestCase(unittest.TestCase):
         from multiphonon.flutils import MDH2Histo
 
         h1 = MDH2Histo(os.path.join(datadir, "Al_md.h5"))
+        print(h1)
+        # from histogram.plotter import HistogramMplPlotter as p
+        # plotter = p()
+        # plotter.plot2d(h1)
         assert np.abs(h1.getAttribute("Ei") - 49.6743) < 0.0001
         return
 

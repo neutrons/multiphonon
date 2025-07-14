@@ -4,9 +4,7 @@ description="Multiphonon scattering and multiple scattering correction for powde
 dynamic = ["version"]
 requires-python = ">=3.10"
 dependencies = [
-  "numpy >= 1.26.4",
-  "scipy == 1.14.1",
-  "mantid == 6.12.0.2",
+
 ]
 license = { text = "BSD" }
 keywords= ["neutron, inelastic neutron scattering, powder, phonon"]
@@ -16,34 +14,41 @@ homepage = "https://github.com/neutrons/multiphonon"  # if no homepage, use repo
 
 [build-system]
 requires = [
-  "setuptools >= 40.6.0",
-  "wheel",
-  "toml",
-  "versioningit",
+  "hatchling",
+  "versioningit"
 ]
-build-backend = "setuptools.build_meta"
+build-backend = "hatchling.build"
 
 [tool.black]
 line-length = 119
 
+[tool.hatch.version]
+source = "versioningit"
+
+[tool.hatch.build]
+artifacts = ["*.yml", "*.yaml", "*.json"]
+
+[tool.hatch.build.hooks.versioningit-onbuild]
+source-file = "src/multiphonon/_version.py"
+build-file = "multiphonon/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/multiphonon"]
+
+[tool.versioningit.write]
+file = "src/multiphonon/_version.py"
+
 [tool.versioningit.vcs]
 method = "git"
-default-tag = "0.0.1"
+default-tag = "4.0.0"
 
 [tool.versioningit.next-version]
 method = "minor"
 
 [tool.versioningit.format]
 distance = "{next_version}.dev{distance}"
-dirty = "{version}+d{build_date:%Y%m%d}"
-distance-dirty = "{next_version}.dev{distance}+d{build_date:%Y%m%d%H%M}"
-
-[tool.versioningit.write]
-file = "src/multiphonon/_version.py"
-
-[tool.setuptools.packages.find]
-where = ["src"]
-exclude = ["tests/*", "docs/*"]
+dirty = "{version}"
+distance-dirty = "{next_version}.dev{distance}"
 
 [tool.pytest.ini_options]
 pythonpath = [
@@ -99,3 +104,122 @@ ignore = ["D203", # 1 blank line required before class docstring, conflict with 
           "E722", # Do not use bare except
           ]
 exclude = ["docs/conf.py","tests/data/*"]
+
+
+# ------------------ #
+# Pixi configuration #
+# ------------------ #
+[tool.pixi.workspace]
+preview = ["pixi-build"] # Need this to access pixi-build feature
+platforms = ["linux-64"]
+channels = [
+  "conda-forge",
+  "https://prefix.dev/pixi-build-backends",
+  "mantid-ornl",
+  "mantid",
+  "neutrons",
+  "mcvine",
+]
+
+[tool.pixi.package]
+name = "multiphonon"
+version = "0.0.0" # placeholder, can be updated by task sync-version
+
+[tool.pixi.package.build]
+backend = { name = "pixi-build-python", version = "0.1.*" }
+
+[tool.pixi.package.host-dependencies]
+hatchling = "*"
+versioningit = "*"
+
+[tool.pixi.package.run-dependencies]
+#dependencies for the conda package - for multiphonon to run
+pyre = ">=0.8.3"
+histogram = ">=0.4.2"
+pyside6 = ">=6.8.1"
+numpy = ">=1.26.4"
+scipy = ">=1.14.1"
+mantid = ">=6.12.0.2"
+git-lfs = ">=3.7.0"
+ipywidgets = ">=8.1.7"
+
+[tool.pixi.dependencies]
+# Conda package dependencies for the local environment though pixi
+pyre = ">=0.8.3"
+histogram = ">=0.4.2"
+pyside6 = ">=6.8.1"
+numpy = ">=1.26.4"
+scipy = ">=1.14.1"
+mantid = ">=6.12.0.2"
+git-lfs = ">=3.7.0"
+ipywidgets = ">=8.1.7"
+
+[tool.pixi.pypi-dependencies]
+# PyPI dependencies for the local environment though pixi
+#including this package to allow local editable installs
+multiphonon = { path = ".", editable = true }
+
+[tool.pixi.environments]
+#environment definitions with feature dependencies
+default = { features = ["package", "developer","docs","test",], solve-group = "default" }
+
+[tool.pixi.feature.package.dependencies]
+#conda package
+anaconda-client = ">=1.13.0"
+check-wheel-contents = ">=0.6.2"
+versioningit = ">=3.2.0"
+#python package
+pip = "*"
+
+[tool.pixi.feature.package.pypi-dependencies]
+toml-cli = "*"
+
+#code analysis tools
+[tool.pixi.feature.developer.dependencies]
+pip = ">=25.1.1"
+pip-audit = ">=2.9.0"
+pre-commit = ">=4.2.0"
+codecov = ">=2.1.13"
+
+#readthedocs
+[tool.pixi.feature.docs.dependencies]
+sphinx = ">=8"
+sphinx_rtd_theme = ">=3.0.1"
+sphinxcontrib-mermaid = ">=1.0.0"
+
+#pytest
+[tool.pixi.feature.test.dependencies]
+pytest = ">=8.4.1"
+pytest-qt = ">=4.4.0"
+pytest-cov = ">=6.2.1"
+pytest-mock = ">=3.14.1"
+pytest-xvfb = ">=3.1.1"
+
+[tool.pixi.tasks]
+# Documentation
+build-docs = { cmd = 'sphinx-build -b html docs/source/ docs/_build/html', description = "Build documentation" }
+test-docs = { cmd = "sphinx-build -M doctest docs/source/ docs/_build/html", description = "Test building the documentation" }
+# Testing
+test = { description = "Run the test suite", cmd = "pytest" }
+# Packaging
+conda-build-command = { cmd = "pixi build", description = "Wrapper for building the conda package - used by `conda-build`" }
+conda-build = { description = "Build the conda package", depends-on = [
+    "sync-version",
+    "conda-build-command",
+    "reset-version",
+] }
+conda-publish = { cmd = "anaconda upload *.conda", description = "Publish the .conda package to anaconda.org", depends-on = [
+    "conda-build",
+] }
+# Misc
+audit-deps = { cmd = "pip-audit --local -s osv", description = "Audit the package dependencies for vulnerabilities" }
+clean = { cmd = 'rm -rf .pytest_cache .ruff_cache **/*.egg-info **/dist **/__pycache__ **/_version.py', description = "Clean up various caches and build artifacts" }
+clean-conda = { cmd = "rm -f *.conda", description = "Clean the local .conda build artifacts" }
+clean-docs = { cmd = "rm -rf docs/_build", description = "Clean up documentation build artifacts" }
+clean-all = { description = "Clean all artifacts", depends-on = [
+    "clean",
+    "clean-conda",
+    "clean-docs",
+] }
+sync-version = { cmd = 'version=$(python -m versioningit); toml set tool.pixi.package.version "$version" --toml-path pyproject.toml', description = "Sync pyproject.toml version with Git version" }
+reset-version = { cmd = "toml set tool.pixi.package.version \"0.0.0\" --toml-path pyproject.toml", description = "Reset the package version to 0.0.0" }
