@@ -118,6 +118,7 @@ channels = [
   "mantid-ornl",
   "mantid",
   "neutrons",
+  "neutrons/label/rc",
   "mcvine",
 ]
 

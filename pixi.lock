@@ -7,6 +7,7 @@ environments:
     - url: https://conda.anaconda.org/mantid-ornl/
     - url: https://conda.anaconda.org/mantid/
     - url: https://conda.anaconda.org/neutrons/
+    - url: https://conda.anaconda.org/neutrons/label/rc/
     - url: https://conda.anaconda.org/mcvine/
     indexes:
     - https://pypi.org/simple
@@ -2601,8 +2602,8 @@ packages:
   timestamp: 1749813314523
 - pypi: ./
   name: multiphonon
-  version: 0.5.0.dev1
-  sha256: 9df4b268e12ffcaa6ce700938d4522e1bc2ea3313e800074a70ef853f1d94b50
+  version: 0.5.0.dev4
+  sha256: ef67512f017d0c2dbb3722f49d8c4e77e74e1a7bb98f85c23fa24ceb6e1c75a4
   requires_python: '>=3.10'
   editable: true
 - conda: https://conda.anaconda.org/conda-forge/noarch/munkres-1.1.4-pyhd8ed1ab_1.conda
