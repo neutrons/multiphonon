@@ -30,30 +30,22 @@ This code converts a S(Q,E) INS spectrum to DOS.
 
 ## Development Installation and Testing
 
-Create and activate conda environment for shiver development
+Create and activate a virtual environment with [Pixi](https://pixi.sh/).Prerequisites: Pixi installation e.g. for Linux:
 
-```bash
-conda env create
-# or
-mamba env create
+`curl -fsSL https://pixi.sh/install.sh | sh`
 
-conda activate multiphonon
-```
-The environment.yml is used for building the code in editable mode and creating the python wheel
+Download the repository. Setup/Update the environment
 
-Install multiphonon (in editable mode)
+`pixi install`
 
-```bash
-python -m pip install -e .
+Enter the environment
 
-```
+`pixi shell`
 
 ```bash
 See "Run test" section below for how to set up git-lfs and run unit tests
 
 ```
-
-The conda_environment.yml is only used to build the multiphonon as a conda package.
 
 ## Installation
 
@@ -104,7 +96,7 @@ Due to certain test files exceed github storage limit, git-lfs(large file storag
     $ git submodule update --init --recursive
 
 A folder named "multiphonon-data" should appear under "tests/data/", from here run:
-
+    $ pixi shell
     $ pytest
 
 to run all tests or follow instructions below to run minimal tests .

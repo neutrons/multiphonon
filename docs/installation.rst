@@ -68,3 +68,20 @@ and can be installed by::
     $ python setup.py install
 
 if all dependecies are already installed.
+
+Pixi Installation:
+-------------------------
+Developers can also use pixi to install multiphonon::
+    Install Pixi::
+
+    $ curl -fsSL https://pixi.sh/install.sh | sh
+
+    In the package directory::
+
+    $ pixi install
+
+    Acitivate pixi environment::
+
+    $ pixi shell
+
+See more details in readme.md.
