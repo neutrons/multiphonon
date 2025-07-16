@@ -72,15 +72,16 @@ if all dependecies are already installed.
 Pixi Installation:
 -------------------------
 Developers can also use pixi to install multiphonon::
-    Install Pixi:
+    Install Pixi::
 
     $ curl -fsSL https://pixi.sh/install.sh | sh
 
-    In the package directory:
+    In the package directory::
 
     $ pixi install
 
-    Acitivate pixi environment:
+    Acitivate pixi environment::
+
     $ pixi shell
 
 See more details in readme.md.
