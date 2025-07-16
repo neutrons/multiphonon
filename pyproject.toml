@@ -135,13 +135,12 @@ versioningit = "*"
 
 [tool.pixi.package.run-dependencies]
 #dependencies for the conda package - for multiphonon to run
-pyre = ">=0.8.3"
+pyre = "==0.8.3"
 histogram = ">=0.4.2"
 pyside6 = ">=6.8.1"
 numpy = ">=1.26.4"
 scipy = ">=1.14.1"
 mantid = ">=6.12.0.2"
-git-lfs = ">=3.7.0"
 ipywidgets = ">=8.1.7"
 
 [tool.pixi.dependencies]
