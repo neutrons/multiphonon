@@ -2621,7 +2621,7 @@ packages:
   timestamp: 1749813314523
 - pypi: ./
   name: multiphonon
-  version: 0.5.0.dev12
+  version: 0.5.0.dev14
   sha256: 1075360ab45e04e5aa9ede7ef079877fc76697137b81daf640e956c0488d3df2
   requires_python: '>=3.10'
   editable: true
