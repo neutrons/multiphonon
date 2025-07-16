@@ -145,7 +145,7 @@ ipywidgets = ">=8.1.7"
 
 [tool.pixi.dependencies]
 # Conda package dependencies for the local environment though pixi
-pyre = ">=0.8.3"
+pyre = "==0.8.3"
 histogram = ">=0.4.2"
 pyside6 = ">=6.8.1"
 numpy = ">=1.26.4"
@@ -198,8 +198,8 @@ pytest-xvfb = ">=3.1.1"
 
 [tool.pixi.tasks]
 # Documentation
-build-docs = { cmd = 'sphinx-build -b html docs/source/ docs/_build/html', description = "Build documentation" }
-test-docs = { cmd = "sphinx-build -M doctest docs/source/ docs/_build/html", description = "Test building the documentation" }
+build-docs = { cmd = 'sphinx-build -b html docs/ docs/_build/html', description = "Build documentation" }
+test-docs = { cmd = "sphinx-build -M doctest docs/ docs/_build/html", description = "Test building the documentation" }
 # Testing
 test = { description = "Run the test suite", cmd = "pytest" }
 # Packaging
