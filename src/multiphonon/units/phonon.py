@@ -1,4 +1,4 @@
-from pyre.units import SI, energy
+from histogram.utils.units import SI, energy
 
 
 def _hertz2meV():
