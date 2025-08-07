@@ -130,9 +130,6 @@ venv.bak/
 # mkdocs documentation
 /site
 
-# Pyre type checker
-.pyre/
-
 # pytype static type analyzer
 .pytype/
 
