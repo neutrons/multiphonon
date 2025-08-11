@@ -81,7 +81,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/harfbuzz-11.3.3-hbb57e21_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/hdf4-4.2.15-h2a13503_7.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/hdf5-1.14.6-nompi_h6e4c0c1_103.conda
-      - conda: https://conda.anaconda.org/neutrons/noarch/histogram-0.4.2-pyhf484d3e_0.tar.bz2
+      - conda: https://conda.anaconda.org/neutrons/label/rc/noarch/histogram-0.4.3rc2-pyh4616a5c_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/hpack-4.1.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/html5lib-1.1-pyhd8ed1ab_2.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/hyperframe-6.1.0-pyhd8ed1ab_0.conda
@@ -1247,17 +1247,16 @@ packages:
   purls: []
   size: 3710057
   timestamp: 1753357500665
-- conda: https://conda.anaconda.org/neutrons/noarch/histogram-0.4.2-pyhf484d3e_0.tar.bz2
-  sha256: 755ef859d80b95dba5263077c9bda4808646d1d83fd3c7b0db3836a27607b223
-  md5: 65a02db78576ada248f74cb2e1836e89
+- conda: https://conda.anaconda.org/neutrons/label/rc/noarch/histogram-0.4.3rc2-pyh4616a5c_0.conda
+  sha256: 9d3a524bf7cce5d47f8ef19e5495c186d03f88ed8a69158c7e99a11ba8efabd6
+  md5: f5ab2eb253f9d64e071eb303a8e78dd2
   depends:
-  - h5py
+  - numpy >=1.26.4
   - matplotlib
-  - numpy
+  - h5py
   - python
-  license: BSD
-  size: 69703
-  timestamp: 1742936034086
+  size: 63707
+  timestamp: 1754937149223
 - conda: https://conda.anaconda.org/conda-forge/noarch/hpack-4.1.0-pyhd8ed1ab_0.conda
   sha256: 6ad78a180576c706aabeb5b4c8ceb97c0cb25f1e112d76495bff23e3779948ba
   md5: 0a802cb9888dd14eeefc611f05c40b6e
@@ -2629,7 +2628,7 @@ packages:
 - pypi: ./
   name: multiphonon
   version: 0.5.0.dev4
-  sha256: c729b17fa86e10b5be9e9859cbe0073484f6bdc585529a4890e95754831150a9
+  sha256: e1da818bf493ac1495f5ecbaf993222802c57a77d10d0d40a8e97b0ac0f59304
   requires_python: '>=3.10'
   editable: true
 - conda: https://conda.anaconda.org/conda-forge/noarch/munkres-1.1.4-pyhd8ed1ab_1.conda

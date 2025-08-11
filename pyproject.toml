@@ -134,7 +134,7 @@ versioningit = "*"
 
 [tool.pixi.package.run-dependencies]
 #dependencies for the conda package - for multiphonon to run
-histogram = ">=0.4.2"
+histogram = ">=0.4.3rc2"
 pyside6 = ">=6.8.1"
 numpy = ">=1.26.4"
 scipy = ">=1.14.1"
@@ -143,7 +143,7 @@ ipywidgets = ">=8.1.7"
 
 [tool.pixi.dependencies]
 # Conda package dependencies for the local environment though pixi
-histogram = ">=0.4.2"
+histogram = ">=0.4.3rc2"
 pyside6 = ">=6.8.1"
 numpy = ">=1.26.4"
 scipy = ">=1.14.1"
