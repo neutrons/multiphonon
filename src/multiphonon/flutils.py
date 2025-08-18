@@ -1,7 +1,8 @@
 import copy
-import numpy as np
+
 import h5py
 import histogram as H
+import numpy as np
 
 
 def MDH2Histo(filename, Ei=None):
@@ -30,7 +31,7 @@ def MDH2Histo(filename, Ei=None):
             if "long_name" in atkylst:
                 tlng_nm = dh[ky].attrs["long_name"]
                 try:
-                    tlng_nm = np.astype(tlng_nm,'T')
+                    tlng_nm = np.astype(tlng_nm, "T")
                 except AttributeError:
                     pass
                 if tlng_nm == "|Q|":
