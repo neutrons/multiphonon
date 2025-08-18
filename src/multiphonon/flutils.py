@@ -1,5 +1,5 @@
 import copy
-
+import numpy as np
 import h5py
 import histogram as H
 
@@ -28,10 +28,15 @@ def MDH2Histo(filename, Ei=None):
         for idx, ky in enumerate(dh):
             atkylst = list(dh[ky].attrs.keys())
             if "long_name" in atkylst:
-                if dh[ky].attrs["long_name"] == b"|Q|":
+                tlng_nm = dh[ky].attrs["long_name"]
+                try:
+                    tlng_nm = np.astype(tlng_nm,'T')
+                except AttributeError:
+                    pass
+                if tlng_nm == "|Q|":
                     datain["|Q|"] = rh["data"][ky][:]
                     Qidx = copy.copy(idx)
-                elif dh[ky].attrs["long_name"] == b"DeltaE":
+                elif tlng_nm == "DeltaE":
                     datain["DeltaE"] = dh[ky][:]
                     Eidx = copy.copy(idx)
                 else:
