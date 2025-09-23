@@ -4,8 +4,9 @@
 import os
 import sys
 import unittest
-import numpy as np
+
 import histogram.hdf as hh
+import numpy as np
 from multiphonon.backward import sqe2dos
 from multiphonon.backward.singlephonon_sqe2dos import guess_init_dos
 from multiphonon.sqe import interp
@@ -31,23 +32,23 @@ class TestCase(unittest.TestCase):
             pylab.plot(E, g)
             pylab.show()
         return
-    def testguess_init_dos(self):
-       cutoff=66
-       S = hh.load(os.path.join(datadir,'V-iqe.h5'))
-       newiqe = interp(S, newE=np.arange(-50,50,1.0))
-       dE = newiqe.E[1]-newiqe.E[0]
-       Eplus = newiqe.E[newiqe.E>-dE/2.0]
-       res = guess_init_dos(Eplus,cutoff)
-       unnorm = np.ones(len(Eplus))
-       Equadbool = Eplus<cutoff/3
-       unnorm[Equadbool] = Eplus[Equadbool]*Eplus[Equadbool]/cutoff/cutoff*9
-       dE = Eplus[1]-Eplus[0]
-       norm = unnorm.sum()*dE
-       gcmp = unnorm/norm
-       self.assertTrue(np.all(abs(res.I[1:]-gcmp[1:])/gcmp[1:]<1e-6))
-       self.assertTrue(abs(res.I[0])<1e-6)
-       self.assertTrue(np.all(abs(res.E[1:]-Eplus[1:])/Eplus[1:]<1e-6))
 
+    def testguess_init_dos(self):
+        cutoff = 66
+        S = hh.load(os.path.join(datadir, "V-iqe.h5"))
+        newiqe = interp(S, newE=np.arange(-50, 50, 1.0))
+        dE = newiqe.E[1] - newiqe.E[0]
+        Eplus = newiqe.E[newiqe.E > -dE / 2.0]
+        res = guess_init_dos(Eplus, cutoff)
+        unnorm = np.ones(len(Eplus))
+        Equadbool = Eplus < cutoff / 3
+        unnorm[Equadbool] = Eplus[Equadbool] * Eplus[Equadbool] / cutoff / cutoff * 9
+        dE = Eplus[1] - Eplus[0]
+        norm = unnorm.sum() * dE
+        gcmp = unnorm / norm
+        self.assertTrue(np.all(abs(res.I[1:] - gcmp[1:]) / gcmp[1:] < 1e-6))
+        self.assertTrue(abs(res.I[0]) < 1e-6)
+        self.assertTrue(np.all(abs(res.E[1:] - Eplus[1:]) / Eplus[1:] < 1e-6))
 
     pass  # end of TestCase
 
