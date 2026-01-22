@@ -19,9 +19,6 @@ requires = [
 ]
 build-backend = "hatchling.build"
 
-[tool.black]
-line-length = 119
-
 [tool.hatch.version]
 source = "versioningit"
 
@@ -126,7 +123,7 @@ name = "multiphonon"
 version = "0.0.0" # placeholder, can be updated by task sync-version
 
 [tool.pixi.package.build]
-backend = { name = "pixi-build-python", version = "0.1.*" }
+backend = { name = "pixi-build-python", version = "0.4.*" }
 
 [tool.pixi.package.host-dependencies]
 hatchling = "*"
