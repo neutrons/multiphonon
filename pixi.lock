@@ -10,8 +10,6 @@ environments:
     - url: https://conda.anaconda.org/neutrons/label/rc/
     indexes:
     - https://pypi.org/simple
-    options:
-      pypi-prerelease-mode: if-necessary-or-explicit
     packages:
       linux-64:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/_libgcc_mutex-0.1-conda_forge.tar.bz2
@@ -2614,9 +2612,10 @@ packages:
   timestamp: 1756678682315
 - pypi: ./
   name: multiphonon
-  version: 0.5.0.dev2
+  version: 0.5.0.dev6
   sha256: a2c7a7685183b6dc072f0d3547332aae4f0cb1c6975186a7afe59b350b44f394
   requires_python: '>=3.10'
+  editable: true
 - conda: https://conda.anaconda.org/conda-forge/noarch/munkres-1.1.4-pyhd8ed1ab_1.conda
   sha256: d09c47c2cf456de5c09fa66d2c3c5035aa1fa228a1983a433c47b876aa16ce90
   md5: 37293a85a0f4f77bbd9cf7aaefc62609
