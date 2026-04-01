@@ -43,6 +43,11 @@ jobs:
       - name: Install local package
         run: pixi run pip install --no-deps -e .
 
+      - name: Set-up git lfs
+        run: |
+          git lfs pull
+          git submodule update --init --recursive
+
       - name: Run unit tests
         run: pixi run test
 
