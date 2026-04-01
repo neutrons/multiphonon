@@ -162,6 +162,7 @@ default = { features = ["package", "developer","docs","test",], solve-group = "d
 anaconda-client = ">=1.13.0"
 check-wheel-contents = ">=0.6.2"
 versioningit = ">=3.2.0"
+hatch = "*"
 #python package
 pip = ">=26.0"
 
