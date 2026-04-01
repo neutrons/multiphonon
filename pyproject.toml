@@ -6,7 +6,7 @@ requires-python = ">=3.10"
 dependencies = [
 
 ]
-license = { text = "BSD" }
+license = { text = "GPL-3.0-or-later" }
 keywords= ["neutron, inelastic neutron scattering, powder, phonon"]
 
 [project.urls]

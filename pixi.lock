@@ -2612,8 +2612,8 @@ packages:
   timestamp: 1756678682315
 - pypi: ./
   name: multiphonon
-  version: 0.5.0.dev6
-  sha256: a2c7a7685183b6dc072f0d3547332aae4f0cb1c6975186a7afe59b350b44f394
+  version: 0.5.0.dev7
+  sha256: 176635979be6240101020831bee68ac2e26fc92d16c8d2571b0dd27492cf231d
   requires_python: '>=3.10'
   editable: true
 - conda: https://conda.anaconda.org/conda-forge/noarch/munkres-1.1.4-pyhd8ed1ab_1.conda
